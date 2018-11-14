@@ -1,0 +1,317 @@
+---
+title: "crudo"
+author: "J. Antonio García Ramirez, Tarea 6: Aplicaciones a datos financieros en el contexto de big data."
+date: "12 de noviembre, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, cache=TRUE)
+library(BatchGetSymbols) # obtencion de series
+library(reshape2)
+library(lubridate)     #manejo de fechas
+library(dplyr)
+library(tseries)
+library(parallel)
+library(readr) #lectura rapida
+library(seasonal)
+library(RMTstat)
+library(pls)
+```
+
+```{r funciones.auxiliares}
+SMAPE <- function(y.hat, y)
+{
+  # Calculo de raiz cuadrada de error cuadratico medio
+  return( sum( abs(y.hat-y) /(abs(y) + abs(y.hat))   )*(100/length(y)) )
+}
+ERROR <- function(y.hat, y)
+{
+  # Calculo de raiz cuadrada de error cuadratico medio
+  return( mean( abs(y.hat-y) )/length(y)) 
+}
+quita.tendencia.init <- function(data, inicio , frecuencia)
+{
+  # CLOSURE para quitar seasonality, regresa una funcion
+  #  data (vector): valores de la serie de tiempo 
+  # inicio (vector.longitud2): inicio de la serie de tiempo c(2008,1)
+  # frecuencia (numeric): frecuencia de la serie (semanal:54)
+  inicio <- inicio 
+  frecuencia <- frecuencia
+  function(data)
+  {
+    s <- ts(data, start = inicio, frequency = frecuencia) # habra que harcodear estos numeros
+    x <- tryCatch(seas(s)$series$s11,
+                         error = function(e) data, finally = data )
+    x <- as.numeric(x)
+    return(x)
+  }
+}
+adf.test.custom <- function(y, option='both')
+{
+  # funcion para elegir el resago optimo
+  # y (numeric): vector con los datos de la serie de tiempo univariada
+  # option (chacaracter) : eleccion de la tendencia e intercepto 'none','c','t','both'
+  y <- ts(y) 
+  lag <- floor(log(length(y))) + 1 #acotamos el numero de lags por el que siguiere el 
+  #texto de Chan Ngai
+  datos <- data.frame(y1 = diff(y))
+  for (i in 2:lag) #aumentamos las columnas de lags 
+  {
+    datos[, as.character(paste0('y',i))] <- c(diff(y, lag=i), rep(NA, i-1))
+  }
+  names(datos) <- c('y1', names(datos)[2:lag])
+  if (option == 'none')
+  {
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(names(datos)[x], collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 1)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        # el BIC de la regresion
+        return(big)
+      } else {return(Inf)} #si un coeficiente al menos es no significativo
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  
+  if (option == 'c')
+  {
+    datos[, 'c'] <- rep(1, dim(datos)[1] )
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(names(datos)[x], collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 2)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        #el BIC de la regresion
+        return(big)
+      }else {return(Inf)} #si un coeficiente al menos es no significativo 
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  if (option == 't')
+  {
+    datos[, 't'] <- cumsum(1:dim(datos)[1])
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(c(names(datos)[x], 't'), collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 2)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        #el BIC de la regresion
+        return(big)
+      }else { return(Inf)}  #si un coeficiente al menos es no significativo
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  if (option == 'both')
+  {
+    datos[, 't'] <- cumsum(1:dim(datos)[1])
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(c(names(datos)[2:(x)], 't'), collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 3)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos
+        #el BIC de la regresion
+        return(big)
+      } else { return(Inf)}  #si un coeficiente al menos es no significativo
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  parsimonia <- which.min(resultado) 
+  names(parsimonia) <- 'Lag optimo'
+  return(parsimonia)
+}
+```
+
+
+
+# Ejercicio 1
+
+En este ejercicio se busca integrar los conocimientos aprendidos a lo largo del curso. Para  ello se solicita realizar lo siguiente:
+
+a.  *Completar la derivación de la distribución de Marcenko-Pastur, partiendo de las notas de clase. Sea los más claro posible, sin omitir ningún detalle algebraico (puede escanearlo.)*
+
+b.  *Reproduzca la figura 14.1 del libro seguido en este módulo (__Introduction to Random Matrices__, G. Livan et. al.), bajo las mismas condiciones y parámetros (compruebe que $p > 0.05$ en el test de Kolmogorov-Smirnov).*
+
+c.  *Descargue las series de tiempo que componen el índice bursátil Standard & Poor’s 500. Utilizando una periodicidad semanal durante los últimos 10 años (Enero 2008 a la fecha).*
+
+Descargamos los datos en tiempo real y gráficamos algunas de las series. Utilizamos 
+los tickers de las empresas que contribuyen al S&P500 previamente de [https://mx.investing.com/indices/investing.com-us-500-components](https://mx.investing.com/indices/investing.com-us-500-components).
+
+```{r parametros}
+diferencia <- today()- ymd('2008-01-01')
+fecha <- as.numeric(diferencia)
+today()-days(fecha) #checar fecha de inicio
+first.date <- Sys.Date() - fecha #actualización en tiempo real 
+last.date <- Sys.Date() 
+freq.data <- 'weekly'  # frecuencia semanal 
+```
+
+```{r descarga.de.datos}
+# lectura de tickerts
+Componentes_Investing_com_United_States_500 <- read_csv("Componentes Investing.com United States 500.csv") # previanmente descargamos de
+       #https://mx.investing.com/indices/investing.com-us-500-components los nombres de las empresas
+tickers <- Componentes_Investing_com_United_States_500$Símbolo
+companias <- BatchGetSymbols(tickers = tickers, 
+                         first.date = first.date,
+                         last.date = last.date, 
+                         freq.data = freq.data,
+                         do.complete.data = FALSE) #sihay nulos los descartamos
+# comprobamos que variable es la que se registra 'price.close '
+#a <- companias$df.tickers
+#a <- subset(a, ticker=='A')
+#sapply(a,class )
+#a <- a[ a$price.open !=a$price.high,  ]
+#a <- a[ a$price.low !=a$price.high,  ]
+#a <- a[ a$price.low !=a$price.close ,  ]
+#a <- a[ a$price.adjusted !=a$price.close ,  ]
+#a <- unique(as.data.frame(a)) #identificamos la variable de interes
+serie <- companias$df.tickers
+class(serie) <- 'data.frame'
+```
+
+
+d.  *Aplique las transformaciones necesarias (aprendidas en el módulo de series de tiempo) para trabajar las series de tiempo desde el punto de vista estacionario. Deseche las series de los mercados que presentan problemas.*
+
+Se procedió a aplicar la transformación logaritmo para disminuir la varianza de las series originales, también se aplicaron técnicas para eliminar la estacionalidad en las pocas series que la presentan. El resultado es un conjunto de datos (de dimensiones $565,449$) donde las observaciones son semanas registradas y las columnas las empresas que reportan su indicador de cierre. También se determino un resago de 8 para todas las series para estacionalizar las series, la prueba de Anderson Darling descarta que tengamos raices unitarias. 
+
+```{r limpieza }
+serie %>% select(ticker, ref.date, price.close) -> serie#  era open o close ?
+SP500 <- BatchGetSymbols(tickers = "^GSPC", 
+                         first.date = first.date,
+                         last.date = last.date, 
+                         freq.data = freq.data,
+                         do.complete.data = FALSE, #sihay nulos los descartamos
+                         cache.folder = file.path(tempdir(),'BGS_Cache')) 
+#names(SP500)
+SP500 <- as.data.frame(SP500$df.tickers)[, c('ref.date', 'price.close')]
+sp.500 <- na.omit(SP500)
+serie2 <- dcast(serie, ref.date ~ ticker, value.var = 'price.close' )
+#write_csv(serie2, path='serie2.csv')
+#serie2 <- read_csv( file='serie2.csv')
+serie3 <- apply(serie2, 2, function(x) sum(is.na(x))) # identificamos series problematicas
+#table(serie3)
+malas <- which(serie3 > 8 )
+serie4 <- serie2[,  !(colnames(serie2) %in% names(malas)) ]
+serie5 <- na.omit(serie4)
+class(serie5) <- 'data.frame'
+serie5$ref.date <- as.Date(serie5$ref.date)
+serie.cruda <- serie5 # para comparacion sin estacionalizar
+```
+
+
+
+
+h.  *¿Cómo mejoraría el pronóstico? si obtiene un promedio en la efectividad mayor al 50% gana puntos extras en proporción a como este valor se acerque al 100% (Puede explorar otros métodos de pronóstico en busca de mayor efectividad, pero siempre contrastando con el criterio de matrices aleatorias).*
+
+
+En vista de que las series presentan diferentes tendencias, se propne trabajarlas sin estacionarizar, los resultados son los siguientes:
+
+```{r braver}
+# estimar SIN HACER ESTACIONARIAS, ESTIMAR CON SP500 RECORTADO
+serie.cruda <- na.omit(serie.cruda)
+#View(head(serie.cruda))
+colnames(serie.cruda) <- c('time', colnames(serie.cruda)[-1])
+colnames(SP500) <- c('time', 'y')
+m <- merge(serie.cruda, SP500)
+colnames(m)
+tiempo <- m$time 
+tiempo
+index <- which(tiempo>ymd('2018-01-01'))
+m$time <- NULL
+train <- m[-index, ]
+test <- m[index,]
+vals <- eigen(cor(scale(train[, -dim(train)[2]])))$values
+# minisimulacion
+set.seed(0)
+r <- (dim(train)[2]-1)/dim(train)[1]
+x <- c(0,seq((1-r**.5)**2, (1+r**.5)**2, by=0.1), 4)
+plot(x,dmp(x, ndf=dim(train)[1]-1, pdim=dim(train)[2] ), col='purple', type='l')
+rug(vals, col='red')
+muestras <- dim(m)[1]*10
+set.seed(0)
+(limite <- mean(rmp(muestras, ndf=dim(train)[1], pdim=dim(train)[2]-1 )))
+abline(v=limite)
+vals <- vals[vals>limite]
+(RMT.cota.2 <- length(vals))
+################# resultado con RMT
+modelo.pcr.rmt <- pcr(y~., data=train, ncomp=RMT.cota.2)
+summary(modelo.pcr.rmt)
+y.hat.test <- predict(modelo.pcr.rmt, ncomp=RMT.cota.2 , newdata = test)
+(100-SMAPE(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+(100-ERROR(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+
+res1 <- data.frame(y=test$y, y.hat=as.numeric(y.hat.test),
+                   time=tiempo[-(1:dim(train)[1])])
+library(ggplot2)
+ggplot(res1, aes(x=time, y=y))+geom_line(color=I('purple')) + theme_minimal()+
+  geom_line(data=res1, aes(x=time, y=y.hat),color=I('orange'))
+################# resultado con 80 vars
+modelo.pcr.rmt <- pcr(y~., data=train, ncomp=dim(train)[2]-1)
+#summary(modelo.pcr.rmt)
+y.hat.test <- predict(modelo.pcr.rmt, ncomp=1 , newdata = test)
+(100-SMAPE(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+(100-ERROR(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+res1 <- data.frame(y=test$y, y.hat=as.numeric(y.hat.test),
+                   time=tiempo[-(1:dim(train)[1])])
+ggplot(res1, aes(x=time, y=y))+geom_line(color=I('purple')) + theme_minimal()+
+  geom_line(data=res1, aes(x=time, y=y.hat),color=I('orange'))
+################# resultado con PLS
+modelo.pcr.rmt <- plsr(y~., data=train, ncomp=RMT.cota.2)
+summary(modelo.pcr.rmt)
+error <- rep(0, RMT.cota.2)
+for (i in 1:RMT.cota.2){
+  y.hat.test <- predict(modelo.pcr.rmt, ncomp=i , newdata = test)
+  error[i] <- SMAPE(test$y, as.numeric(y.hat.test)) #100-19.15192
+}
+which.min(error)
+y.hat.test <- predict(modelo.pcr.rmt, ncomp=which.min(error) , newdata = test)
+(100-SMAPE(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+(100-ERROR(test$y, as.numeric(y.hat.test))) #100- 0.9553613
+
+res1 <- data.frame(y=test$y, y.hat=as.numeric(y.hat.test),
+                   time=tiempo[-(1:dim(train)[1])])
+ggplot(res1, aes(x=time, y=y))+geom_line(color=I('purple')) + theme_minimal()+
+  geom_line(data=res1, aes(x=time, y=y.hat),color=I('orange'))
+```
+
