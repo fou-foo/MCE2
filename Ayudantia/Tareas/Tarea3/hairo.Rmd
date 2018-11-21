@@ -1,0 +1,766 @@
+---
+title: "Tarea 4 Inferencia Estadística"
+author: "Hairo Ulises Miranda Belmonte"
+date: "2 de Octubre de 2018"
+output:
+  html_document:
+    code_folding: hide #echo=TRUE hide code its default
+    
+    toc: true
+    toc_float: true
+    # number_sections: true
+    theme: readable
+    highlight: textmate 
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+       
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+```
+
+
+EJERCICIO 1  
+---------------
+b) Simule una muestra ${x_{1}, . . . , x_{n}}$ de una v.a. Normal de tamaño $n = 10^5$.
+Defina $y_{m} = \Sigma_{i=1}^{n} x_{i}/n$ y grafique esta cantidad. ¿Que observa? ¿Como está esto relacionado con la LGN?
+```{r }
+# variables auxiliares
+n <- 10^5
+mu <- pi
+sd <- sqrt(2)
+
+#Generando la muestra de la variable aleatoria 10^5 veces
+set.seed(100) # fijando semilla
+ym <- cumsum((rnorm(n, pi, sd)))/1:n
+
+
+plot(c(1, n), c(2.5, 3.5), type = "n",
+     xlab = "Tamaño de muestra x", main = "Simulación x~Normal(pi, sqrt(2))", 
+     ylab = "" )
+lines(ym, type="l")
+
+#El siguiente plot solamente reduce el grill  del anterior
+plot(c(1, n), c(2.5, 3.5), type = "n",
+     xlab = "Tamaño de muestra x", main = "Simulación x~Normal(pi, sqrt(2))", 
+     ylab = "" , xlim = c(1,10000))
+lines(ym, type="l", lwd=2)
+abline(pi, 0, col ="red")
+```
+Se observa que cuando $n$ -el numero de simulaciones- es grande, 
+la media mustral se aproxima a la media poblacional ($\pi$). 
+A su vez, lo anterior se puede relacionar con la convergencia en probabilidad,dado a que una secuencia de variables aleatorias se aproxima a una variable aleatoria -(i.e, la media muestral es una variable aleatoria enerada por una combinación lineal de una secuencia de variables aleatorias)- cuando el tamaño de muestra tiende a infinito.
+
+c) Repita el procesoanterior 100 veces y grafique  y de cada iteración
+sobre una misma gráfica
+```{r}
+set.seed(100) # fijando semilla
+# Define límites del gráfico
+plot(c(1, n), c(mu-sd, mu+sd), type = "n",
+     xlab = "Tamaño de la muestra n", ylab = "", main = "Simulación Normal")
+#Se repite el proceso 100 veces, gráficando para cada iteración
+
+for( i in 1:100){ # se utiliza for dado que replicate imprime 100 valores nulos
+lines(1:n, (cumsum((rnorm(n, mu, sd)))/1:n), 
+                             type = "l", col=colors()[i])}
+# en cada simulacion se realiza el plot
+
+```
+d) Repita los dos incisos anteriores para una distribución cauchi ¿Qué observa?
+
+```{r }
+set.seed(100) # fijando semilla
+Cauchy <- cumsum((rcauchy(n, pi, sd)))/1:n
+
+
+plot(Cauchy, type="l", xlab = "Tamaño de la muestra x", ylab = "", 
+     main = "Simulación x~Cauchy(pi, sqrt(2))")
+abline(pi, 0, col="red")
+```
+
+
+Repita el procesoanterior 100 veces y grafique  y de cada iteración sobre una misma gráfica.
+```{r }
+#Simulación del proceso anterior (100 veces).
+set.seed(100) # fijando semilla
+plot(c(1, n), c(-100, 100), type = "n",
+     xlab = "Tamaño de la muestra n", ylab = "", main = "Simulación Normal")
+for (i in 1:100){
+lines(1:n, (cumsum((rcauchy(n, mu, sd)))/1:n), 
+                                  type = "l", col="blue",
+                                  xlab = "Tamaño de la muestra n", 
+          ylab = "", main = "Simulación x~cuchy(pi,  sqrt(2))")}# en cada simulacion se realiza un plot
+abline(pi, 0, col="red")
+```
+
+Caso contrario a la media muestral generada con variables aleatorias normales, al tener un conjunto de variables aleatorias con distribución cauchy, el estadistico -media muestral-, no coverge en ´probabilidad (i.e, conjunto de variables aleatorias tienden a una variable aleatoria). Lo que sucede, al contrario de las normales, es que al incrementar el número de muestras, la media muestral no se aproxima a su media poblacional. Esto se puede explicar, dado que la distribución cauchy se encuentra ausente de momentos. Otro determinante, es el no cumplimiento de la ley de los grandes números ( debil ), dado a que no sólo se es necesario un conjunto de datos iid, también se require que las variables aleatoria presenten media y varianza finitas, (que existan primer y segundo momento).
+
+
+EJERCICIO 3  
+---------------
+
+b) Sea $\alpha  = 0.05$ y $p = 0.4$. Mediante simulaciones, realice un estudio para ver que tan a menudo el intervalo de confianza contiene a p (la cobertura). Haga esto para $n = 10, 50, 100, 250, 500, 1000, 2500, 5000, 10000$. Grafique la cobertura contra $n$.
+```{r }
+rm(list =ls()) #limpiando enviroment
+N <- 10^5 #Número de simulaciones 
+a <- 0.05 # alpha
+p <- 0.4 # Bernoulli(p) and also the mean
+set.seed(100) # fijando semilla
+n <- c(10, 50, 100, 250, 500, 1000, 2500, 5000, 10000) # Tamaño de la muestra
+
+# # # # # # # # # # # # # # # # # # # # # # # #  # #
+# Función : IC
+# Calcula una simulación en la cual 
+# contabiliza el número de veces en el que
+# el intervalo de confianza contiene al 
+# al valor de la media teorica (o poblacional)
+# El intervalo de confianza se realiza con la 
+# desigualdad de Hoeffdinf
+#
+# Input: Número de la muestra
+# Outpu: Número de veces que cae en el intervalo 
+# # # # # # # # # # # # # #  # # # # # # # # # # # # 
+IC <- function(n){
+hits <- 0
+epsilon <- sqrt((1/(2*n))*(log(2/a))) 
+pest <- mean(rbinom(n, 1, p))
+if(abs(pest-p) < epsilon  ){hits <- hits + 1}
+return(hits)
+}
+
+# Matriz que almacena el número de veces que p cae en el intervalo
+Simulacion <- matrix(0, 9, 2) 
+
+for(i in seq(1, 9, 1)){ # For para cada muestra n
+Simulacion[i, ]<-table(replicate(N, IC(n[i])))
+} # end for
+
+
+
+colnames(Simulacion) <-  c("Fuera IC", "Dentro IC")
+rownames(Simulacion) <-  c("n = 10", "n = 50", "n = 10" ,"n = 250", 
+                           "n = 500", "n = 1000", "n = 2500", "n = 5000",
+                           "n = 10000")
+Simulacion #proporción de veces que cae dentro del intervalo de confianza
+```
+Como se observa en la tabla anterios, a un 95% de confianza, la mayoría de de veces el intervalo de confinza contiene a p.
+
+Se gráfica  la cobertura contra el numero de muestra $"n"$
+```{r }
+Cn <- matrix(0, 9,2) # Se introduce valores en matriz
+epsilon<-0
+pest<-0
+for(i in seq(1, 9, 1)){ #realiza la simulación 
+epsilon[i] <- sqrt((1/(2*n[i]))*(log(2/a))) 
+set.seed(100) # fijando semilla
+pest[i] <- mean(rbinom(n[i], 1, p))
+Cn[i, ] <- c(pest[i] - epsilon[i], pest[i] + epsilon[i]); 
+if(Cn[i, 1] < 0){Cn[i, 1] <- 0}
+if(Cn[i, 2] > 1){Cn[i, 2] <- 1}
+} # end for
+
+conIntL <-Cn[, 1] # intervalo superior
+conIntU <-Cn[,2] # intervalo inferior
+
+
+plot(n, rep(.4, 9), type="p", ylim=c(0,.8),
+     xlab = "Tamaño de la muestra", main = "Cobertura por las estimaciones por IC", 
+     ylab="IC", pch=19)
+arrows(n, conIntU, n, conIntL, angle = 90, length = 0.05, code = 3, col = "blue")
+abline(p, 0, col= "red")
+
+```
+c) Grafique la longitud del intervalo contra n. Suponga que deseamos que la longitud del intervalo sea menor que $0.05$. ¿Qué tan grande debe ser n?
+```{r }
+Dist<-numeric(0)
+for(i in seq(1, 9, 1)){ # calcula distancia entre intervalo sup. e inf.
+Dist[i] <- dist(Cn[i, ])
+} # end for
+
+```
+Para observar que tan grande debe ser n se realiza por medio de un análisis visual. El siguiente plot se le delimitó el eje de las abcisas para observal el tamaño de muestra necesaria para que la longitud del intervalo sea menor a $0.05$. 
+```{r }
+
+# Este plot se encuentra sin delimitar el eje de las abscisas
+plot(n, Dist, type="h", xlab = "Tamaño de la muestra",
+     ylab = "Longitid de la cobertura de las estimaciones por IC", col="blue", lwd=5)
+abline(.05, 0, col="red", lwd=2)
+# reduciendo escala 
+plot(n, Dist, type="h", xlab = "Tamaño de la muestra",
+     ylab = "Longitid de la cobertura de las estimaciones por IC", col="blue", lwd=5, ylim = c(0,0.05), xlim = c(2000,10000))
+abline(.05, 0, col="red", lwd=2)
+
+Distancia <- cbind(n, Dist)
+colnames(Distancia, c("N", "Distancia"))
+
+Distancia
+# Distancia exacta
+nexacta<- log(2/.05)/(2*.025^2)
+
+```
+Como se observa en la tabla, un n mayor a los $2500$ mil, genera una longitud
+de los intervalos de confianza de un $0.05$. Pero siendo exactos, al $2951.104$
+
+
+$2\sqrt{(\frac{1}{2n})\log(\dfrac{2}{.05})} <  .05$
+
+$\sqrt{(\frac{1}{2n})\log(\dfrac{2}{.05})} <  .05$
+
+$(\frac{1}{2n})\log(\dfrac{2}{.05}) <  (.025)^2$
+
+$\dfrac{\log(\dfrac{2}{.05})}{(2*.025^2)} >  n$
+
+
+EJERCICIO 5  
+---------------
+El siguiente conjuntos de datos contiene mediciones del diametro de un agave, medido en decmetros, en distintas localizaciones no cercanas.
+
+a) Escriba una funcion en R que calcule la función de distribución empirica para un conjunto
+#de datos dado. La funcion debe tomar como parámetros al punto x donde se evalúa y alconjunto de datos D. Utilizando esta función grafique la función de distribucion emprica asociada al conjunto de datos de lluvias. Ponga atencion a los puntos de discontinuidad.
+¿Que observa?
+
+```{r}
+rm(list = ls())
+diamAgave <- c(23.37, 21.87, 24.41, 21.27, 23.33, 15.20, 24.21, 27.52, 15.48, 27.19,
+25.05, 20.40, 21.05, 28.83, 22.90, 18.00, 17.55, 25.92, 23.64, 28.96,
+23.02, 17.32, 30.74, 26.73, 17.22, 22.81, 20.78, 23.17, 21.60, 22.37)
+# puntos a evaluar, se pude modificar segun el usuario
+x <- seq(from = min(diamAgave) - 1, to = max(diamAgave) + 1, by = 1)
+n <- length(diamAgave)
+
+```
+
+Se estima la función de distribución por dos métodos, esto solo para tener puntos de comparación en las estimaciones. La primera estimación de la distrribucion empirica se realiza al dividir las observaciones ordenadas.
+
+```{r}
+plot(stepfun(sort(diamAgave[1:29]), sort(diamAgave)/n), xlab="tamaño de la muestra (x)", ylab="F(x)", main="Distribución Empirica",
+     do.points = TRUE, pch = 16,verticals = FALSE, col = "blue", lwd = 1)
+```
+
+Por el hecho de contrastar estimaciones en la distribución emirica, se realiza otra estimación, pero ahora por el método de kernels. De acuerdo con Gramacki, A. (2018),  la densidad gaussiana genera estimaciones más suavizadas que otros tipos de kernels, es por eso, que se utiliza un kernel gaussiano.
+```{r}
+# # # # # # # # # # # # # # # # # # # # # # # #  # # # #
+# Función : kernelDistribution
+# Estima función de distribución
+# con una función kernel Gaussiana
+#
+# Input: x: puntos a evaluar
+#        h: parámetro de suavizamiento
+#        data; conjunto de datos
+# Outpu: Gráfica de la distribución estimada de los datos
+# # # # # # # # # # # # # #  # # # # # # # # # # # # # #
+kernelDistribution <-function(x, h, data){
+gauss <- sapply(data, function(a) ((1/sqrt(2*pi))*exp((-((x-a)^2)/(2*h^2))))/(n*h)) # a cada fila se lo calcula
+
+
+plot(stepfun(x[1:17], cumsum(rowSums(gauss))), xlab="tamaño de la muestra (x)", ylab="F(x)", main=paste("Distribución Empirica con kernel gaussiano h =", h),
+     do.points = TRUE, pch = 16,verticals = FALSE, col = "blue", lwd = 1)
+
+}
+
+# Se utiliza una h de 1.37
+
+kernelDistribution(x, 1.37, diamAgave)
+```
+¿Qué observa?
+
+Se observan incremento mayores al centro de las observaciones. A su vez, se observa que es más probale que  el agave se encuentre entre 20 y 25 decímetros. Especialmente en el centro de la distribución.
+
+Para observar lo que se menciona anteriormente, se gráfica la función de densidad del diámetro del agave.
+
+```{r}
+# # # # # # # # # # # # # # # # # # # # # # # #  # # # #
+# Función : kernelDensity
+# Estima función de densidad
+# con una funci´n kernel Gaussiana
+#
+# Input: x: puntos a evaluar
+#        h: parámetro de suavizamiento
+#        data; conjunto de datos
+# Outpu: Gráfica de la densidad estimada de los datos
+# # # # # # # # # # # # # #  # # # # # # # # # # # # # #
+kernelDensity <-function(x, h, data){
+  gauss <- sapply(diamAgave, function(a) ((1/sqrt(2*pi))*exp((-((x-a)^2)/(2*h^2))))/(n*h)) # a cada fila se lo calcula
+  
+  plot(x, rowSums(gauss), 
+       type = "l", xlab = "x", ylab = "f(x)", 
+       main = " Densidad diámetro de un agave", lwd = 2) #suma de cada bumps
+  rug(x, lwd = 2)
+  out <- apply(gauss, 2, function(b) lines(x, b))
+  lines(density(diamAgave), lty = 3)
+  
+}
+
+kernelDensity(x, 1.37, diamAgave)
+```
+
+
+NOTA: la linea con dash es la que calcula R con density. Se traslapa dicha linea  para observar como nuestra función se aproxima a density.
+
+Como se mencionó anteriormente, la media de la distribución, como era de eseparese, se encuentra entre los 20 a 25 decimentros.
+Sin embargo, si se observa la cola derecha de la función de densidad, se observa con mayor claridad los brincos que aparecen en la función de distribución, los cuales, son más marcados en al inicio de la curva gráficada.
+
+En conclusión, se podría comentar que en distintas localizaciónes los factores climaticos pueden variar influyendo en el proceso de crecimiento del agave. El proceso de crecimimento, por otro lado, puede ser factor de dichos saltos -en la función de distribución- a medida se produzcan determinada cantidad por estación.
+
+b) Escriba una funcion en R que determine la graca Q-Q normal de un conjunto de datos. La funcion debe tomar como parametro al conjunto de datos. Usando esta funcion, determine la graca Q-Q normal.
+
+
+
+
+```{r}
+# # # # # # # # # # # # # # # # # # # # # # # #  # #
+# Función : qqplotFunction
+# Gráfica qq-plot
+#
+# Input: Datos
+# Outpu: QQ-PLOT gráfica
+# # # # # # # # # # # # # #  # # # # # # # # # # # # 
+#qqplot
+qqplotFunction<-function(data){
+sort(data)
+n <- length(data)
+x <- 1:length(data)
+p <- x/(n+1)
+
+teorico <-qnorm(c(0.25, 0.75))
+estimado <- quantile(data, c(0.25, 0.75)) 
+slope <- diff(estimado) / diff(teorico)      
+int <- estimado[1] - slope * teorico[1]
+plot(qnorm(p), sort(data),  type = "p",
+     ylab = "Observaciones", xlab ="Cuantil teórico",
+     main = "Normal QQ- plot", pch=20)
+abline(int, slope)
+
+}
+
+qqplotFunction(diamAgave)
+```
+
+¿Qué observa?
+
+Se observa que las colas tanto superior como inferior son muy pesadas. A primera impresión la distrubución de los datos no es normal. Sin embargo, el centro de la distribución aproxima a una normal. La presencia de colas pesadas es el gran número de datos a tipicos, esto es, que hay una cantidad considerada de agavez que su altura -en decímetros- , es o muy pequeña o muy grande, claro está, que en su totalidad la mayoría se encuntra en promedio  entre los 20 a 25 decímetros, aproximadamente. 
+
+
+c) Añada a la funcion anterior la opcion de que graque la banda de confíanza, de cobertura
+$1 - \alpha$ , basada en el estadístico de Kolmogorov-Smirnov. La función debe tomar como
+parámetros al conjunto de datos y el nivel de confíanza $1 - \alpha$,. Aplique esta función al
+conjunto de datos para un nivel de conanza $1 - \alpha$ = 0:95; 0:9 
+Que observa?
+
+```{r}
+
+# # # # # # # # # # # # # # # # # # # # # # # #  # #
+# Función : qqplotFunctionIC
+# Gráfica QQ-plot con intervalos de confianza.
+# Los intervalos se realizan con el estimador
+# Kolmogorov Smirknov
+
+# Input: Datos, d: nivel de insignificancia,
+# CI: intervalos de
+# confianza (1 con CI, 0 si CI)
+# Outpu: QQ-plot con Intervalos de confianza 
+#
+# # # # # # # # # # # # # #  # # # # # # # # # # # # 
+#qqplot con intervalos de confianza
+
+data<- diamAgave
+qqplotFunctionIC<-function(data, d, CI){
+  if (d == .05 && length(data)==30){d <- 0.24170 } # tablas kolmogorov-smirknov
+  if (d == .01 && length(data)==30){d <- 0.28987 } # tablas kolmogorov-smirknov
+  n <- length(data)
+  x <- 1:length(data)
+  p <- x/(n+1)
+  teorico <-qnorm(c(0.25, 0.75))
+  estimado <- quantile(data, c(0.25, 0.75)) 
+  slope <- diff(estimado) / diff(teorico)      
+  int <- estimado[1] - slope * teorico[1]
+  Fest <- p
+  Fn <- pnorm(sort(data), mean(data), sd(data))
+  lowF <- Fest - d
+  lowF[which(lowF < 0)] <- 0
+  upperF <- Fest + d
+  
+  upperF[which(upperF > 1)] <- 1
+  if(CI == 1){
+  plot(qnorm(Fest), sort(data),  type = "p",
+       ylab = "Observaciones", xlab ="Cuantil teórico",
+       main = "Normal QQ- plot", pch=20)
+  lines(qnorm(lowF), sort(data), col = "blue", type = "l")
+  lines(qnorm(upperF), sort(data), col = "blue" , type = "l")
+  lines(qnorm(pnorm(sort(data), mean(data), sd(data))), sort(data),  col="red", type = "l")
+
+  } else if (CI == 0){
+    plot(qnorm(p), sort(data),  type = "p",
+         ylab = "Observaciones", xlab ="Cuantil teórico",
+         main = "Normal QQ- plot", pch=20)
+    abline(int, slope,  col="red")
+}
+ }
+# Primer Gráfico
+qqplotFunctionIC(diamAgave, .05, 1)
+# Segundo Gráfico
+qqplotFunctionIC(diamAgave, .01, 1)
+
+
+```
+
+
+NOTA: El valor d se calcula por medio de las tablas de kolmogorov-Smirknov. Las cuales se encuentran disponibles en : Practical Reliability Engineering, Fifth Edition. Patrick D. T. O'Connor and Andre Kleyner.
+© 2012 John Wiley & Sons, Ltd. Published 2012 by John Wiley & Sons, Ltd.
+
+Para una $N = a 30$, con un alpha de $.05$, el estadístico $d$ es $0.24170$ 
+Para una $N = a 30$, con un alpha de $.01$, el estadístico $d$ es $0.28987$ 
+
+¿Qué observa?
+
+Ahora, se le anexa al QQ-plot un intervalo de confianza. Dicho intervalo, se contruye mediante el estadístico de Kolmogorov-Smirnov. En el primer gráfica se lacula el intervalo de confianza al 95%, en el cual se observa como todos los valores se encuentran dentro del intervalo de confianza.Sin embargo, la distribución del diametro del agave en decímetros se aproxima en las colas a una normal. Pero, el centro, las  dos distribuciones si parecen que se aproximan.
+
+Para el segundo gráfico, el intervalo de confianza es del 99%. En el cual, la mayoria de las observaciones caen dentro de dicho intervalo. No obstante, al tener niveles de insignificancia ($\alpha$) tan pequeños, es decir la probabilidad de que la distribución estimada no se ajuste bien a la teórica, será muy baja, dejando la posibilidad de que dicha distribución mientas sobre si es o no es la normal.
+
+d) Escriba una función en R que determine el gráfico de probabilidad normal. La función debe tomar como parámetro al conjunto de datos. ¿Qué observa?
+
+
+
+```{r}
+
+  pp_plotFunction<-function(data, d){
+  n <- length(data)
+  x <- 1:length(data)
+  pest <- x/(n+1)
+  teorico <-pnorm(c(0.25, 0.75))
+  estimado <- c(0.25, 0.75) 
+  
+  slope <- diff(estimado) / diff(teorico)      
+  int <- estimado[1] - slope * teorico[1]
+  
+  Fest <- pest
+  Fn <- pnorm(sort(data), mean(data), sd(data))
+  
+  plot(Fest, Fn,  type = "p",
+       ylab = "Observaciones", xlab ="zi",
+       main = "Normal PP- plot", pch=20)
+  }
+  
+pp_plotFunction(diamAgave, .05)
+pp_plotFunction(diamAgave, .01)
+
+```
+¿Qué observa?
+
+Se gráfica el pp-plot de los datos, en el cual, al igual que con el qq-plot, se observa que los datos presentan colas pesadas y algo de sesgo. 
+
+e) Los datos anteriores se distribuyen normalmente? Argumente.
+
+En conclusión, la función de densidad que se estimó se aproxima a la normal sólo en el centro, sin embargo, tanto el QQ y PP plot nos hace ver que las colas son muy pesadas, inclusive presentando sesgo. Al introducir el intervalo de confianza, para cada punto se construye un intervalo de 95% de confianza, esto es que tienden a mentir más por ser intervalos puntuales, ya que se encuentran  subestimando la variablidad de los datos. Lo mejor sería contrastar con unas bandas globales. A su vez, los datos a típicos puede que no se estén capturando por la distribución normal. De esta  manera, se concluye que dado a las estimaciones que se realizaron y a la información del qq- plot dado su intervalo, se puede decir que dichas bandas mienten mucho, que la normal no captura los datos a tipicos, y por el sesgo que presenta la distribución no se considerará que os datos se distribuyan normales.
+
+EJERCICIO 6 
+---------------
+
+a) Escriba una funcion en R que calcule el estimador de la densidad por el metodo de kerneles. La funcion debera recibir al punto x donde se evalua al estimador, al parametro de suavidad h, al kernel que se utilizara en la estimacion y al conjunto de datos.
+
+```{r}
+rm(list = ls()) # limpiando environment
+
+# Cargar el archivo correspondiente "Tratamiento.csv"
+dataTratamiento <- read.csv(file.choose(), header=TRUE)
+
+# Observando  los datos
+head(dataTratamiento)
+summary(dataTratamiento)
+```
+
+```{r}
+# # # # # # # # # # # # # # # # # # # # # # # #  # #
+# Función : kernelDensity
+# Calcula estimador de la densidad mediante
+# el método de kernels
+#
+# Input: 
+#          x: Puntos a evaluar
+#          h: el parámetro de suavidad
+#          kernel: tipo de kernel para la estimación
+#                  1 -> Gaussiano
+#                  2 -> Triangular
+#                  3 -> Uniforme
+#                  4 -> Epanechnikov
+#                  5 -> Biweight
+#                  6 -> Triweight
+#                  
+#          data: conjunto de datos
+#
+# Outpu: Gráficó con la densidad estimada de los datos,
+#          traslapando las densidades por cada punto evaluado y
+#          traslapando la densidad de los datos con la función
+#          density, la cual utiliza una banda óptima.
+## # # # # # # # # # # # # #  # # # # # # # # # # # # 
+
+kernelDensity <-function(x, h, kernel, data){
+  # Kernel Gaussiano
+  if(kernel==1){
+    print("Seleccionó Un kernel Normal para la Estimación")
+    gauss <- sapply(data, function(a) ((1/sqrt(2*pi))*exp((-((x-a)^2)/(2*h^2))))/(n*h)) # a cada fila se lo calcula
+    plot(x, rowSums(gauss), 
+         type = "l", xlab = "x", ylab = "density",
+         main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(gauss, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+  }else if(kernel==2){
+    # Kernel Triangular
+    print("Seleccionó Un kernel Triangular para la Estimación")
+    tri <- function(x) (abs(x) < 1) * (1 - abs(x))
+    triangular <- sapply(data, function(a) tri((x - a)/h)/(n * h)) # a cada fila se lo calcula
+    plot(x, rowSums(triangular), 
+         type = "l", xlab = "x", ylab = "density", main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(triangular, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+    
+  }else if(kernel==3){
+    # Kernel Uniforme
+    print("Seleccionó Un kernel Uniforme para la Estimación")
+    unif <- function(x) (abs(x) < 1) * 0.5
+    uniforme <- sapply(data, function(a) unif((x - a)/h)/(n * h)) # a cada fila se lo calcula
+    plot(x, rowSums(uniforme), 
+         type = "l", xlab = "x", ylab = "density", main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(uniforme, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+  }else if(kernel==4){
+    # Kernel Epanechnikov
+    print("Seleccionó Un kernel Epanechnikov para la Estimación")
+    epanech <- function(x) {(abs(x) < 1) * ((3/4*(1-x^2)))}
+    epanechnikov <- sapply(data, function(a) epanech((x - a)/h)/(n * h)) # a cada fila se lo calcula
+    plot(x, rowSums(epanechnikov), 
+         type = "l", xlab = "x", ylab = "density", main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(epanechnikov, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+    
+  }else if(kernel==5){
+    # Kernel Biweight 
+    print("Seleccionó Un kernel Biweight para la Estimación")
+    Biw <- function(x) {(abs(x) < 1) * ((15/16*(1-x^2)^2))}
+    Biweight <- sapply(data, function(a) Biw((x - a)/h)/(n * h)) # a cada fila se lo calcula
+    plot(x, rowSums(Biweight),
+         type = "l", xlab = "x", ylab = "density", main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(Biweight, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+  }else if(kernel==6){
+    # Kernel Triweight
+    print("Seleccionó Un kernel Triweight para la Estimación")
+    Triw <- function(x) {(abs(x) < 1) * ((35/32*(1-x^2)^3))}
+    Triweight <- sapply(data, function(a) Triw((x - a)/h)/(n * h)) # a cada fila se lo calcula
+    plot(x, rowSums(Triweight),
+         type = "l", xlab = "x", ylab = "density", main=paste("Regresión por kernel h =", h),lwd = 2) #suma de cada bumps
+    rug(x, lwd = 2)
+    out <- apply(Triweight, 2, function(b) lines(x, b))
+    lines(density(data), lty = 3)
+  }
+} # end kernleDensity
+
+```
+b) Cargue en R al archivo \Tratamiento.csv", el cual contiene la duracion de los perodos
+de tratamiento (en días) de los pacientes de control en un estudio de suicidio. Utilice
+la funcion del inciso anterior para estimar la densidad del conjunto de datos para 
+$h = 20, 30, 60$ . Graque las densidades estimadas. >Cual es el mejor valor para h? Argumente.
+```{r}
+
+# El archivo contiene la duración de los períodos de tratamineto
+# (en días) de los pacientes de control en un estudio de suicidio
+tratamiento <- data.matrix(dataTratamiento)
+# puntos a evaluar, se pude modificar segun el usuario
+x <- seq(from = min(tratamiento) - 1, to = max(tratamiento) + 1, by = .1)
+
+# Caso 1: con h igual a 20
+h <- 20 # parámetro de suavizamiento
+n <- length(tratamiento) # número de observaciones
+```
+
+```{r}
+kernelDensity(x, 20, 1, tratamiento) # estimación, karnel gaussiano
+kernelDensity(x, 20, 2, tratamiento) # estimación, karnel Triangular
+kernelDensity(x, 20, 3, tratamiento) # estimación, karnel Uniforme
+kernelDensity(x, 20, 4, tratamiento) # estimación, karnel Epanechnikov
+kernelDensity(x, 20, 5, tratamiento) # estimación, karnel Biweight
+kernelDensity(x, 20, 6, tratamiento) # estimación, karnel Triweight
+
+```
+
+
+Antes del análisis, se vuelve a recordad que la densidad contra la que se traslapa la estimación kernel, es contra la función density, la cual calcula un h óptimo. Esto con el fin de saber que la función que se programó se aproxima a  una ya
+realizada en R. La comparación de prámetro de suavidad se centrará en los Kernel gaussianos. Sin embargo, se discute un poco sobre la estimación  con los distintos tipos de kernel para cada valor de h. A manera muy general, entre los kernels con los que se puede estimar la densidad, se observa, que el gaussiano con un suavizador de 20 se aproximá más que los otros posibles tipos de kernel. No obstante, con un h igual a 20 se puede observar que con ese valor aún se observa un poco de variabilidad. mostrando algunos intervalos con algunos picos.
+
+```{r}
+# Caso 2: con h igual a 30
+h <- 30
+kernelDensity(x, 30, 1, tratamiento) # estimación, karnel gaussiano
+kernelDensity(x, 30, 2, tratamiento) # estimación, karnel Triangular
+kernelDensity(x, 30, 3, tratamiento) # estimación, karnel Uniforme
+kernelDensity(x, 30, 4, tratamiento) # estimación, karnel Epanechnikov
+kernelDensity(x, 30, 5, tratamiento) # estimación, karnel Biweight
+kernelDensity(x, 30, 6, tratamiento) # estimación, karnel Triweight
+```
+
+Con un h igual a 30, la dessidad estimada con un kernel gaussiano parece lo suficientemente suavizada. A lo que respectan los otros tipos de kernel, no onstante, la variabilidad es muy marcada a ese valor del parámetro, haría falta un h más grande para que tendieran a la gaussiana. 
+
+```{r}
+# Caso 3: con h igual a 60
+h <- 60
+kernelDensity(x, 60, 1, tratamiento) # estimación, karnel gaussiano
+kernelDensity(x, 60, 2, tratamiento) # estimación, karnel Triangular
+kernelDensity(x, 60, 3, tratamiento) # estimación, karnel Uniforme
+kernelDensity(x, 60, 4, tratamiento) # estimación, karnel Epanechnikov
+kernelDensity(x, 60, 5, tratamiento) # estimación, karnel Biweight
+kernelDensity(x, 60, 6, tratamiento) # estimación, karnel Triweight
+
+```
+Un valor del parámetro de suavidad de 60, genera que la estimación con el kernel gaussiano se encuentra muy suavizado. El tener una h muy grande implica el trade off que ha mayor h, nayor sesgo, y a menor h, mayor variabilidad En este sentido, la densidad estimada se encuentra muy suavizada. Para los otros tipos de kernel, lo interesante es que presentan un comportamiento aproximado a un kernel gaussiano, sin embargo, no tan suavizado con un h de 60 como el  kernel gaussiano.
+
+Conclusion, el parámetro de suavizamiento de 30, se va a considerar el mejor entre el de 20 y el de 60. Con el de 20, h es muy chico,lo cual deja ver curvas no lo suficientemente suavizadas, y con ello muchas curvas espurias. Con un h de 60, por otro lado, genera una suavización de más, ocultando de más información sobre los datos. Recordando, el trade off entre el sesgo y la variabilidad, que a mayor h tenemos más sesgo, y a menor h mayor variabilidad. De esta forma, con un parámetro de suavidad de 30, la densidad estimada parecería estár mejor estimada que con los anteriores valores de h, dejandola lo suficientemente suave para obtener una buena estructura de información sobre los datos.
+
+EJERCICIO 7  
+---------------
+7. Cargue en R al conjunto de datos "Ma´iz.csv", el cual contiene el precio mensual de la tonelada de ma´iz y el precio de la tonelada de tortillas en USD. En este ejercicio tendr´a que estimar  los coeficientes de una regresi´on lineal simple.
+
+a) Calcule de forma expl´icita la estimaci´on de los coeficientes via m´inimos cuadrado y ajuste
+la regresi´on correspondiente. Concluya.
+
+
+
+```{r}
+rm(list = ls()) # limpiando environment
+
+#Cargue el archivo correspondiente (Maiz)
+data <- read.csv(file.choose(), header=TRUE)
+```
+Conociendo los datos
+```{r}
+
+head(data)
+cor.test(data$P..Tonelada.Tortilla, data$P..Tonelada.Maíz)
+```
+Como era de esperarse se tiene un coeficiente de corelación lineal  positiva mayor al .5, expresando la relación lineal entre ambas variables, la cual es prudente por ser maíz insumo de algun tipo de tortillas
+```{r}
+plot(data$P..Tonelada.Maíz, data$P..Tonelada.Tortilla,
+     ylab = "Precio Tonelada de Tortillas (Dolares)",
+     xlab = "Precio Tonelada de Maiz (Dolares)",  main="Regresión por MCO", pch=20)
+# la relación de dependencia lineal positiva
+
+```
+Con el fin de contrastar mi estimación explicita de los coeficientes de regresión Se ajusta una regresión en la cual modela la esperanza condicional de las toneladas de tortilla dado as toneladas de máíz
+
+
+```{r}
+lm(data$P..Tonelada.Tortilla~data$P..Tonelada.Maíz)
+```
+Ahora, se estima los ceoficiente explicitamente por el método de mínimos cuadrados ordinarios.
+
+
+```{r}
+# Variable Dependiente de la regresión lineal 
+# Media
+mediaTortilla<-sum(data$P..Tonelada.Tortilla)/length(data$P..Tonelada.Tortilla)
+# Variable Independiente de la regresión lineal
+# Media
+mediaMaiz <-sum(data$P..Tonelada.Maíz)/length(data$P..Tonelada.Maíz)
+# Varianza
+varMaiz <-sum((data$P..Tonelada.Maíz - mediaMaiz)^2)/(length(data$P..Tonelada.Maíz)-1)
+# covarianza entre toneladas de tortilla y maiz
+cov <- sum(((data$P..Tonelada.Maíz - varMaiz))*((data$P..Tonelada.Tortilla - mediaTortilla)))/(length(data$P..Tonelada.Maíz)-1)
+#coeficiente de regresión
+best <- cov/varMaiz # beta estimada (pendiente de la regresión)
+aest <- mediaTortilla-best*mediaMaiz # (constante de la regresión)
+
+```
+$y= \beta_{0} + \beta_{1}x + \epsilon$
+
+```{r}
+# COEFICIENTES
+aest #beta 0
+best #beta 1
+
+```
+se observa que son los mismos que los que genera R con la función lm Interpretación, por cada incremento de una tonelada en el maíz genera un incremento de .4600, más su valor constante de 684.9545, en el caso de que querer hacer predicción sobre algún valor en especifico de x.
+```{r}
+# Estimación propia, en rojo la linea de regresión estimada 
+# con los coeficientes previamente obtenidos.
+plot(data$P..Tonelada.Maíz, data$P..Tonelada.Tortilla,
+     ylab = "Precio Tonelada de Tortillas (Dolares)",
+     xlab = "Precio Tonelada de Maiz (Dolares)",
+      main="Regresión por MCO", pch=20)
+lines(100:200, aest+best*(100:200), type = "l",col="steelblue", pch=3, lwd = 2)
+
+```
+b) Calcule de forma explcita la estimacion de los coecientes via regresion no-parametrica tipo kernel (ver Nadaraya, E. A. (1964).  Estimating Regression". Theory of Probability  and its Applications. 9 (1): 141{2. doi:10.1137/1109020) y ajuste la regresion correspondiente. Concluya.
+```{r}
+# # # # # # # # # # # # # # # # # # # # # # # #  # #
+# Función : KernelRgression
+# Regresi´pn por método de kernel. Se utiliza un 
+# kernel gaussiano
+#
+# Input: 
+#          x: Variable independente
+#          y: Variable dependiente
+#          h: el parámetro de suavidad
+
+# Outpu: Gráficó con la regresión estimada   
+## # # # # # # # # # # # # #  # # # # # # # # # # # # 
+```
+```{r}
+KernelRgression<- function(x, y, h) {
+xgril <- seq(from = min(x) - 1, to = max(x) + 1, by = .1) # puntos a evaluar
+n <- length(x) # número de observaciones
+
+gauss <- sapply(x, function(x) (((1/sqrt(2*pi))*exp((-((xgril-x)^2)/(2*h^2))))/(n*h))) # kernel gaussiano
+
+Y<-matrix(0L, 462, 200) # generando matriz para guardar resultados de kernel ponderado
+  for (i in 1:200){
+    Y[ ,i] <- ((((1/sqrt(2*pi))*exp((-((xgril-x[i])^2)/(2*h^2))))*y[i])/(n*h))
+  } # end for 
+KernelXY <-rowSums(Y)
+kernelX <-rowSums(gauss)
+
+X <- KernelXY/kernelX
+
+plot( x,y, main=paste("Regresión por kernel h =", h), 
+     xlab="Precio Tonelada de Maiz (Dolares)", ylab="Precio Tonelada de Tortillas (Dolares)", pch=20) 
+lines(xgril, X, type = "l",col="steelblue", pch=3, lwd = 2) #contra el grill
+
+} # end KernelRgression
+
+```
+
+
+```{r}
+x<- data$P..Tonelada.Maíz
+y <- data$P..Tonelada.Tortilla
+KernelRgression(x,y,1)
+KernelRgression(x,y,1.37)
+KernelRgression(x,y,2)
+KernelRgression(x,y,3)
+KernelRgression(x,y,4)
+```
+Comparando con Con un h = 4 Kernel regresión y MCO.
+
+```{r}
+#Kernel regresión
+KernelRgression(x,y,4)
+#MCO
+plot(data$P..Tonelada.Maíz, data$P..Tonelada.Tortilla,
+     ylab = "Precio Tonelada de Tortillas (Dolares)",
+     xlab = "Precio Tonelada de Maiz (Dolares)", 
+     main="Regresión por MCO",
+     pch=20)
+lines(100:200, aest+best*(100:200), type = "l",col="steelblue", pch=3, lwd = 2)
+
+```
+
+c) Compare ambos resultados. >Que diferencias observa?
+
+Concluya. Cuando se utiliza la regresión con el método de kernel el parámetro de suavidad al modificarlo, puede encontrar un mejor ajuste que  la estimación con mínimos cuadrados ordinarios. En cuanto la comparación, se puede
+observar, que si se utiliza un parámetro de suavidad de cuatro (h = 4),  la regresión por kernel ajusta de una forma similar a la regresión con MCO.

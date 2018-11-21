@@ -1,0 +1,94 @@
+---
+title: "Temas selectos de econometría y finanzas (modulo de matrices aleatorias)"
+author: "J. Antonio García Ramirez, Tarea 4"
+date: "23 de Octobre, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio 2 
+
+*Considere la descomposición espectral $H = O XO^t$ , donde $H$ es una matriz simétrica de dimensión $n \times n$, $O$ es la matriz ortogonal que contiene los eigenvectores de $H$, y $X$ es una matriz diagonal que contiene sus eigenvalores. Los diferenciales de $H$ se pueden expresar como:*
+
+$$dH = \prod_{i<j} |\lambda_i -\lambda_j ( dX ) (O^tdO)$$
+
+*Numéricamente, las perturbaciones en $X$ y $O$ se calculan a través de las perturbaciones en $H$. Como analistas numéricos siempre pensamos en $H$ como la entrada, y en $\{X,O\}$ como la salidas, por lo que es natural hacerse preguntas en esa dirección. Asumiendo que la descomposición espectral es única después de fijar la base de las columnas de $O$, la perturbación a primer orden en $\{X,O\}$ debido a la perturbación en $H$ está dada por:*
+
+$$\frac{(dX)(O^tdO)}{dH} = \frac{1}{\prod_{i<j} |\lambda_i - \lambda_j|} = \frac{1}{\Delta(X)}$$
+
+*Donde $\Delta(X)$ es el valor absoluto del determinante de Vandermonde.*
+
+*Basandose en la expresión anterior, escriba un código para obtener numéricamente el jacobiano, y compare el resultado con el valor exacto al calcular el determinante de Vandermonde para una matriz fija de dimensión $10 \times 10$ de tal manera que el error relativo sea menor a $10^{-3}$. Se recomienda seguir los siguientes pasos:*
+
+
+i.  *Construya una matriz simétrica: $H$*
+
+ii. *Obtenga los valores y vectores propios de la matriz construida:* $\{X,O\}$
+
+iii. *Determine la dimensión de la matriz jacobiana:* $n (n + 1)/2 \times n(n + 1)/2$
+
+iv. *De manera iterativa realizar los siguientes pasos:*
+    1.  *Generar una perturabación $E$ en el elemento $(i, j)$ de la matriz $H: H' = H + \epsilon E$*
+    2.  *Obtener los valores y vectores propios de $H': \{X',0'\}$*
+    3.  *Calcular los valores propios perturbados: $dX = (X - X')/\epsilon$*
+    4.  *Calcular los vectores propios perturbados: $O^tdO = O^t (O'- O)/\epsilon$*
+    5.  *Llenar las primeras $n$ columnas de la matriz jacobiana con $dX$, y las restantes con $O^tdO$*
+
+v.  *Calcular el valor absoluto de la matriz jacobiana resultante y comparar el resultado con el valor del determinante de Vandermonde de $H$, calculado con alguna función preestablecida en el lenguaje de su preferencia.*
+
+vi. *Asegurarse que el error relativo sea menor a $10^{-3}$*
+
+
+
+
+Después de implementar la simulación propuesta, fijar una semilla y al intentar fijar un $\epsilon$ adecuado de perturbación para después de fijar la matriz obtener un error relativo menor a $10^{-3}$ la única dificultad fue que la función <code> eigen </code> del kernel base del lenguaje R es demasiado precisa por lo que al comparar el error relativo este siempre era menor a la precisión de la máquina.
+
+Por lo que se recurrió a una implementación menos precisa de la descomposición de valores y vectores propios, la función <code> eigjacobi </code> del paquete *pracma*, que realiza reflexiones y rotaciones para obtener la descomposición. 
+
+Incluimos a continuación el código de la simulación las únicas salidas que desplegamos son la matriz fija $H$ del tipo GOE, con entradas redondeadas a dos decimales y el error relativo al cálculo del determinante de Vandermonde con una perturbación de $\epsilon=0.001$.
+
+```{r}
+rm(list = ls())
+set.seed(0) # fijamos una semilla
+n <- 10     # fijamos las dimensiones de la matriz
+    #Construimos una matriz simetrica GOE
+M <- matrix( rnorm(n*n), ncol = n, nrow = n )
+H <- (M +t(M))/2
+round(H, 2)
+library(pracma) # utilizamos un algoritmo poco preciso para calcular la
+                # eigen descomposicion
+eigen <- eigjacobi(H)
+X <- eigen$D
+O <- eigen$V
+Jacobiano <- matrix( rep (0, (n*(n+1)/2)**2),
+                          ncol =  n*(n+1)/2, nrow = n*(n+1)/2 )
+epsilon <- 1e-3 # fijamos la perturbacion
+columna <- 1    # un contador para iterar facilmente
+for (i in 1:n)
+{
+    for(j in i:n)
+    {
+        E <- diag(rep(0, n))     # generamos la matriz de perturbacion por cada entrada
+        E[i, j] <- E[j, i] <- 1  # de la matriz simetrica
+        H.prima <- H + epsilon*E # perturbamos
+        eigen.aux <- eigjacobi(H.prima) # nueva eigen-descomposicion
+        X.prima <- eigen.aux$D
+        O.prima <- eigen.aux$V
+        d.X <- (X - X.prima)/epsilon    # val. prop. perturbados
+        d.O <- (t(O) %*% (O.prima - O) )/epsilon # vect. prop. perturbados
+        Jacobiano[1:n, columna] <- d.X    # guardamos las perturbaciones de cada entrada
+        Jacobiano[ (n+1):( n*(n+1)/2 ), columna] <- d.O[upper.tri(d.O)]
+        columna <- columna + 1
+    }
+}
+#########################
+library(matrixcalc)
+empirico <- abs( det(Jacobiano) ) # calculamos el valor absoluto 
+                                  # de la matriz-Jacobiano que simulamos
+teorico <- 1/abs( det( vandermonde.matrix(X, n) ) ) # calculamos el determinante 
+                                                    # de vandermonde de los val.prop
+(error <- abs( (teorico-empirico) / (teorico ))) # Calculo del error relativo
+```

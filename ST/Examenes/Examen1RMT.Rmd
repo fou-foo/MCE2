@@ -1,0 +1,509 @@
+---
+title: "Examen RMT"
+author: "J. Antonio García Ramirez"
+date: "Octobre 12, 2018"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width  = 6, fig.height = 4,
+                      warning=FALSE, message = FALSE)
+adf.test.custom <- function(y, option='none')
+{
+  # y (numeric): vector con los datos de la serie de tiempo univariada
+  y <- ts(y) 
+  lag <- floor(log(length(y))) + 1 #acotamos el numero de lags por el que siguiere el 
+                                   #texto de Chan Ngai
+  datos <- data.frame(y1 = diff(y))
+  for (i in 2:lag) #aumentamos las columnas de lag´s 
+  {
+    datos[, as.character(paste0('y',i))] <- c(diff(y, lag=i), rep(NA, i-1))
+  }
+  names(datos) <- c('y1', names(datos)[2:lag])
+  if (option == 'none')
+  {
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(names(datos)[x], collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+        # nos fijamos si todos los coeficientes de la regresion
+        # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 1)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        # el BIC de la regresion
+        return(big)
+      } else {return(Inf)} #si un coeficiente al menos es no significativo
+                            #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  
+  if (option == 'c')
+  {
+    datos[, 'c'] <- rep(1, dim(datos)[1] )
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(names(datos)[x], collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 2)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        #el BIC de la regresion
+        return(big)
+      }else {return(Inf)} #si un coeficiente al menos es no significativo 
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  if (option == 't')
+  {
+    datos[, 't'] <- cumsum(1:dim(datos)[1])
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(c(names(datos)[x], 't'), collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 2)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos 
+        #el BIC de la regresion
+        return(big)
+      }else { return(Inf)}  #si un coeficiente al menos es no significativo
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  if (option == 'both')
+  {
+    datos[, 't'] <- cumsum(1:dim(datos)[1])
+    #aplicamos el test para cada lag
+    resultado <- mapply(function(x)
+    {
+      formula <- paste(c(names(datos)[2:(x)], 't'), collapse = '+')
+      formula <- as.formula(paste0('y1 ~ ', formula))
+      modelo <- lm(formula , data = datos )
+      resumen <- summary(modelo)
+      # nos fijamos si todos los coeficientes de la regresion
+      # son significativos individualmente
+      coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+      coeficientes.significativos <- coeficientes.significativos <= 0.05
+      if(sum(coeficientes.significativos) == 3)
+      {
+        big <- BIC(modelo)
+        # en caso de que todos los coeficientes sean significativos regresamos
+        #el BIC de la regresion
+        return(big)
+      } else { return(Inf)}  #si un coeficiente al menos es no significativo
+      #regresamos un BIC infinito
+    }, 2:lag)
+  }
+  parsimonia <- which.min(resultado) 
+  names(parsimonia) <- 'Lag optimo'
+  return(parsimonia)
+}
+```
+
+# Ejercicio  4
+
+Simule un ensamble $GOE$ con $10^4$ iteraciones de matrices simetricas $H_s$ de $2\times 2$
+
+El resultado teorico fue parte de la tarea extra pasada y es $\frac{s}{2}e^{-s^2/4}$
+
+Y lo simulo 
+
+```{r}
+set.seed(0)
+GOE.2.2 <- function(i)
+{
+  m <- matrix(rnorm(4), ncol= 2 , nrow=2)
+  m <- (m + t(m))/2
+  valores <- eigen(m)$values
+  valores <- sort(valores)
+  s <- diff(valores)
+  return(s)
+}
+n <- 10**4
+simulacion <- mapply(1:n, FUN=GOE.2.2)
+df <- data.frame(simulacion = simulacion)
+teorico <- function(x) { (x/2)*exp(-x^2/4)}
+library(ggplot2)
+ggplot(data=df, aes(x = simulacion)) +geom_density(aes(colour=I('purple'))) +
+  theme_minimal() + stat_function(fun = teorico) +xlab('Morado muestral')+
+  ylab('Verde resultado teorico ') + ggtitle('distribucionn del unico GAP en una matriz 2x2, n =10^6')
+
+
+```
+
+Y los resultados del test de Kolmogorov, despues de simular la distribución por el metodo de la función inversa es :
+
+```{r}
+teorica <- runif(n, 0,1)
+teorica <- (-4*log(1-teorica))**.5
+ks.test(simulacion, teorica)
+```
+
+Con lo cual concordamos en que las distribuciones son iguales, pero era de esperar pues este caso es sencillo...  y es un resultado exacto.
+
+También lo simule para un $n$ menor 
+
+
+```{r}
+set.seed(0)
+GOE.2.2 <- function(i)
+{
+  m <- matrix(rnorm(4), ncol= 2 , nrow=2)
+  m <- (m + t(m))/2
+  valores <- eigen(m)$values
+  valores <- sort(valores)
+  s <- diff(valores)
+  return(s)
+}
+n <- 100
+simulacion <- mapply(1:n, FUN=GOE.2.2)
+df <- data.frame(simulacion = simulacion)
+teorico <- function(x) { (x/2)*exp(-x^2/4)}
+library(ggplot2)
+ggplot(data=df, aes(x = simulacion)) +geom_density(aes(colour=I('purple'))) +
+  theme_minimal() + stat_function(fun = teorico) +xlab('Morado muestral')+
+  ylab('Verde resultado teorico ') + ggtitle('distribucionn del unico GAP en una matriz 2x2, n =100')
+```
+
+
+Y los resultados del test de Kolmogorov, despues de simular la distribución por el metodo de la función inversa es :
+
+```{r}
+teorica <- runif(n, 0,1)
+teorica <- (-4*log(1-teorica))**.5
+ks.test(simulacion, teorica)
+```
+
+# Ejercicio 3
+
+Cargamos las series de tiempo 
+
+```{r}
+library(forecast)
+library(vars)
+library(urca)
+UK <- data(UKconinc)
+```
+
+
+a)  Visualizamos las series originales
+
+El test aumentado de Dickey-Fuller señala en ambas series la presencia de raices unitarias :< y por lo tanto pueden existir cambios estructurales.
+
+```{r}
+library(tseries)
+#class(UKconinc)
+datos <- UKconinc
+ts.plot(datos, main='consumo (morado), ingreso', 
+        col=c('#783884', '#F1B61A') )
+adf.test(datos$conl)
+adf.test(datos$incl)
+adf.test.custom(datos$conl, option='both')
+adf.test.custom(datos$incl, option='both')
+```
+
+Como los resultados de diferencias cada serie dos veces, con lags de uno y posteriormente 4 se pueden representar por modelos MA tenemos evidencia para concluir que el orden de integración del consumo y el ingreso es 2. 
+
+
+
+
+
+```{r}
+lag <- 4
+conl <- diff(datos$conl)
+ts.plot( conl , main='consumo (morado)', col='purple')
+incl <- diff(datos$incl)
+points(incl , main='ingreso', col='orange', type='l')
+adf.test( conl)
+adf.test( incl)
+adf.test.custom(conl, option='none')
+adf.test.custom(incl, option='none')
+```
+
+Como podemos ver las dos series diferenciadas parecen no tener más de una raiz unitaria por lo que tenemos elementos para afirmar que las series tienen el mismo orden de integración despues de diferenciar nuevamente  pero con un lag de 4 que coincide con el lag de nuestra prueba implementada en la tarea 2
+
+```{r}
+conl <- diff(conl, lag=lag)
+incl <- diff(incl, lag=lag)
+acf(conl, main='Primeras diferencias y diferencias con lag=4')
+acf(incl, main='Primeras diferencias y diferencias con lag=4')
+```
+
+Estimamos los modelos, con fines dídacticos
+
+```{r}
+auto.arima(conl, stationary=TRUE ) # consumo de orden I(2)
+auto.arima(incl, stationary=TRUE) # consumo de orden I(2)
+ts.plot( conl , main='consumo (morado) e ingreso estacional',
+         col='purple')
+points(incl , main='', col='orange', type='l')
+```
+
+
+b)  
+
+
+
+Decidi no incluir la tendencia ni el drift en la selección del número de rezagos pues las series ya estan estacionalizadas y parecen tener media cercana a cero, adémas elegé el criterio de $HQ(n)$ (en un principio para tener un modelo parsimonioso) sin embargo déspues de una busqueda exhaustiva el criterio $AIC$ logro un mejor ajuste sobre los demás modelos (considerando para ello el $R^2$ ajustado el cual nunca sobre paso a 0.5.
+
+
+```{r rezagos}
+datos.estacionales <- cbind(incl, conl)
+apply(datos.estacionales, 2, mean)
+p <- VARselect(datos.estacionales, type = "none")
+p$selection #rezagos sugeridos
+p <- p$selection['AIC(n)']
+p
+```
+
+c)  Como la implementación de la funcion "VAR" de R estima por OLS la utilice. Los resultados se muestran en la siguiente tabla:
+
+
+
+En vista de muchos coeficientes no son significativos, y que de manera conjunta tampo lo son esperamos que la varianza del proceso se incremente con el tiempo, es decir que no sea estacional a largo plazo.
+
+La mayoría de los coeficientes con este modelo no son sifnificativos, la significancia conjunta no se logra ni individualmente, la bondad de ajuste es mala al medirla con el R cuadrado ajustado, sobre todo porque las regresiones presentan heterosedasticidad es decir que los errores de las regresiones para ambas series estan correlacionados por 0.5
+
+
+```{r, fig.height=7}
+v.ar <- VAR(datos.estacionales, p = p)
+summary(v.ar)
+```
+
+ 
+
+d)  
+
+Sobre los residuos encontramos que distan de tener una distribución normal bivariada como se puede ver en la segunda imagen adémas podriamos decir que con una confianza de .9 los residuos son descorrelacionados en cada componente sin embargo con una confianza excesiva los residuos presentan el fenómeno Arch, es decir que la varianza de los errores se mueve con el tiempo. 
+ 
+ 
+```{r}
+residuos <- residuals(v.ar)
+serial.test(v.ar) #test de Portmanteau H0: Ausencia correlacion serial
+arch.test(v.ar) #test de arch H0: Prosencia de Arch y heteroscesdicidad
+plot(residuos, col=rgb( 29/255, 145/255, 192/255, alpha=0.5),
+     main='Residuales del modelo VAR(10) bivariado', pch=20,
+     xlab='',
+     ylab='')
+```
+
+e) *Eliminando las 5 observaciones finales, vuelve a estimar el $VAR$ realiza el pronóstico 5 pasos adelante, estima el porcentaje de error de pronostico para ambas variables y comenta*
+
+En vista de que eliminamos las últimas 5 observaciones considere prudente volver a estimar el número de rezagos, en vista de que no es computacionalmente más costoso que OLS y por el supuesto de ergodicidad no considere adecuado realizar nuevamente las pruebas de raicez unitarias.
+
+Se encontro que el mejor ajuste se logra también con un modelo $VAR(10)$ y los coeficientes $R^2$ ajustados son muy parecidos. 
+
+```{r nuevo.fit.error, fig.height=5}
+train <- datos.estacionales[1:(dim(datos.estacionales)[1]-5), ]
+test <- datos.estacionales[(dim(datos.estacionales)[1]-4):dim(datos.estacionales)[1], ]
+p <- VARselect(train, type = "none")
+p$selection #rezagos sugeridos iguales
+p <- p$selection['AIC(n)']
+#p
+v.ar <- VAR(train, p = p)
+#summary(v.ar)
+fore <- predict(v.ar, n.ahead = 5)
+```
+
+
+Decidí utilizar el [SMAPE](https://en.wikipedia.org/wiki/Symmetric_mean_absolute_percentage_error) pues es la manera en que medire el porcentaje del error pronósticado en el proyecto final y tiene una interpretación sencilla como de porcentaje de error entre 0 y 100.
+
+```{r}
+pronostico.incl <- ts(fore$fcst$incl[, 'fcst'], end=1984, frequency = 4)
+incl.real <- ts(test[,'incl'], end=1984, frequency = 4 )
+ts.plot(pronostico.incl, incl.real, xlab='ingreso real (amarillo)', 
+        main='Pronostico de ingreso (morado)',
+        col=c('#783884', '#F1B61A') )
+pronostico.conl <- ts(fore$fcst$conl[, 'fcst'], end=1984, frequency = 4)
+conl.real <- ts(test[,'conl'], end=1984, frequency = 4 )
+ts.plot(pronostico.incl, conl.real, xlab='consumo real (verde)', 
+        main='Pronostico de consumo (rosa)',
+        col=c('#4BD1B0', '#C265CF') )
+###cuentas 
+pronostico.puntual.1 <- ts(fore$fcst$incl[, 'fcst'],  end=1984, frequency = 4)
+pronostico.puntual.2 <- ts(fore$fcst$conl[, 'fcst'],  end=1984, frequency = 4)
+pronostico.puntual <- ts.intersect(pronostico.puntual.1, pronostico.puntual.2)
+pronostico.puntual <- as.data.frame(pronostico.puntual)
+SMAPE <- (100/(dim(test)[1]))*
+  apply( abs(pronostico.puntual - test)/ (abs(test) + abs(pronostico.puntual)), 2, sum)
+```
+
+Al no considerar las últimas cinco observaciones y pronosticarlas con el modelo tenemos las dos anteriores gráficas, mientras que el error promedio de pronóstico es de `r round(SMAPE[1],2)`%  para la primer variable y `r round(SMAPE[2],2)`% para la segunda, lo cual es un error demasiado alto y siguiere la idea de buscar un modelo $AR(P)$ más apropiado.
+
+
+f)  *¿Están cointegradas las dos variables? Si es asi concluye que sí, estima un modelo de correción de errores e interpreta lo obtenido.*
+
+Como en a) verifique que las series de los logaritmos de consumo e ingresos son no estacionales pero ambas tienen nivel de inetegración 2 estas pueden estar cointegradas. 
+Para verificarlo usare la función de la tarea anterior que implementa las ideas de Mackinnon sobre 
+
+```{r mac}
+Mackinnon <- function(x, y, confianza=0.95, type=c("none", "trend", "both"))
+{
+  df <- as.data.frame(cbind(x,y))
+  n <- length(x)
+  type <- match.arg(type)
+  res <- lm(x~., data=df)$residuals #Generamos una regresion entre ambas series de tiempo y obtenemos sus residuos
+  res.z <- diff(res) 
+  res.lag <- res[2:length(res)]
+  df2 <- as.data.frame(cbind(res.z,res.lag))
+  temp=0
+  if (confianza==0.99) {temp=1}
+  if (confianza==0.95) {temp=2}
+  if (confianza==0.9) {temp=3}
+  if (type=="none")
+  {
+    pos.root <- lm(res.z~.-1, data=df2) #calculamos una regresion para un modelo AR(1) con las diferencias de los residuos 
+    t_value <- summary(pos.root)$coef[, 3] #calculamos el valor critico
+    print(paste("t_value:",round(t_value,2)))
+    tabla <- data.frame(cbind(size=c(0.99,0.95,0.9), 
+                              binf=c(-2.56574, -1.94100,-1.61682), 
+                              beta1=c(-2.2358, -0.2686,0.2656),
+                              beta2=c(-3.627,-3.365,-2.714), 
+                              beta3=c(0, 31.223,25.364)))  
+    val.crit <- tabla[temp,2] +
+      (tabla[temp,3]/n) + (tabla[temp,4]/(n^2)) + (tabla[temp,5]/(n^3))
+    if (t_value<val.crit)
+    { #Comparamos el estadistico contra las tablas
+      print("Series no cointegradas")
+    }
+    else{print("Series cointegradas")}
+  }
+    if (type=="trend")
+    {
+      pos.root <- lm(res.z~., data=df2) #calculamos una regresion para un modelo AR(1) con las diferencias de los residuos 
+      t_value <- summary(pos.root)$coef[, 3][2] #calculamos el valor critico
+      print(paste("t_value:",round(t_value,2)))
+      tabla <- data.frame(cbind(size=c(0.99,0.95,0.9),
+                              binf=c(-3.43035,-2.86154,-2.56677), 
+                              beta1=c(-6.5393,-2.8903,-1.5384),
+                              beta2=c(-16.786,-4.234,-2.809),
+                              beta3=c(-79.433,-40.040,0)))  
+    val.crit <- tabla[temp,2]+
+      (tabla[temp,3]/n) + (tabla[temp,4]/(n^2)) + (tabla[temp,5]/(n^3))
+    if (t_value<val.crit)
+    { #Comparamos el estadistico contra las tablas
+      print("Series no cointegradas")
+    }
+    else{print("Series cointegradas")}
+  }
+  if (type=="both")
+  {
+    df2$t <- seq(1,(n-1),1)
+    pos.root <- lm(res.z~., data=df2) #calculamos una regresion para un modelo AR(1) con las diferencias de los residuos 
+    t_value <- summary(pos.root)$coef[, 3][2] #calculamos el valor critico
+    print(paste("t_value:",round(t_value,2)))
+    tabla <- data.frame(cbind(size=c(0.99,0.95,0.9),
+                              binf=c(-3.95877,-3.41049,-3.12705),
+                              beta1=c(-6.5393,-2.8903,-1.5384),
+                              beta2=c(-16.786,-4.234,-2.809),
+                              beta3=c(-79.433,-40.040,0)))  
+    val.crit <- tabla[temp,2]+ (tabla[temp,3]/n) + (tabla[temp,4]/(n^2)) + (tabla[temp,5]/(n^3))
+    if (t_value<val.crit)
+    { #Comparamos el estadistico contra las tablas
+      print("Series no cointegradas")
+    }
+    else{print("Series cointegradas")}
+  }
+}
+```
+
+
+Y la probare sobre las series originales no estacionales con una confianza de 0.95. La implementación que realice dice que ambas series son cointegradas
+
+```{r}
+Mackinnon(datos$incl, datos$conl)
+```
+
+Ahora procederemos a estimar el modelo de correción de error.
+
+De nueva cuenta vamos a regresar el ingreso sobre el consumo con intercepto, que como vimos en el inciso a) tienen comportamientos parecidos y revizamos con las ACF y PACF que los residuales no son estacionarios y es más distan de ser normales.
+
+```{r}
+d <- datos
+ingreso <- d$incl
+consumo <- d$conl
+modelo.MCE <- lm(ingreso~consumo )
+residuales.1 <- modelo.MCE$residuals
+acf(residuales.1, main='Primeros residuales no estacionarios')
+pacf(residuales.1, main='Primeros residuales no estacionarios')
+library(ggplot2)
+r <- data.frame(e1 = residuales.1)
+d <- cbind(d, r )
+ggplot(data=d, aes(x=e1 )) +
+  geom_density(aes(y=..density.., fill=I('purple'))) +theme_minimal() +xlab('')+
+  ylab('')+ggtitle('Primeros residuales')
+```
+
+Realizamos la siguiente regresión 
+
+```{r}
+modelo.MCE.2 <- lm(diff(ingreso)~ diff(consumo) + e1[1:(dim(datos)[1]-1)],
+                   data=d  )
+residuales.2 <- modelo.MCE.2$residuals
+acf(residuales.2, main='Segundos residuales no estacionarios')
+pacf(residuales.2, main='Segundos residuales no estacionarios')
+summary(modelo.MCE.2)
+library(ggplot2)
+r <- data.frame(e2 = c(residuales.2, NA))
+d <- cbind(d, e2 <- c(r$e2) )
+ggplot(data=d, aes(x=e2 )) +
+  geom_density(aes(y=..density.., fill=I('purple'))) +theme_minimal() +xlab('')+
+  ylab('')+ggtitle('segundos residuales')
+
+```
+
+Hasta aqui tenemos que los residuales se parecen más a ruido blanco adémas de tener un coeficiente negativo en los terminos de las partes moviles y repetimos una vez más: 
+
+
+
+```{r}
+modelo.MCE.3 <- lm(diff(diff(ingreso), 4)~ diff(diff(consumo), 4) +
+                                        diff(e1[1:(dim(datos)[1]-1)], 4),
+                   data=d  )
+residuales.3 <- modelo.MCE.3$residuals
+acf(residuales.3, main='Tercerosos residuales  estacionarios')
+pacf(residuales.3, main='Terceross residuales  estacionarios')
+summary(modelo.MCE.3)
+library(ggplot2)
+r <- data.frame(e3 = c(residuales.3,NA,NA,NA, NA, NA))
+d <- cbind(d, e3=r$e3 )
+ggplot(data=d, aes(x=e3 )) +
+  geom_density(aes(y=..density.., fill=I('purple'))) +theme_minimal() +xlab('')+
+  ylab('')+ggtitle('Terceros residuales')
+```
+
+Hasta aqui que los coeficientes del termino $MA$ siempre fueron negativos y que las sries presentan relaciones a largo plazo. 
+
+Descompondremos la matriz de varianzas para poder informarnos acerca del número de 'direcciones a largo placo' o bien que podemos interpretar como una variable latente.
+
+```{r}
+C <- cov(datos)
+eigen <- eigen(C)
+(var.expli <- eigen$values /sum(eigen$values))
+```
+
+ 

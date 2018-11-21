@@ -1,0 +1,286 @@
+---
+title: "Temas selectos de econometría y finanzas (modulo de matrices aleatorias)"
+author: "J. Antonio García Ramirez, Tarea 3"
+date: "3 de Octobre, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio 1
+
+*Probar que *
+
+$$\lim_{N\rightarrow \infty}P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=P_X(x)e^{-\hat{s}}$$
+
+En clase vimos que $$P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=P_X(x+\frac{\hat{s}}{NP_X(x)} ) \left( 1+F(x)- F(x+\frac{\hat{s}}{NP_X(x)}) \right)^{N-2}$$
+
+
+
+Para facilitar la notación consideremos $b= \frac{1}{NP_X(X)}$ asi $s=\hat{s}b$, ahora podemos interpretar a $P(s)$ como $P(\hat{s})$ reescalado. Notemos que si $N \rightarrow \infty$ entonces $b \rightarrow 0$.
+
+Hasta el momento tenemos que $P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=P_X(x+\hat{s}b ) \left( 1+F(x)- F(x+\hat{s}b) \right)^{N-2}$
+
+También sabemos que $F(x+\hat{s}b)-F(x) = \int_0^{ \hat{s}b} P_X(x+\tau)$, notemos que podemos por el teorema del valor medio aproximar el valor $\frac{F(x+\hat{s}b)-F(x)}{\hat{s}b}$ por la derivada $P_x(x+\tau^*)$ para algún $\tau^* \in [0,\hat{s}b]$, por lo que podemos escribir $F(x+\hat{s}b)\approx F(x) +P_X(x+\tau^*)\hat{s}b$.
+
+Sustituyendo $F(x+\hat{s}b)$ en $P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)$ tenemos que $$P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=P_X(x+\hat{s}b ) \left( 1+F(x)- (F(x) + P_X(x+\tau^*)\hat{s}b) \right)^{N-2}$$
+
+$$P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=P_X(x+\hat{s}b )(1-P_X(x+\tau^*)\hat{s}b)^{N-2}=P_X(x+\hat{s}b) \left(1-\frac{P_X(x+ \tau^*)\hat{s}}{N P_X(x)} \right)^{N-2}$$
+
+Finalmente tenemos que 
+
+$$\lim_{N\rightarrow \infty} P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=\lim_{N\rightarrow\infty}P_X(x+\hat{s}b) \left(1-\frac{P_X(x+ \tau^*)\hat{s}}{N P_X(x)} \right)^{N-2}$$
+
+$$\lim_{N\rightarrow \infty} P_N\left(s=\frac{\hat{s}}{NP_X(x)|X_j=x}\right)=\left(\lim_{N\rightarrow\infty}P_X(x+\hat{s}b) \right) \left( \lim_{N\rightarrow \infty}1-\frac{P_X(x+ \tau^*)\hat{s}}{N P_X(x)} \right)^{N-2}$$
+
+Donde el primer límite de la derecha es $P_X(x)$ y el segundo limite de la derecha es $\lim_{N\rightarrow \infty}(1-\frac{P_X(x+ \tau^*)\hat{s}}{N P_X(x)}) ^{N-2}=\lim_{N\rightarrow \infty}( 1 + \frac{-s}{N} )^{N}=e^{-s}$
+
+# Ejercicio 2
+
+*Graficar $e^{-s}$ en conjunto con la simulación de espaciamiento de variables i.i.d. bajo los mismos argumentos con los que se construyó el modelo teórico ¿La distribución empírica concuerda con lo esperado?*
+
+En la siguientes gráficas se muestran los 'gaps' o tiempos simulados entre realizaciones de $n$ v.a. i.i.d. con distribución $N(0,1)$, para diferentes $n \in \{10,100,10^3,10^6\}$. Podemos apreciar que la distribución se asemeja más a la función $e^{-s}$ que es el límite cuando $n \rightarrow \infty$, es decir que mientras más v.a. están en juego la probabilidad de que $s\rightarrow 0$ aumenta, es decir que las variables se atraen en lugar de repelerse a diferencia de los valores propios. Así que mientras más variables aleatorias normales consideremos más tenderán los gaps $s$ a valor cero en el límite el gaps vale cero.
+
+Sí la distribución empírica concuerda con lo esperado pero más en el caso limíte con un numero infinito de variables aleatorias i.i.d.
+
+
+```{r, echo=TRUE, fig.height=3, warning=FALSE}
+set.seed(0)
+N <- 10
+x <- rnorm(N)
+x <- sort(x)
+gaps <- diff(x)
+s.N <- dnorm(gaps)
+s.Hat <- gaps*N*s.N
+#hist(s.Hat)
+hist(s.Hat, probability=TRUE, col ='purple',
+     xlim=c(-0,2.5), main='Gaps normalizados, n=10',
+     ylab='Distribución muestral', xlab='En naranja la teórica')
+lines(seq(-1,10, .1), exp(-seq(-1,10, .1)), lw= 2, col = "orange")
+############
+set.seed(0)
+N <- 100
+x <- rnorm(N)
+x <- sort(x)
+gaps <- diff(x)
+s.N <- dnorm(gaps)
+s.Hat <- gaps*N*s.N
+#hist(s.Hat)
+hist(s.Hat, probability=TRUE, col ='purple',
+     xlim=c(0,20), main='Gaps normalizados, n=100',
+     ylab='Distribución muestral', xlab='En naranja la teórica')
+lines(seq(-1, 20, .1), exp(-seq(-1,20, .1)), lw= 2, col = "orange")
+################
+set.seed(0)
+N <- 1000
+x <- rnorm(N)
+x <- sort(x)
+gaps <- diff(x)
+s.N <- dnorm(gaps)
+s.Hat <- gaps*N*s.N
+#hist(s.Hat)
+#hist(s.Hat, xlim=c(0,50), freq = FALSE, breaks = 20)
+hist(s.Hat,  col ='purple',
+      main='Gaps normalizados, n=1000',
+     ylab='Distribución muestral', xlab='En naranja la teórica',
+     xlim=c(0,50), freq = FALSE, breaks = 800)
+lines(seq(-1, 20, .1), exp(-seq(-1,20, .1)), lw= 2, col = "orange")
+############
+set.seed(0)
+N <- 10^6
+x <- rnorm(N)
+x <- sort(x)
+gaps <- diff(x)
+s.N <- dnorm(gaps)
+s.Hat <- gaps*N*s.N
+#summary(s.Hat)
+#sum(s.Hat<4)
+#hist(s.Hat)
+hist(s.Hat,  col ='purple',xlim=c(0,4), freq = FALSE, breaks = 10000000000,
+      main='Gaps normalizados, n=10^6',
+     ylab='Distribución muestral', xlab='En naranja la teórica')
+lines(seq(-1, 20, .1), exp(-seq(-1,20, .1)), lw= 2, col = "orange")
+
+
+```
+
+\newpage 
+
+# Ejercicio 3
+
+*Probar que $$p(H_s) \propto e^{\frac{1}{2} tr(H_s^2)}$$*
+
+Para comenzar la prueba observemos como se ve $tr(H_s^2)$, para ello denotemos a $H_s$ de la siguiente manera:
+
+$$H_S=\begin{pmatrix} 
+a_{1,1} & a_{1,2} &... & a_{1,n}\\
+a_{1,2}& a_{2,2} & ...& a_{2,n}\\
+a_{1,n}&  n_{2,n} &...& a_{n,n}
+\end{pmatrix}=
+\begin{pmatrix}-a1-\\
+-a2-\\
+.\\
+.\\
+.\\
+-an-
+\end{pmatrix}=
+\begin{pmatrix} | &| & ...  & |\\
+a1 & a2 & ... &an \\
+| &| & ...  & |
+\end{pmatrix}$$
+
+Donde $(-ai-)$ son vectores reglón y $\begin{pmatrix} |\\ai \\| \end{pmatrix}$ son vectores columna, como $H_s$ es simetríca el vector columna  $\begin{pmatrix} |\\ai \\| \end{pmatrix}$ es igual al vector reglón $(-ai-)$. 
+
+Con lo anterior podemos escribir facilmente el producto $H_s^2$, denotando por $ai$ al vector columna o bien el vector reglón i-ésimo de $H_s$:
+
+$$H_s^2=\begin{pmatrix}-a1-\\
+-a2-\\
+.\\
+.\\
+.\\
+-an-
+\end{pmatrix}
+\begin{pmatrix} | &| & ...  & |\\
+a1 & a2 & ... &an \\
+| &| & ...  & |
+\end{pmatrix}= 
+\begin{pmatrix}
+a1a1 & a1a2 & ... & a1an\\
+a2a1 & a2a2 & ... & a2an\\
+.& . & .    & ... &.\\
+.& . & .   & ...&.\\
+.& . & .    & ... &.\\
+ana1 & ana2 & ...& anan
+\end{pmatrix}$$
+
+De donde es más sencillo ver que 
+$$tr(-H_s^2)=tr(-(-H_s)^2)=\sum_{i=1}^{n}aiai=\sum_{i=1}^{n}\sum_{j=1}^i(a_{i,j}a_{j,i})=\sum_{i=1}^{n}\sum_{j=1}^i(a_{i,j}a_{i,j})$$
+Entonces podemos escribir:
+
+$$tr(-(-H_s)^2)=tr(-H_s^2)= -\sum_{i=j}a_{i,i}^2-\sum_{i\neq j}a_{i,j}^2$$
+
+O bien:
+
+$$\frac{1}{2}tr(-(-H_s)^2)= -\frac{1}{2}\sum_{i=j}(a_{i,i})^2-\frac{1}{2}\sum_{i\neq j}(a_{i,j})^2=-\frac{1}{2}\sum_{i=j}(a_{i,i})^2-\beta$$
+De donde $$-\frac{1}{2}\sum_{i=j}(a_{i,i})^2=\frac{1}{2}tr(-(-H_s)^2) +\beta$$
+
+
+
+Con lo anterior y como sabemos que $p(H_s)=p((H_s)_{11}, ..., (H_s)_{NN} ) = \prod_{i=1}^{N}exp((-H_s)_{ii}^2/2)/\sqrt{2\pi}\prod_{i<j}exp(-(H_s)_{ij}^2)/\sqrt{\pi}$
+
+Tenemos que:
+$$p(H_s)= \frac{1}{\pi\sqrt{2}}exp\left(-\sum_{i=1}^{N}(H_s)_{ii}^2/2\right) exp\left(-\sum_{i<j}(H_s)_{ij}^2\right)=\frac{1}{\pi\sqrt{2}}exp\left(-\sum_{i<j}(H_s)_{ij}^2/2\right) exp\left(\frac{1}{2}tr(-H_s^2)+\beta\right)$$
+Y asociando tenemos que 
+
+$$p(H_s)=\left( \frac{1}{\pi\sqrt{2}}exp\left(-\sum_{i<j1}(H_s)_{ii}^2 + \beta \right)\right) exp\left(\frac{1}{2}tr(-H_s^2)\right)=\alpha exp\left(\frac{1}{2}tr(-H_s^2)\right)$$
+Con $\alpha=\left( \frac{1}{\pi\sqrt{2}}exp\left(-\sum_{i<j}(H_s)_{ii}^2/2 + \beta\right)\right) >0$ y de donde $p(H_s) \propto exp\left(\frac{1}{2}tr(-H_s^2)\right)$.  Es de notar que $\alpha$ es función de la suma de los cuadrados de las entradas de $H_s$.
+
+
+# Ejercicio 4
+
+*Explicar la demostración del teorema 2 enunciado en clase.*
+
+*El teorema 2 enunciado en clase dice que:*
+
+*Sea $Z$ una matriz de tamaño $n\times m$ con ($n\geq m$) y rango $m$ tal que se puede escribir $Z=H_1 T$, donde $H_1$ es una matriz $n\times m$ con $H_1^tH_1=1_m$ y $T$ es una matriz de tamaño $n\times n$ triangular superior con los elementos de la diagonal positivos. Sea $H_2$ una función de $H_1$ tal que $H=[H_1:H_2]$ es una matriz ortogonal $n \times n$ y escribamos $H=[h_1,...,h_m:h_{m+1},...,h_n]$ donde $h_1,...,h_m$ son las columnas de $H_1$ y $h_{m+1},...,h_{n}$ son las columnas de $H_2$. Entonces la forma diferencial exterior $dZ$ es de la forma:*
+
+
+\begin{equation}
+dZ = \prod_{i=1}^mt_{ii}^{n-i} (dT)(H_1^tdH_1)
+\end{equation}
+
+
+*Donde*
+
+\begin{equation}
+H_1^tdH_1 = \wedge_{i=1}^n\wedge_{j=i+1}^{n}h_j^tdh_i
+\end{equation}
+
+
+Como comentario anterior a la prueba podemos ver que $Z$ se factoriza como una rotación al ser producto de $H_1$ y por otro lado el término $T$ en el producto $H_1T$ representa una transformación cualquiera que podemos ver como un cambio de base. Aunque el enunciado en el texto que mencionamos no hace referencia explícita a la dependencia de $H_2$ con respecto a $H_1$ esta dependencia debe de ser lineal para que los productos de matrices cobren sentido (estos productos son fundamentales en la prueba y se traducen como composición de funciones lineales).
+
+
+
+Partimos del hecho de que $Z=H_1T$ entonces por la regla de la cadena se tiene que $dZ=dH_1T + H_1dT$ y entonces 
+
+$$H^tdZ=\begin{pmatrix} H_1^t \\ H_2^t \end{pmatrix}dz = \begin{pmatrix} H_1^tdH_1T +H_1^tH_1dT \\ H_2^tdH_1T+H_2^tH_1dT \end{pmatrix}$$
+
+Ahora como las matrices $H_2$ y $H_2$ son ortogonales por hipótesis y como $H_1$ es una rotación lo anterior se reduce a 
+ \begin{equation}
+H^tdZ = \begin{pmatrix} H_1^tdH_1T+dT \\ H_2^tdH_1T \end{pmatrix}
+\end{equation}
+
+Utilizando el teorema 2.1.4 del texto de referencia, que es consecuencia a su vez de una iteración sucesiva del teorema 2.1.4 que nosotros enunciamos como teorema 1, tenemos que si aplicamos el teorema 1 a la matriz $Z^t=H_1^tT^t$ extendiendo el producto a la forma $H^tdZ=(det(H))^m(dZ)=dZ$ y dejamos de prestarle atención al exponente $m$ que solo nos indicara paridad en el producto debido a cómo se extiende $H_1$ a $H$ el determinante $det(H)$ es el producto de las diagonales de $H_1$ que por ser una rotación debe de ser $+1$ o $-1$.
+
+
+Entonces la prueba se reduce a calcular parte derecha de la ecuación (3). Primero comenzamos a describir las columnas de $H_2dH_1T$ que como es de esperarse son una combinación lineal de las columnas de $H_1T$ que a su vez al ser $T$ de rango completo son solamente una transformación lineal de otro cambio de base. Así se puede describir el efecto de $H_2$ sobre el espacio original que está en la base que recibe $T$ de lo cual cuidamos que sea una base fácil de calcular ((como la canónica). Entonces las columnas de $H_2^tdH_1T$ son de la forma $h_j^th_1,...,h_jdh_m^t$ con $m+1 \leq j \leq m$ y ahora sí utilizando el teorema 1 (que también citamos en clase) las filas (transpuestas) de $H_2dH_1T$ son de la forma $(det(T)) \wedge_{i=1}^th_j^tdh_i$ es decir que cada reglón es combinación lineal de los productos de diferenciales de las columnas de $H_1$ con respecto a los mismos renglones de $H_1$ por lo que como resultado de aplicar sucesivamente el teorema 1 tenemos que 
+
+\begin{equation}
+H_2^t dH_1T =\wedge_{j=m+1}^n[(det(T))\wedge_{i=1}^mh_j^tdh_i]= (det(T))^{n-m}\wedge_{j=m+1}^n\wedge_{i=1}^mh_j^tdh_i
+\end{equation}
+
+Donde la última igualdad solo es resultados de agrupar el producto de los escalares y colocarlos al inicio en vista de los productos $\wedge$ son lineales en cada entrada.
+
+Ahora vamos a describir el producto $H_1^t dH_1 T+dT$, factorizando por la derecha a $T$ y en vista de que $H_1$ es una rotación, tenemos que la combinación lineal $H_1 dH_1+dH_1^tH_1=0$ por lo que se tiene que $H_1^tH_1=-dH_1^tH_1$ es decir que la matriz $H_1dH_1$ es antisimétrica y además tiene cero en su diagonal.
+
+Entonces multiplicando $H_1^tH_1$ por $T$ a la derecha tenemos que $(H_1^tH_1)T$ es también una matriz diagonal superior y como las entradas de $T$ en su diagonal no son cero  (por hipótesis) el producto $H_1^tH_1T$ es de la siguiente forma (donde el asterisco indica que esa posición ya apareció en alguna de las entradas anteriores, esta parte es muy importante y está haciendo uso implícito de que los elementos en la diagonal de $T$ no son cero): 
+
+$$
+H_1^t dH_1 T =  \begin{pmatrix} 0 &                * & ... &* & *\\
+h_2^tdh_1t_{11}                   &                * & ... & *& * \\
+h_3^tdh_1t_{11}                   & h_1^tdh_2t_{22}+*  & ... &* &*\\
+. &.& .& .& . \\
+. &.& .& .& . \\
+. &.& .& .& . \\
+h_m^tdh_1t_{11} & h_m^tdh_2t_{22}+* & ...& h_m^tdh_{m-1}t_{m-1,m-1} & 0
+\end{pmatrix}
+$$
+
+
+Y si calculamos el determinante anterior por la primer columna de la matriz tenemos que el producto exterior de los elementos por debajo de la diagonal coinciden con  $H_1^tdH_1T+dT$ pues $dT$ es diagonal superior la suma no afecta. 
+Entonces considerando el producto anterior con la forma que encontramos en la ecuación (4), aquí se debe de considerar el producto de las formas para que vivan en el mismo espacio, 
+
+\begin{equation}
+(\prod_{i=1}^mt_{ii}^{n-m})(\wedge_{i=1}^{m}\wedge_{j=m+1}^nh_j^tdh_i)(\prod_{i=1}^md_{ii}^{m-i}(\wedge_{i=1}^{m}\wedge_{j=i+1}^nh_j^tdh_i)= \prod_{i=1}^m t_{ii}^{n-i}\wedge_{i=1}^m\wedge_{j=i+1}^n h_j^tdh_i= \prod_{i=1}^mt_{ii}^{n-1}(H_i^tdH_i)
+\end{equation}
+
+Donde es importante mencionar que los elementos por arriba de la diagonal de $H_1dH_1T+dT$ son de la forma $\wedge_{i\leq j}^m dt_{ij}+multiplos\_de\_dH_i$ por lo que no contribuyen al producto exterior anterior pues la forma $\wedge_{i=1}^m\wedge_{j=i+1}^nh_j^tdh_i$ es una forma diferencial que ya tiene la base completa es decir que es de maximo grado para $H_1$
+
+Así la última ecuación se reduce a $\prod_{t=1}^n t_{ii}(dT)(H_1^tdH_1)$ 
+
+
+
+# Ejercicio opcional 
+
+*Dado* $$p(x_1,x_2)=\frac{1}{z_{2,1}}e^{\frac{-1}{2}(x_1^2+x2^2)}\prod_{j<k}^2|x_j-x_k|$$
+
+*Donde* $$Z_{2,1}=(2\pi)\prod_{j=1}^2\frac{\Gamma(1+j/2)}{\Gamma(1+1/2)}$$
+*Mostrar que* $$P(s)=\int dx_1dx_2 p(x_1,x_2) \delta(s-|x_2-x_1|)=\frac{s}{2}e^{s^2/4}$$
+
+
+Sabemos que $P(s)=\int_{-\infty}^{\infty}dx_1dx_2dx_3p(x_1,x_2,x_3)=1$, entonces la igualdad 
+
+$$P(s) = \int dx^2_1dx^2_2dx^2_3\frac{1}{z_{2,1}}e^{\frac{1}{2}(x^{*2}_1+x_2^{*2}+x_3^{*2} )}|x_1-x_2|\delta(s-|x_2-x_1|)$$
+
+La podemos ver de la forma en que $s=g(x_1^{*},x_2^*,x_3^*)$ donde las $x^*$ son normales estandar y ademas $s=g(x_1^*,x_2^*,x_3^3)=|x_1-x_2|=\sqrt{(x_1^*-x_2^*)^2+4x_3^*}$, así podemos usar el resultado de que si $x$ es una v.a. (en nuestro caso $x=(x_1^*,x^*_2,x_3^*$) y tenemos $s=g(X)$ como la definimos en este parrafo entonces $P(s)=\int p(x)\delta(s-(g(x)))$.
+
+
+Considerando el cambio de coordenas $x_1^*-x_2^*=rcos, 2x_3^*=rsin\theta$ y $x_1^*+x_2^*=\phi$, que tiene un jacobiano igual a $-r/4$
+
+
+Podemos escribir 
+$$P(s)=\int dx_1^*dx_2^*dx_3^*\frac{1}{z_{2,1}}e^{\frac{-1}{2}{(x_1^{*2}+x_2^{*2}+x_3^{*2})}}\delta(s-g(x_1^*,x_2^*,x_3^*))$$
+Que con el cambio de coordenadas queda como:
+
+$$P(s)=\frac{1}{4z_{2,1}}\int_0^{\infty}r dr  \delta(s-g(x))\int_0^{2\pi}d\theta\int_{-\infty}^{\infty}d\phi e^{\frac{-1}{2}\left[ (\frac{rcos\theta+\phi}{2})^2+(\frac{-rcos\theta+\phi}{2})^2+(\frac{r^2sin^2\theta}{2})\right]}$$
+
+Lo cual se simplifica a 
+
+$$P(s)=\frac{\sqrt{4\pi}}{4z_{2,1}}\int_0^{2\pi}d\theta e^{-\frac{1}{2}(\frac{s^2cos^2\theta + s^2 sin ^2 \theta^2}{2})}=\frac{2\pi^{1/2}}{4z_{2,1}}\int_0^{2\pi}d\theta e^{-(1/4)s^2}=\frac{1}{4\pi }\int_{0}^{2\pi }e^{-(1/4)s^2}=\frac{s}{2}e^{-s^2/4}$$
+
+
+
+
+

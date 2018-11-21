@@ -1,0 +1,406 @@
+---
+title: "Cómputo Estadístico (Tarea1)"
+author: "José Antonio García Ramírez"
+date: "Septiembre 23, 2018"
+output: pdf_document
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, fig.width = 7, fig.height = 3, message = FALSE)
+library(xtable)
+```
+
+1.  *Elija una distribución de la familia exponencial (excepto normal, binomial y poisson ya que esto se impartirá en la clase). Escriba los tres componentes (componente aleatoria, componente sistemática y función de enlace o link) del modelo lineal generalizado. Defina y derive $\theta$, $\phi$, $a()$, $b()$, $c()$, $E(Y)$, $\eta$, $E(\frac{\partial l }{\partial \beta_j})$ y $E[(\frac{\partial^2 l }{\partial \beta_j\beta_i})]$ como se mostró en la clase según la distribución que eligió para esta tarea.*
+
+
+El pasado martes 14 de agosto, en clase de cómputo estadístico vimos la siguiente forma cerrada de la familia exponencial, para los casos vistos en clase (distribuciones con solo dos parámetros), cuando la distribución de interes posee parámetros de localización y de escala.
+
+$$f(y;\theta) = exp\left \{    \frac{y\theta - b(\theta)}{a(\phi)} +c (y,\phi)\right\}$$
+
+Donde $\theta$ es el parámetro de escala y $\phi$ es el parámetro de localización, definición que puede consultarse en [@GLMIngenieril].
+
+Sin embargo para el caso de las funciones de densidad con cualquier número de parámetros existe una definición más general.  
+
+$$f(y;\theta) = h(y)exp \left \{    T(y) \eta(\theta)  - b(\theta)  \right \}$$
+
+
+Donde $\theta \in R^k$ es el vector de parámetros, definición que puede consultarse en [@Mathematical].
+
+Elegí la distribución de Rayleigh, por sus aplicaciones en teoría de confiabilidad. Y la lleve a la forma vista en clase considerando que esta distribución sólo tiene parámetro.
+
+Así se tiene:
+
+$f(y; \sigma^2) = \frac{y}{\sigma^2} exp\{-y^2/(2\sigma^2)\}=exp\{\ln(\frac{y}{\sigma^2})\}exp\{-y^2/(2\sigma^2)\}=exp\{ \ln(\frac{y}{\sigma^2})-y^2/(2\sigma^2)\}=exp\{y^2(-1/(2\sigma^2))-\ln(\sigma^2) +\ln(y)\}$
+
+Considerando un cambio de variable, $\theta=-1/(2\sigma^2)\Rightarrow \sigma^2=-1/(2\theta)$ tenemos que:
+$g(\mu) =\eta,\eta(\theta)=\theta, T(y)=y^2, b(\theta)=\ln(-1/(2\theta))=-\ln(-2\theta), a(\phi)=1$ y $c(y,\phi)=c(y)=\ln(y)$ 
+
+
+Se tiene que la definición de [@Mathematical] coincide con la de [@GLMIngenieril], con $a(\phi)=1$.
+
+La segunda parte de la tarea consiste en deducir $\frac{\partial l}{\partial \beta}$ y $E\left(\frac{\partial^2 l}{\partial^2 \beta_j \beta_i}\right)$,para deducir la entrada $i$-ésima de  $\frac{\partial}{\partial \beta}$ al igual que la entrada $(j,i)$ de $E\left(\frac{\partial^2 l}{\partial^2 \beta_j \beta_i} \right)$, realizaré unos cálculos para facilitar la notación y ser más breve.
+
+$$\frac{\partial}{\partial \theta}\ln(f(y;\sigma^2))=\frac{\partial}{\partial \theta}(T(y)\theta-b(\theta)+c(y))=T(y)-b'(\theta)$$
+
+Igualando a cero y sacando esperanzas tenemos: 
+
+ $$E(T(y))=b'(\theta)=\mu$$
+ De nuestros cursos de inferencia estadística sabemos que $E(l''(\theta,y))=-E(l'(\theta,y)^2)$, por lo que $Var(l'(\theta,y))=-E(l''(\theta,y))=b''(\theta)$
+
+
+Entonces $$\frac{\partial l }{\partial \beta_i}=\frac{\partial l }{\partial \theta}\frac{\partial \theta }{\partial \mu}\frac{\partial \mu }{\partial \eta}\frac{\partial \eta }{\partial \beta_i}$$
+
+Falta calcular
+
+$$\frac{\partial l }{\partial \theta}=(T(y)-b'(\theta))=T(y)-\mu$$
+$$\frac{\partial \theta }{\partial \mu}=1/b''(\theta)$$
+$$\frac{\partial \mu }{\partial \eta}=1$$
+$$\frac{\partial \eta }{\partial \beta_i}=x_i$$
+
+Entonces $$\frac{\partial l }{\partial \beta_i}=(T(y)-\mu)(1/b''(\theta))x_i=x_i\frac{y^2-b'(\theta)}{b''(\theta)}=x_i((y^2\theta+1)/\theta)/(1/\theta^2))=x_i\theta(y^2\theta+1)$$
+
+
+Finalmente
+$$\frac{\partial^2 l }{\partial \beta_j\beta_i}=\frac{\partial }{\partial \theta}x_i\theta(y^2\theta+1)\frac{\partial \theta }{\partial \mu}\frac{\mu}{\eta}\frac{\eta}{\beta_j}=-x_ix_j(1-2y^2+(1/\theta))$$
+
+Y 
+$$E(\frac{\partial^2 l }{\partial \beta_j\beta_i}) =-x_ix_j(1-2E(y^2)+(1/\theta))=-x_ix_j(1-2(-1/\theta)+(1/\theta))=-x_ix_j(1+3/\theta)$$
+
+Como $\theta=-1/(2\sigma^2)$, $\phi$ no existe para esta distribución i.e. vale cero,$a(\phi)=1$, $b(\theta)=\ln(-1/(2\theta))=-\ln(-2\theta)$, $c(y,\phi)=c(y)=\ln(y)$, $E(T(y)=y^2)=-b'(\theta)$, la función de link es la identidad $\eta(\theta)=\theta$ y al considerar verosimilitudes de una muestra con $n$ observaciones y $m$ variables $\frac{\partial l }{\partial \beta_i}=\sum_{k=1}^nx_{ki}\theta(y^2\theta+1)$ y $E(\frac{\partial^2 l }{\partial \beta_j\beta_i}) =-\sum_{k=0}^nx_{ki}x_{kj}(1+3/\theta)$, donde $x_{ki}$ es la k-ésima observacion de la variable i-ésima para calcular  ($E(\frac{\partial^2 l }{\partial \beta_j\beta_i}))^{-1}$ requerimos de una muestra fija.
+
+\newpage
+
+2.  *Haga un grupo de dos estudiantes y cada grupo debe ajustarse al modelo lineal generalizado en uno de de los conjuntos de datos de los archivos:* __cocmo_nuermic.arff__, __detatrieve.arff__, __desharnails.arff__, __humans_numeric.arff__, __nasa_numeric.arff__, __usp05-ft.arff__,  __usp05.arff__ *y* __cocomonasa.arff__ *disponibles en [http://tunedit.org/repo/PROMISE/EffortPrediction](http://tunedit.org/repo/PROMISE/EffortPrediction) y [http://promise.site.uottawa.ca/SERepository/datasets/cocomonasa.arff](http://promise.site.uottawa.ca/SERepository/datasets/cocomonasa.arff).*
+
+Junto a mi compañero Adrián Alejandro Rodriguez decidimos trabajar con el archivo **humans_numeric.arff**, pues relaciona conceptos de ingeniería de software y  estimación humana empírica (algo muy común en la industria del desarrollo de software).
+
+Comenzamos considerando la distribución de la variable de respuesta que es el cociente entre la diferencia del tiempo estimado por una persona y el que en verdad tardó el desarrollo entre el mismo tiempo de desarrollo verdadero, denotaremos como $y$ a esta variable (los detalles del contenido de las variables se puede consultar en http://tunedit.org/repo/PROMISE/EffortPrediction).
+
+Después de varios intentos (entre distribuciones lognormales) ajustamos una distribución gamma con link logarítmico.
+
+
+```{r, warning=FALSE, message=FALSE}
+rm(list = ls())
+link <- 'log' #
+data <- read.csv('data.csv')
+library(MASS) 
+param <- fitdistr(data$y,"gamma") 
+library(ggplot2)
+ggplot(data = data, aes(x = y)) + geom_histogram(aes(y=..density.., fill = I('purple')), 
+position="identity") +  stat_function(fun = dgamma,args = list(shape=param$estimate[1], 
+rate =param$estimate[2]),colour=I('blue')) +
+  theme_minimal() +   xlab('') + ylim(c(0 ,1))+
+  ggtitle('Distribución de variable de respuesta')+
+  xlab('') + ylab('')
+```
+
+
+
+```{r}
+set.seed(0)
+ks.test(data$y, 'pgamma', param$estimate[1], param$estimate[2])
+```
+
+Si bien, visualmente, el ajuste con respecto a la distribución gamma de la variable de respuesta  parece adecuado realizamos una el test de Kolmogorov-Smirnov para afirmar que la distribución de nuestra variable a predecir es en efecto una gamma. El resultado del test es el rechazo de la hipótesis de igualdad en distribución sin embargo el p-value en considerable (>.03) y tomando en cuenta el gran sesgo positivo de la distribución muestral además de que no cubre todo el soporte de la v.a. gamma, consideramos prudente suponer que la variable de respuesta es una gamma.
+
+En un inicio consideramos estimaciones de OLS sobre la variable <code> log(y)</code>, los resultados eran modelos con parámetros individuales y en conjunto significativos sin embargo los residuales distaban de ser normales.
+
+Se procedió a usar glm con diferentes funciones de densidad (gaussiana, inversa de la gaussiana,...) y diversos links sin embargo el modelo aceptado y presentado es un glm con distribución gamma con link 'log'.
+
+Después de estimar los parámetros y utilizar el algoritmo de stepwise, para eliminar parámetros y por ende variables en vista de que originalmente tenemos 16 variables y solo 75 observaciones (lo que puede disminuir la calidad de las estimaciones por la maldición de la dimensionalidad) el modelo propuesto es el siguiente:
+
+
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+#data$Degree <- factor(data$Degree)
+no.lineal <- glm(y ~ ., family = Gamma(link=link), data = data )
+summary(no.lineal)
+no.lineal2 <- step(no.lineal)
+```
+
+
+$log(y) = 0.66597-0.15765MgmtUGCourses + 0.28325MgmtGCourses -0.05692Total.Workshops -0.03634TotalLangExp + 0.07276Hardware.Proj.Mgmt.Exp + \epsilon$
+
+
+Podemos apreciar que sólo dos coeficientes no son significativos al 95\%, sin embargo elegimos este modelo como el mejor. A continuación graficamos los residuales de la deviance (que son más sencillos de interpretar y los cuales son asintóticamente normales por la ley de los grandes números y el TLC.
+
+```{r}
+summary(no.lineal2)
+```
+
+```{r}
+e <- residuals(no.lineal2, c ="deviance")
+e <- residuals(no.lineal2, c ="deviance")
+a <- data.frame(y_hat=fitted(no.lineal2), res.deviance=e)
+a$index <- 1:dim(a)[1]
+ggplot(a, aes(y_hat, e)) + geom_point(aes(colour=I('purple'))) +
+  theme_minimal()
+cor(a$res.deviance, a$y_hat)
+```
+Podemos apreciar que los residuos están poco correlacionados con los valores ajustados, aunque se nota una tendencia en ellos, cuando checamos su normalidad vemos que estos pasan el test de Anderson-Darling  de normalidad con una confianza de 95\%, en vista de que estos residuos deben de ser normales como lo podemos apreciar en la siguiente gráfica los residuales son normales, el intervalo de confianza se calcula con el estadístico $t$ pertinente en vista de que estimamos la varianza.
+
+```{r, message=FALSE}
+library(nortest)
+ad.test(e)
+ggplot(a, aes(index, res.deviance) )+  geom_point(aes(colour=I('purple'))) +
+  theme_minimal() + ggtitle('Residuos de deviance') +xlab('')
+library(qqplotr)
+set.seed(0)
+ggplot(data = a, mapping = aes(sample = res.deviance, color = I('#619CFF')) ) +
+  stat_qq_line() +  stat_qq_point() +
+  geom_qq_band(bandType = "ts", mapping = aes(fill = "TS"), alpha = 0.1) +
+  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")+ theme_minimal() + ggtitle('QQ-normal, residuales') 
+```
+
+
+Procedemos a estimar otro modelo semejante al original pero reducido con los coeficientes poco significativos, por parsimonia, y esperando tener mejores residuos de deviance.
+
+
+```{r}
+#artesanal 
+no.lineal.reducido <- glm(y ~  MgmtGCourses + Total.Workshops + 
+                   TotalLangExp , family = Gamma(link=link), data = data )
+summary(no.lineal.reducido)
+e <- residuals(no.lineal.reducido, c ="deviance")
+a <- data.frame(y_hat=fitted(no.lineal.reducido), res.deviance=e)
+a$index <- 1:dim(a)[1]
+ggplot(a, aes(y_hat, e)) + geom_point(aes(colour=I('purple'))) +
+  theme_minimal() + ggtitle('Residuales del modelo reducido') +
+  xlab('Estimaciones del modelo reducido')
+cor(a$res.deviance, a$y_hat)
+ggplot(a, aes(index, res.deviance) )+  geom_point(aes(colour=I('purple'))) +
+  theme_minimal() + ggtitle('Residuales del modelo reducido') +xlab('Residuos de deviance')
+set.seed(0)
+ggplot(data = a, mapping = aes(sample = res.deviance, color = I('#619CFF')) ) +
+  stat_qq_line() +  stat_qq_point() +
+  geom_qq_band(bandType = "ts", mapping = aes(fill = "TS"), alpha = 0.1) +
+  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")+ theme_minimal() + ggtitle('QQ-normal, residuales') + xlab('Modelo reducido') 
+ad.test(e)
+```
+Como podemos apreciar, estos residuales del modelo reducido no pasan el test de Anderson-Darling, pese a que el modelo tiene dos parámetros menos. 
+
+En los inicios exploramos modelos con diferentes factores de diversas variables, sin embargo no encontramos que alguno de ellos fuese significativo. A continuación realizamos una prueba anova (en realidad es una prueba de deviance no de varianza) con la hipótesis nula de que el modelo reducido ajusta mejor que él no reducido (el primero). La implementación actual de la función <code> anova </code> del ambiente R no arroja un p-value sin embargo como sabemos que el cociente de las variance de ambos modelos son aproximadamente distribuidos como una F asintóticamente podemos realizar el cálculo del cociente de verosimilitudes 147.10/153.44=0.9586809 y contrastarlo contra el cuantil 0.9586809 de una distribucion $F_{69,71} = 1.517737$. Como el estadístico calculado es menor al cuantil entonces no rechazamos la hipótesis de que los dos parámetros sean no significativos en conjunto. Sin embargo como los residuales del primero sí son normales y la diferencia de deviances es pequeña optamos por el primer modelo.
+
+
+```{r}
+anova( no.lineal.reducido, no.lineal2)
+(147.10/153.44)
+qf(147.10/153.44, 69,71)
+```
+
+Intervalos de confianza para los parámetros del primer modelo, el modelo que determinamos como mejor.
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrr}
+  \hline
+ & 2.5 \% & 97.5 \% \\ 
+  \hline
+(Intercept) & 0.29 & 1.06 \\ 
+  MgmtUGCourses & -0.32 & 0.03 \\ 
+  MgmtGCourses & 0.05 & 0.50 \\ 
+  Total.Workshops & -0.08 & -0.01 \\ 
+  TotalLangExp & -0.08 & 0.01 \\ 
+  Hardware.Proj.Mgmt.Exp & -0.00 & 0.17 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+```{r, echo=FALSE}
+#xtable(confint(no.lineal2))
+```
+
+En la siguiente tabla reportamos los intervalos de confianza de los parámetros del modelo obtenidos por medio de bootstrap paramétrico con 10000 iteraciones, los intervalos fueron calculados como se indica en la sección 3 del doc. que se nos compartió *Lecture Notes 13 The Bootstrap.*
+
+$$C_n = \left[ \hat{\theta_n} -\frac{t_{1-\alpha/2}}{\sqrt{n}}, \hat{\theta_n} -\frac{t_{\alpha/2}}{\sqrt{n}}  \right]$$
+Donde $t_{\alpha/2}$ es el cuantil muestral de la forma 
+
+$$t_{\alpha/2}=\hat{F}^{-1}(\alpha/2)$$
+Donde $$\hat{F}(t) = \frac{1}{N}\sum_{j=1}^N I( (\sqrt{n}(\hat{\theta)}^*_{n,j}-\hat{\theta_n}) \leq t)$$
+
+Donde $\hat{\theta}^*_{n,j}$ es la j-ésima estimación del parámetro obtenido por bootstrap y $\hat{\theta_n}$ es la media de todos los parámetros.
+
+```{r bootstrap1, warning=FALSE, message=FALSE}
+bootstrap.parametrico <- function(i)
+{
+  index <- sample(1:dim(data)[1], dim(data)[1], replace = TRUE)
+  datos <- data[index,]
+  modelo <- tryCatch(glm(y ~ MgmtUGCourses + MgmtGCourses + 
+                           Total.Workshops + TotalLangExp +
+                   Hardware.Proj.Mgmt.Exp, 
+                   family = Gamma(link=link), data = datos), 
+                   error = function(err) 
+                  {  
+                     return(rep(NA, 6 ))
+                  })
+  if(sum(is.na(modelo)) >0)
+  {
+    salida <- rep(NA,6)} else {
+    salida <- modelo$coefficients
+    } 
+  return(salida)
+}
+set.seed(0)
+N <- 10000
+b <- mapply(FUN =bootstrap.parametrico , 1:N)
+bootstrap.parametrico.coeficeintes <- data.frame(media =apply(b, 1, mean, na.rm=TRUE),
+                                                 sd = (apply(b, 1, sd, na.rm=TRUE)))
+bootstrap.parametrico.coeficeintes$inf.95 <- 0
+bootstrap.parametrico.coeficeintes$sup.95 <- 0
+for (i in 1:6)
+{
+  bootstrap.parametrico.coeficeintes$inf.95[i] <- quantile(
+    (N**.5)*(b[i,]-bootstrap.parametrico.coeficeintes$media[i]), probs = .95, na.rm=TRUE)/N**.5
+}
+bootstrap.parametrico.coeficeintes$sup.95 <- bootstrap.parametrico.coeficeintes$media + bootstrap.parametrico.coeficeintes$inf.95
+bootstrap.parametrico.coeficeintes$inf.95 <- bootstrap.parametrico.coeficeintes$media - bootstrap.parametrico.coeficeintes$inf.95
+#xtable(bootstrap.parametrico.coeficeintes[, c(3, 1, 4)])
+```
+
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & inf.95 & media & sup.95 \\ 
+  \hline
+(Intercept) & 0.29 & 0.67 & 1.05 \\ 
+  MgmtUGCourses & -0.35 & -0.16 & 0.02 \\ 
+  MgmtGCourses & 0.00 & 0.24 & 0.49 \\ 
+  Total.Workshops & -0.14 & -0.04 & 0.06 \\ 
+  TotalLangExp & -0.09 & -0.04 & 0.01 \\ 
+  Hardware.Proj.Mgmt.Exp & -0.01 & 0.06 & 0.14 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+A continuación presentamos los intervalos de confianza (que se construyen con un cuantil con distribución t dado que los residuos de deviance son aproximadamente normales asintóticamente) para la respuesta media de nuestras observaciones.
+
+
+```{r}
+preds <- predict(no.lineal, data,  se.fit = TRUE) # para obtener los errores estandar 
+critval <- qt(.95,71) ## los df los saque del anova
+upr <- preds$fit + (critval * preds$se.fit)
+lwr <- preds$fit - (critval * preds$se.fit)
+fit <- preds$fit
+CI.mean <- data.frame(l=lwr, mean=fit, u=upr)
+#################
+set.seed(0)
+smp <- data.frame(norm = CI.mean$mean)
+ggplot(data = smp, mapping = aes(sample = norm, colour=I('blue'))) +
+   stat_qq_line() +   stat_qq_point() +
+  geom_qq_band(bandType = "ts", mapping = aes(fill = "TS"), alpha = 0.3) +
+  labs(x = "Cuantiles teoricos", y = "Cuantiles muestrales")+ theme_minimal()
+```
+
+Finalmente concluimos este ejercicio realizando una regresión no paramétrica, al considerar un modelo con todas las variables obtenemos los siguientes coeficientes:
+ 
+
+
+```{r np1, message=FALSE, warning=FALSE}
+library(np)
+datos <- data
+datos$intercepto <- 1
+model.np <- invisible(npreg(y ~  Degree  + TechUGCourses+
+                              TechGCourses+MgmtUGCourses+
+                              MgmtGCourses+Total.Workshops+
+                              Total.Conferences+ TotalLangExp +
+                    Hardware.Proj.Mgmt.Exp+ Software.Proj.Mgmt.Exp+
+                  No.Of.Hardware.Proj.Estimated+
+                    No.Of.Software.Proj.Estimated+ Domain.Exp+
+                    Procurement.Industry.Exp  , data=datos))
+```
+Donde podemos apreciar que los anchos de banda varían demasiado para cada variable (pues no considera al intercepto).
+
+```{r, fig.height=7, fig.width=7}
+summary(model.np)
+```
+
+Utilizando los resultados que tenemos calcularemos una regresión no paramétrica con las variables que determinamos como importantes utilizando glm los coeficientes estimados son los siguientes:
+
+```{r}
+model <- npreg(y ~ MgmtUGCourses + MgmtGCourses + 
+                    Total.Workshops + TotalLangExp +
+                    Hardware.Proj.Mgmt.Exp,
+                  family = Gamma(link=link), data = data)
+summary(model)
+```
+
+Finalmente calculamos los intervalos de confianza para los coeficientes de la regresión no parámetrica utilizando bootstrap (de la misma manera en que estimamos los intervalos de los coeficientes para el bootstrap parámetrico pero solo con 1000 iteraciones):
+
+```{r eval=FALSE}
+bootstrap.no.parametrico <- function(i)
+{
+  index <- sample(1:dim(data)[1], dim(data)[1], replace = TRUE)
+  datos <- data[index,]
+  modelo <- npreg(y ~ MgmtUGCourses + MgmtGCourses + 
+                           Total.Workshops + TotalLangExp +
+                   Hardware.Proj.Mgmt.Exp, 
+                   family = Gamma(link=link), data = datos)
+  return(modelo$bw)
+}
+set.seed(0)
+N <- 1000
+b2 <- mapply(FUN =bootstrap.no.parametrico , 1:N)
+row.names(b2) <- row.names(b)[2:6]  
+bootstrap.no.parametrico.coeficeintes <- data.frame(media =apply(b2, 1, mean, na.rm=TRUE),
+                                                 sd = (apply(b2, 1, sd, na.rm=TRUE)))
+bootstrap.no.parametrico.coeficeintes$inf.95 <- 0
+bootstrap.no.parametrico.coeficeintes$sup.95 <- 0
+for (i in 1:5)
+{
+  bootstrap.no.parametrico.coeficeintes$inf.95[i] <- quantile(
+    (N**.5)*(b2[i,]-bootstrap.no.parametrico.coeficeintes$media[i]),
+    probs = .95, na.rm=TRUE)/N**.5
+}
+bootstrap.no.parametrico.coeficeintes$sup.95 <- bootstrap.no.parametrico.coeficeintes$media + bootstrap.no.parametrico.coeficeintes$inf.95
+bootstrap.no.parametrico.coeficeintes$inf.95 <- bootstrap.no.parametrico.coeficeintes$media - bootstrap.no.parametrico.coeficeintes$inf.95
+#xtable(bootstrap.no.parametrico.coeficeintes[, c(3, 1, 4)])
+```
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & inf.95 & media & sup.95 \\ 
+  \hline
+MgmtUGCourses & -10762011.15 & 9864255.50 & 30490522.16 \\ 
+  MgmtGCourses & 843279.90 & 421640.30 & 0.70 \\ 
+  Total.Workshops & -13477653.30 & 6299037.49 & 26075728.29 \\ 
+  TotalLangExp & -29614509.59 & 14617690.20 & 58849889.99 \\ 
+  Hardware.Proj.Mgmt.Exp & 40805528.07 & 31068715.25 & 21331902.44 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+3.  *Derive el algoritmo EM-soft para su distribución elegida en el inciso 1. Deducir ambos pasos E y M claramente.*
+
+Siguiendo la cuarta sección *An Informal Statement of General Soft EM* del documento que se nos compartió *em.pdf*, tenemos que si $y_i$ es una muestra aleatoria de tamaño $n$ con distribución Rayleigh con parámetro $\sigma^2$ desconocido, es decir $y\sim Rayleigh(\sigma^2)$ podemos estimar el parámetro desconocido con el algoritmo $EM$ como sigue:
+
+
+a)  Inicializamos $\sigma^2_0=1$ (una elección prudente como punto inicial)
+
+b)  Repetimos hasta que la expresión $L(y_1,...,y_n, \sigma^2)$ converge.
+
+    * Paso $E$: 
+    $$L(y_1,\dots, y_n)=L(y_1,\dots, y_n|\sigma^2)=\prod_{i=1}^nL(y_i|\sigma^2)=\prod_{i=1}^n\left(\frac{y_i}{\sigma^2}exp^{-y_i^2/(2\sigma^2)}\right)=(\prod_{i=1}^ny_i)(\frac{1}{\sigma^2})^nexp^{-\sum_{i=1}^ny_i^2/(2\sigma^{2})}$$
+    
+    Donde la segunda igualdad se tiene por ser $\{y_i\}$ una muestra aleatoria (independencia).
+    
+    * Paso $M$:
+    $$\sigma^2_* = arg\max_{\sigma^2}L(y_1,\dots, y_n)=arg\max_{\sigma^2}log(L(y_1,\dots, y_n|\sigma^2))=\sum_{i=1}^n\ln(y_i)+n\ln(\frac{1}{\sigma^2})-\frac{1}{2\sigma^2}\sum_{i=1}^ny_i^2$$
+    Lo anterior es consecuencia de que la función logarítmo es monótona. Notemos que $l(y_1,...,y_n|\sigma^2)$ es convexa por ser una función de verosimilitud por lo que podemos resolver el problema de optimización anterior derivando con respecto a $\sigma^2$ e igualando a cero:
+    
+    $$\frac{\partial \ln(y_1,...,y_n)}{\partial \sigma^2}=n(\frac{1}{\frac{1}{\sigma^2}})-\frac{1}{2}\sum_{i=1}^ny_i^2==0$$
+
+    Y finalmente lo anterior es equivalente a $$n\sigma^2=\frac{1}{2}\sum_{i=1}^ny_i^2$$ O bien $$\sigma^2_*=\frac{1}{2n}\sum_{i=1}^ny_i^2$$
+      
+  
+
+
+
+\newpage

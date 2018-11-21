@@ -1,0 +1,53 @@
+
+rm(list = ls())
+link <- 'inverse'
+data <- read.csv('data.csv')
+no.lineal <- glm(y ~ ., family = gaussian(link=link), data = data )
+summary(no.lineal)
+no.lineal2 <- step(no.lineal)
+summary(no.lineal2)
+plot(fitted(no.lineal2), residuals(no.lineal2, c = " deviance " ))
+plot(residuals(no.lineal2, c='deviance'))
+qqnorm(residuals(no.lineal2, c='deviance'))
+qqline(residuals(no.lineal2, c='deviance'), col='red')
+ks.test(residuals(no.lineal2, c='deviance'), 'pnorm')
+mean(residuals(no.lineal2, c='deviance'))
+#artesanal 
+no.lineal <- glm(y ~  
+                     Hardware.Proj.Mgmt.Exp + 
+                    No.Of.Hardware.Proj.Estimated + 
+                        , data=data,
+                 family = gaussian(link=link))
+summary(no.lineal)
+plot(fitted(no.lineal), residuals(no.lineal, c = " deviance " ))
+plot(residuals(no.lineal, c='deviance'))
+ks.test(residuals(no.lineal, c='deviance'), 'pnorm')
+hist(residuals(no.lineal, c='deviance'))
+qqnorm(residuals(no.lineal, c='deviance'))
+qqline(residuals(no.lineal, c='deviance'), col='red')
+
+###################experimentos
+data <- read.csv('data.csv')
+data$Degree <- factor(data$Degree)
+no.lineal <- glm(y ~ ., family = gaussian(link=link), data = data )
+summary(no.lineal)
+no.lineal2 <- step(no.lineal)
+summary(no.lineal2)
+plot(fitted(no.lineal2), residuals(no.lineal2, c = " deviance " ))
+plot(residuals(no.lineal2, c='deviance'))
+ks.test(residuals(no.lineal2, c='deviance'), 'pnorm')
+hist(residuals(no.lineal2, c='deviance'))
+qqnorm(residuals(no.lineal2, c='deviance'))
+qqline(residuals(no.lineal2, c='deviance'), col='red')
+#artesanal 
+no.lineal <- glm(y ~  MgmtUGCourses  + Total.Conferences + 
+                   TotalLangExp + Hardware.Proj.Mgmt.Exp + No.Of.Hardware.Proj.Estimated + 
+                   No.Of.Software.Proj.Estimated     , data=data,
+                 family = gaussian(link=link))
+summary(no.lineal)
+plot(fitted(no.lineal), residuals(no.lineal, c = " deviance " ))
+plot(residuals(no.lineal, c='deviance'))
+ks.test(residuals(no.lineal, c='deviance'), 'pnorm')
+hist(residuals(no.lineal, c='deviance'))
+qqnorm(residuals(no.lineal, c='deviance'))
+qqline(residuals(no.lineal, c='deviance'), col='red')

@@ -1,0 +1,4 @@
+NOTA: El Spanish Billion Word Corpus es muy grande para subirlo a ésta plataforma (9 GB). 
+Bajenlo de http://cs.famaf.unc.edu.ar/~ccardellino/SBWCE/clean_corpus.tar.bz2. 
+Asegurense que contiene los 100 subcorpus (del 00 al 99) con el preproceso según se indica en http://crscardellino.github.io/SBWCE/.
+Si tienen problemas para bajarlo, avisenme y se los paso en un USB.

@@ -1,0 +1,588 @@
+---
+title: "Cómputo estadístico (Tarea 3)"
+author: "J. Antonio García Ramirez"
+date: "Septiembre 26, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE)
+MSE <- function(y.hat, y)
+{
+  return(mean((y-y.hat)**2))
+}
+library(ISLR)
+datos <- College
+datos2 <- scale(datos[, 2:18]) 
+datos2 <- as.data.frame(datos2)
+datos2$Private <- datos$Private
+str(datos2)
+library(glmnet)
+set.seed(0)
+n <- dim(datos2)[1]
+index <- sample(1:n, round(n*.7) )
+train <- datos2[index, ]
+test <- datos2[-index, ]
+```
+
+# Ejercicio 1
+
+*Considerando el conjunto de datos __College__ de la libreria ISLR, vamos a predecir el número de solicitudes recibidas(Apps) usando las otras variables del conjunto de datos.*
+
+
+a)  *Divide el conjunto de datos en un conjunto de entrenamiento y un conjunto de prueba y ajusta un modelo lineal usando mínimos cuadrados en el conjunto de entrenamiento. Reporta el error de prueba obtenido.*
+
+Dividimos el conjunto de datos aleatoriamente con un conjunto de prueba correspondiente al 30% de la muestra original. 
+
+Para poder comparar resultados entre la estimación de mínimos cuadrados y los métodos de Ridge, Lasso, PCR y PLS se escala el conjunto de datos para que tengan media cero y varianza igual a uno, excepto la variable **Private** ya que es categórica.
+ 
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+library(glmnet)
+set.seed(0)
+n <- dim(datos2)[1]
+index <- sample(1:n, round(n*.7) )
+train <- datos2[index, ]
+test <- datos2[-index, ]
+names(datos2)
+modelo.ols <- lm(Apps ~., data=train)
+summary(modelo.ols)
+y.hat <- predict(modelo.ols, test)
+MSE(y.hat, test$Apps)
+```
+
+Después de fijar la semilla y efectuar la división del conjunto de datos se obtuvo un error cuadrático medio de $0.06297405$ en el conjunto de prueba utilizando un modelo lineal con todas las variables y los datos escalados.
+
+
+b)  *Ajusta un modelo de regresión Ridge sobre el conjunto de entrenamiento, con $\lambda$ elegido por validación cruzada. Reporta el error de prueba obtenido.*
+
+Utilizando validación cruzada con 10 folds, regresión Ridge y un $\lambda=0.001$ se obtiene un error de prueba de $0.05405734$ sobre los datos escalados
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval=TRUE}
+library(glmnet)
+train2 <-model.matrix (Apps~., train )
+grid<-10^seq(-3,10,length =1000)
+set.seed(0)
+modelo.Ridge <- cv.glmnet(train2, train$Apps, alpha =0,
+                          lambda =grid, nfolds = 10)
+#plot(modelo.Ridge)
+(l <- modelo.Ridge$lambda.min)
+test2 <- model.matrix(Apps~. , test)
+y.hat.rige <- predict(modelo.Ridge, test2)
+MSE(y.hat.rige, test$Apps)
+```
+
+
+
+c)  *Ajusta un modelo de lasso en el conjunto de entrenamiento, con $\lambda$ elegido por validación cruzada. Reporta el error de prueba obtenido, junto con el número de estimaciones de coeficientes no nulos.*
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+set.seed(0)
+modelo.lasso <- cv.glmnet(train2, train$Apps, alpha =1,
+                          lambda =grid, nfolds = 10)
+#plot(modelo.lasso)
+(l <- modelo.lasso$lambda.min)
+test2 <- model.matrix(Apps~. , test)
+y.hat.lasso <- predict(modelo.lasso, test2)
+MSE(y.hat.lasso, test$Apps)
+```
+Utilizando validación cruzada, regresión Lasso y un $\lambda=0.001$ se obtiene un error de prueba de $0.08525753$ sobre los datos escalados. 
+
+
+
+
+d)  *Ajusta un modelo de __PCR__ en el conjunto de entrenamiento, con __M__ elegido por la validación cruzada. Reporta el error de prueba obtenido, junto con el valor de __M__ seleccionado mediante validación cruzada.*
+
+Utilizando validación cruzada con 10 folds, regresión PCR y 7 componentes principales (en vista de que en el conjunto de entrenamiento la octava componente es de poca fignificancia) se obtiene un error de prueba de $0.09222398$ sobre los datos escalados. 
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+set.seed(0)
+modelo.pcr <- pcr(Apps ~ ., data=train,
+                  validation ="CV")
+summary(modelo.pcr)
+validationplot(modelo.pcr, val.type="MSEP")
+y.hat.pcr <- predict(modelo.pcr, test, ncomp = 7)
+MSE(as.numeric(y.hat.pcr), test$Apps)
+```
+
+e)  *Ajusta un modelo __PLS__ en el conjunto de entrenamiento, con __M__ elegido por la validación cruzada. Informe el error de prueba obtenido, junto con el valor de __M__ seleccionado mediante validación cruzada*
+
+
+Utilizando validación cruzada, PLS como método de regresión y 7 componentes principales (en vista de que en el conjunto de entrenamiento la octava componente de ppls es de poca significancia) se obtiene un error de prueba de $0.06016777$ sobre los datos escalados. 
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, eval=TRUE}
+library(pls)
+set.seed(0)
+modelo.pls <- plsr(Apps ~ ., data=train, validation ="CV")
+#summary(modelo.pls)
+#validationplot(modelo.pls ,val.type="MSEP")
+y.hat.pls <- predict(modelo.pls, test, ncomp = 7)
+MSE(as.numeric(y.hat.pls), test$Apps)
+
+```
+
+f)  *Comenta los resultados obtenidos. ¿Con qué precisión podemos predecir el número de solicitudes de estudios universitarios recibidas? ¿Hay mucha diferencia entre los errores de prueba resultantes de estos cinco enfoques?*
+
+Considerando los resultados obtenidos y en aras de retener un modelo altamente preciso y que también posea una interpretación sencilla. Reportamos los resultados de la regresión PLS.
+
+Como podemos apreciar en la gráfica siguiente el ajuste es apropiado, los valores de la gráfica se presentan en sus unidades originales. Si bien el MSE del modelo es del orden de 0.06 las predicciones poseen un error relativo mayor al 200% en vista de que la predicción del modelo se ve afectada por casos aislados.
+
+Con el modelo PLS como base la estimación de Ridge posee mejores resultados pero los  consideramos marginales.
+
+
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+set.seed(0)
+modelo.pls <- plsr(Apps ~ ., data=train, validation ="CV")
+#summary(modelo.pls)
+#validationplot(modelo.pls ,val.type="MSEP")
+y.hat.pls <- predict(modelo.pls, test, ncomp = 7)
+mse <- MSE(as.numeric(y.hat.pls), test$Apps)
+mse**.5
+media <- mean(datos$Apps)
+sd <- sd(datos$Apps)
+error <- ((as.numeric(y.hat.pls)*sd)+media)- ((test$Apps*sd)+media)
+coef.var <- sd(error)/mean(((test$Apps*sd)+media))
+plot(((test$Apps*sd)+media), (as.numeric(y.hat.pls)*sd)+media,
+     main="Regresión usando PLS, 7 comp",
+     xlab='No. Aplicaciones', ylab='Estimación', pch=20, 
+     col=rgb(143/255, 0, 211/255, alpha=0.2), 
+     cex=1.5)
+abline(a=0, b=1, col='navy')
+
+```
+
+\newpage 
+
+# Ejercicio 2
+
+*Se ha visto que a medida que aumenta el número de características de un modelo, el error de entrenamiento disminuirá necesariamente, pero el error de prueba no. Explorar esto con datos simulados*
+
+a)    *Genera un conjunto de datos con $p = 20$ características, $n = 1000$ observaciones y un vector de respuesta cuantitativo generado de acuerdo con el modelo:*
+
+$$Y =X\beta +\epsilon$$
+
+  *Donde $\beta$ tiene algunos elementos que son exactamente iguales a cero.*
+  
+  Generamos las características, las 20 variables son normales con media 1,2,...,20 y desviación estándar $1, 2^2,...,20^2$. Y los primeros coeficientes $\beta_1, \beta_2, ...\beta_5$ son cero.
+  
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+set.seed(0)
+n <- 1000
+datos <- data.frame(x1 =rnorm(n, 1, 1))
+datos$x2 <- rnorm(n, 2, 2**2)
+datos$x3 <- rnorm(n, 3, 3**2)
+datos$x4 <- rnorm(n, 4, 4**2)
+datos$x5 <- rnorm(n, 5, 5**2)
+datos$x6 <- rnorm(n, 6, 6**2)
+datos$x7 <- rnorm(n, 7, 7**2)
+datos$x8 <- rnorm(n, 8, 8**2)
+datos$x9 <- rnorm(n, 9, 9**2)
+datos$x10 <- rnorm(n, 10, 10**2)
+datos$x11 <- rnorm(n, 11, 11**2)
+datos$x12 <- rnorm(n, 12, 12**2)
+datos$x13 <- rnorm(n, 13, 13**2)
+datos$x14 <- rnorm(n, 14, 14**14)
+datos$x15 <- rnorm(n, 15, 15**2)
+datos$x16 <- rnorm(n, 16, 16**2)
+datos$x17 <- rnorm(n, 17, 17**2)
+datos$x18 <- rnorm(n, 18, 18**2)
+datos$x19 <- rnorm(n, 19, 19**2)
+datos$x20 <- rnorm(n, 20, 20**2)
+betas <- runif(20, 0, 10)
+betas[1:5] <- 0
+y <- matrix(rep(betas, each =n), ncol = 20)
+y <-  (y)*(datos)
+y <- apply(y, 1,sum)
+```
+b)  *Divide tu conjunto de datos en un conjunto de entrenamiento que contenga $100$ observaciones y un conjunto de pruebas que contenga $900$ observaciones.*
+
+Realizamos la partición mencionada, del conjunto $\{1,...,1000\}$ escogemos aleatoriamente 100 observaciones para el conjunto de prueba y 900 para el conjunto de prueba.
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+set.seed(0)
+index <- sample(1:n, 100)
+train <- datos[index, ] 
+test <- datos[-index, ]
+y.train <- y[index]
+y.test <- y[-index]
+```
+
+c)  *Realiza la selección del mejor subconjunto sobre el conjunto de entrenamiento y gráfica el error de entrenamiento MSE asociado con el mejor modelo en cada tamaño.*
+
+Utilizando el método exhaustivo y el criterio BIC, se procedió a seleccionar el mejor subconjunto de variables para un modelo lineal con p =1 hasta p=20 con el conjunto de prueba. Los MSE para cada modelo sobre el conjunto de prueba se encuentran en la siguiente gráfica, como es de esperar el MSE sobre el conjunto de prueba disminuye conforme aumenta el número de regresores:
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+library(leaps)
+#modelos <- regsubsets(y.train ~ ., data =train, method = 'exhaustive', nvmax = 20)
+#modelos
+
+#plot(modelos, scale="bic", col=c('green', 'red'))
+modelo1 <- lm(y.train~ x14, data=train)
+error1 <- predict(modelo1, train)
+#
+error <- rep(0,20)
+error[1] <- MSE(error1, y.train)
+# dos variables
+modelo1 <- lm(y.train~ x14 + x18, data=train)
+error1 <- predict(modelo1, train)
+error[2] <- MSE(error1, y.train)
+# tres variables 
+modelo1 <- lm(y.train~ x14 + x16+ x18, data=train)
+error1 <- predict(modelo1, train)
+error[3] <- MSE(error1, y.train)
+# cuatro variables 
+modelo1 <- lm(y.train~ x14 + x16+ x18+x20, data=train)
+error1 <- predict(modelo1, train)
+error[4] <- MSE(error1, y.train)
+# cinco variables 
+modelo1 <- lm(y.train~ x13+ x14+ x16 + x18+x20, data=train)
+error1 <- predict(modelo1, train)
+error[5] <- MSE(error1, y.train)
+# seis variables 
+modelo1 <- lm(y.train~ x13+ x14+ x16 +x17+ x18+x20, data=train)
+error1 <- predict(modelo1, train)
+error[6] <- MSE(error1, y.train)
+# siete variables 
+modelo1 <- lm(y.train~ x10 + x12 + x13+x14+ x16+x17+x18+x20, data=train)
+error1 <- predict(modelo1, train)
+error[7] <- MSE(error1, y.train)
+# ocho variables 
+modelo1 <- lm(y.train~ x10 + x12 + x13+x14 + x16+ x17+x18+x20, data=train)
+error1 <- predict(modelo1, train)
+error[8] <- MSE(error1, y.train)
+# nueve variables 
+modelo1 <- lm(y.train~ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[9] <- MSE(error1, y.train)
+# 10 variables 
+modelo1 <- lm(y.train~ x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[10] <- MSE(error1, y.train)
+#11 variables
+modelo1 <- lm(y.train~ x9+ x10 + x12 + x13 + x14+x15+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[11] <- MSE(error1, y.train)
+#12 variables
+modelo1 <- lm(y.train~ x6+x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[12] <- MSE(error1, y.train)
+#13 varibles
+modelo1 <- lm(y.train~ x6+x7+x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[13] <- MSE(error1, y.train)
+#14 variables
+modelo1 <- lm(y.train~ x6+x7+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[14] <- MSE(error1, y.train)
+##15 variables
+modelo1 <- lm(y.train~ x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[15] <- MSE(error1, y.train)
+##16variables
+modelo1 <- lm(y.train~ x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[16] <- MSE(error1, y.train)
+##17variables
+modelo1 <- lm(y.train~ x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[17] <- MSE(error1, y.train)
+###18variables
+modelo1 <- lm(y.train~ x3+x2+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[18] <- MSE(error1, y.train)
+#19 variables
+modelo1 <- lm(y.train~ x1+x2+x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=train)
+error1 <- predict(modelo1, train)
+error[19] <- MSE(error1, y.train)
+#todas 
+modelo1 <- lm(y.train~ ., data=train)
+error1 <- predict(modelo1, train)
+error[20] <- MSE(error1, y.train)
+plot(1:20, error,
+     main="MSE sobre el conjunto de entrenamiento", type='b',
+     xlab='No. de variables', ylab='MSE', pch=20, 
+     col=rgb(143/255, 0, 211/255, alpha=0.2), 
+     cex=1.5)
+
+```
+
+d)  *Grafica el error de prueba __MSE__ asociado con el mejor modelo de cada tamaño.*
+
+Los MSE sobre el conjunto de prueba para cada número de regresores se presentan en la siguiente gráfica, es de notar que al igual que con el conjunto de entrenamiento este tiende a disminuir conforme aumenta el número de regresores (aunque en diferente escala).
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+modelo1 <- lm(y.test~ x14, data=test)
+error1 <- predict(modelo1, test)
+#
+error2 <- rep(0,20)
+error2[1] <- MSE(error1, y.test)
+# dos variables
+modelo1 <- lm(y.test~ x14 + x18, data=test)
+error1 <- predict(modelo1, test)
+error2[2] <- MSE(error1, y.test)
+# tres variables 
+modelo1 <- lm(y.test~ x14 + x16+ x18, data=test)
+error1 <- predict(modelo1, test)
+error2[3] <- MSE(error1, y.test)
+# cuatro variables 
+modelo1 <- lm(y.test~ x14 + x16+ x18+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[4] <- MSE(error1, y.test)
+# cinco variables 
+modelo1 <- lm(y.test~ x13+ x14+ x16 + x18+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[5] <- MSE(error1, y.test)
+# seis variables 
+modelo1 <- lm(y.test~ x13+ x14+ x16 +x17+ x18+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[6] <- MSE(error1, y.test)
+# siete variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13+x14+ x16+x17+x18+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[7] <- MSE(error1, y.test)
+# ocho variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13+x14 + x16+ x17+x18+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[8] <- MSE(error1, y.test)
+# nueve variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[9] <- MSE(error1, y.test)
+# 10 variables 
+modelo1 <- lm(y.test~ x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[10] <- MSE(error1, y.test)
+#11 variables
+modelo1 <- lm(y.test~ x9+ x10 + x12 + x13 + x14+x15+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[11] <- MSE(error1, y.test)
+#12 variables
+modelo1 <- lm(y.test~ x6+x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[12] <- MSE(error1, y.test)
+#13 varibles
+modelo1 <- lm(y.test~ x6+x7+x9+ x10 + x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[13] <- MSE(error1, y.test)
+#14 variables
+modelo1 <- lm(y.test~ x6+x7+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[14] <- MSE(error1, y.test)
+##15 variables
+modelo1 <- lm(y.test~ x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[15] <- MSE(error1, y.test)
+##16variables
+modelo1 <- lm(y.test~ x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[16] <- MSE(error1, y.test)
+##17variables
+modelo1 <- lm(y.test~ x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[17] <- MSE(error1, y.test)
+###18variables
+modelo1 <- lm(y.test~ x3+x2+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[18] <- MSE(error1, y.test)
+#19 variables
+modelo1 <- lm(y.test~ x1+x2+x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x16+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[19] <- MSE(error1, y.test)
+#todas 
+modelo1 <- lm(y.test~ ., data=test)
+error1 <- predict(modelo1, test)
+error2[20] <- MSE(error1, y.test)
+plot(1:20, error2,
+     main="MSE sobre el conjunto de prueba", type='b',
+     xlab='No. de variables', ylab='MSE', pch=20, 
+     col=rgb(143/255, 0, 211/255, alpha=0.2), 
+     cex=1.5)
+
+```
+
+e)  *¿Para qué tamaño de modelo el error de prueba MSE toma su valor mínimo? Comenta tus resultados. Si toma su valor mínimo en un modelo que sólo contiene una interceptación o un modelo
+que contenga todas las características, entonces juega con la forma en la que estás generando los datos en (a) hasta que aparezca un escenario en el que el error de prueba __MSE__ se minimiza para un tamaño de modelo intermedio.*
+
+En vista de los resultados se volvió a generar el conjunto de datos de prueba, las variables se construyeron de nuevo como normales con media cero y desviación estándar de $1,2^2,3^2,...,20^2$ con ceros los últimos 6 coeficientes $\beta_{15}, \beta_{16}, .,\beta_{20}$, el menor MSE se da con el modelo con 18 características que no engloba a las variables $x\sim Norm(0,16^2 )$ y $x\sim Norm(0,20^2)$.
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+set.seed(0)
+n <- 1000
+datos <- data.frame(x1 =rnorm(n, 0, 1))
+datos$x2 <- rnorm(n, 0, 2**2)
+datos$x3 <- rnorm(n, 0, 3**2)
+datos$x4 <- rnorm(n, 0, 4**2)
+datos$x5 <- rnorm(n, 0, 5**2)
+datos$x6 <- rnorm(n, 0, 6**2)
+datos$x7 <- rnorm(n, 0, 7**2)
+datos$x8 <- rnorm(n, 0, 8**2)
+datos$x9 <- rnorm(n, 0, 9**2)
+datos$x10 <- rnorm(n, 0, 10**2)
+datos$x11 <- rnorm(n, 0, 11**2)
+datos$x12 <- rnorm(n, 0, 12**2)
+datos$x13 <- rnorm(n, 0, 13**2)
+datos$x14 <- rnorm(n, 0, 14**14)
+datos$x15 <- rnorm(n, 0, 15**2)
+datos$x16 <- rnorm(n, 0, 16**2)
+datos$x17 <- rnorm(n, 0, 17**2)
+datos$x18 <- rnorm(n, 0, 18**2)
+datos$x19 <- rnorm(n, 0, 19**2)
+datos$x20 <- rnorm(n, 0, 20**2)
+set.seed(0)
+betas <- runif(20, 0, 10)
+betas[15:20] <- 0
+y <- matrix(rep(betas, each =n), ncol = 20)
+y <-  (y)*(datos)
+y <- apply(y, 1,sum)
+index <- sample(1:n, 100)
+train <- datos[index, ] 
+test <- datos[-index, ]
+y.train <- y[index]
+y.test <- y[-index]
+########calculo de errores
+##############eleccion del modelo 
+#library(leaps)
+#modelos <- regsubsets(y.train ~ ., data =train, method = 'exhaustive', nvmax = 17)
+#modelos
+#plot(modelos, scale="bic", col=c('green', 'red'))
+
+modelo1 <- lm(y.test~ x14, data=test)
+error1 <- predict(modelo1, test)
+#
+error2 <- rep(0,20)
+error2[1] <- MSE(error1, y.test)
+# dos variables
+modelo1 <- lm(y.test~ x14 + x8, data=test)
+error1 <- predict(modelo1, test)
+error2[2] <- MSE(error1, y.test)
+# tres variables 
+modelo1 <- lm(y.test~ x14 + x15+ x8, data=test)
+error1 <- predict(modelo1, test)
+error2[3] <- MSE(error1, y.test)
+# cuatro variables 
+modelo1 <- lm(y.test~ x14 + x15+ x8+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[4] <- MSE(error1, y.test)
+# cinco variables 
+modelo1 <- lm(y.test~ x13+ x14+ x15 + x8+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[5] <- MSE(error1, y.test)
+# seis variables 
+modelo1 <- lm(y.test~ x13+ x14+ x15 +x7+ x8+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[6] <- MSE(error1, y.test)
+# siete variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13+x14+ x15+x7+x8+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[7] <- MSE(error1, y.test)
+# ocho variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13+x14 + x15+ x7+x8+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[8] <- MSE(error1, y.test)
+# nueve variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[9] <- MSE(error1, y.test)
+# 10 variables 
+modelo1 <- lm(y.test~ x9+ x10 + x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[10] <- MSE(error1, y.test)
+#11 variables
+modelo1 <- lm(y.test~ x9+ x10 + x12 + x13 + x14+x15+x6+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[11] <- MSE(error1, y.test)
+#12 variables
+modelo1 <- lm(y.test~ x6+x9+ x10 + x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[12] <- MSE(error1, y.test)
+#13 varibles
+modelo1 <- lm(y.test~ x6+x7+x9+ x10 + x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[13] <- MSE(error1, y.test)
+#14 variables
+modelo1 <- lm(y.test~ x16+x17+x19+ x10 + x11+x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[14] <- MSE(error1, y.test)
+##15 variables
+modelo1 <- lm(y.test~ x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x15+ x17+x18+x19+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[15] <- MSE(error1, y.test)
+##16variables
+modelo1 <- lm(y.test~ x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x15+ x17+x18+x19+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[16] <- MSE(error1, y.test)
+##17variables
+modelo1 <- lm(y.test~ x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x15+ x17+x18+x19+x2, data=test)
+error1 <- predict(modelo1, test)
+error2[17] <- MSE(error1, y.test)
+###18variables
+modelo1 <- lm(y.test~ x3+x2+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x15+ x17+x18+x19+x1, data=test)
+error1 <- predict(modelo1, test)
+error2[18] <- MSE(error1, y.test)
+#19 variables
+modelo1 <- lm(y.test~ x1+x2+x3+x4+x5+x6+x7+x8+x9+ x10 + x11+x12 + x13 + x14+x15+ x17+x18+x19+x20, data=test)
+error1 <- predict(modelo1, test)
+error2[19] <- MSE(error1, y.test)
+#todas 
+modelo1 <- lm(y.test~ ., data=test)
+error1 <- predict(modelo1, test)
+error2[20] <- MSE(error1, y.test)
+plot(1:20, error2,
+     main="MSE sobre el conjunto de prueba", type='b',
+     xlab='No. de variables', ylab='MSE', pch=20, 
+     col=rgb(143/255, 0, 211/255, alpha=0.2), 
+     cex=1.5)
+which.min(error2)
+```
+
+
+
+f) *¿Cómo se compara el modelo con el que se minimiza el error de prueba con el modelo verdadero utilizado para generar los datos? Comenta sobre los valores de los coeficientes*
+
+Los modelos son muy diferentes. El modelo que genera los datos es una combinación lineal de las primeras 15 variables normales con media cero y desviación estándar de $1,2^2,...$ hasta $15^2$, $x_i\sim Norm(0, i^2)$ y los cinco últimos coeficientes son cero. Si bien con el método exhaustivo el modelo que tiene menor MSE en el conjunto de prueba se logra incluyendo 18 variables, todas las variables excepto la que tiene desviación de $16^2$ y la de $20^2$. En el gráfico siguiente se logra apreciar que las últimas variables a considerar son las de desviaciones $17^2, 18^2$ y $19^2$ que son precisamente las que tienen un coeficiente de cero en el modelo. 
+
+variables que en el modelo de datos tienen un coeficiente de cero las últimas seis variables.
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+modelos <- regsubsets(y.train ~ ., data =train, method = 'exhaustive', nvmax = 20)
+plot(modelos, scale="bic", col=c('green', 'red'))
+
+
+```
+
+
+g)  *Crea un gráfico que muestre $\sqrt{\sum_{j=1}^p(\beta -\hat{\beta_j^r})^2}$ para un rango de valores de $r$, donde $\beta^r_j$ es el j-esimo coeficiente estimado para el mejor modelo que contiene $r$ coeficientes. Comenta lo que observas. ¿Cómo se compara esto con el gráfico del error de prueba de d)?*
+
+
+Se eligio $r = 1,3,5,9,14$ en el gráfico anterior podemos notar que conforme el número de regresores aumenta la norma de la diferencia entre los coeficientes estimados y los reales tiende a disminuir lo cual es ad hoc con el resultado del inciso d pues al aumentar el número de regresores el error de prueba tiende a disminuir.
+
+```{r, message=FALSE, warning=FALSE, eval=TRUE, echo=FALSE}
+normas<- rep(0, 5)
+modelo1 <- lm(y.test~ x14, data=test)
+normas[1] <- sum((betas[14] - modelo1$coefficients[2])**2)**.5
+# tres variables 
+modelo1 <- lm(y.test~ x14 + x15+ x8, data=test)
+normas[2] <- sum((betas[c(14,15,8)] - modelo1$coefficients[2:4])**2)**.5
+# cinco variables 
+modelo1 <- lm(y.test~ x13+ x14+ x15 + x8+x2, data=test)
+normas[3] <- sum((betas[c(13,14,15,8,2)] - modelo1$coefficients[2:6])**2)**.5
+# siete variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13+x14+ x15+x7+x8+x2, data=test)
+normas[4] <- sum((betas[c(10,12,13,14,15,7,8,2)] - modelo1$coefficients[2:9])**2)**.5
+# nueve variables 
+modelo1 <- lm(y.test~ x10 + x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+normas[5] <- sum((betas[c(10,12,13,14,15,7,8,9,2)] - modelo1$coefficients[2:10])**2)**.5
+#14 variables
+modelo1 <- lm(y.test~ x16+x17+x19+ x10 + x11+x12 + x13 + x14+x15+ x7+x8+x9+x2, data=test)
+normas[5] <- sum((betas[c(16,17,19,10,11,12,13,14,15,7,8,9,2)] - modelo1$coefficients[2:14])**2)**.5
+#todas 
+plot(1:5, normas,
+     main="Norma de los coeficientes", type='b',
+     xlab='No. de variables 1, 3,5,9 y 14', ylab='', pch=20, 
+     col=rgb(143/255, 0, 211/255, alpha=0.2), 
+     cex=1.5)
+```
+

@@ -1,0 +1,1257 @@
+---
+title: "Temas selectos de econometría y finanzas (modulo de econometría)"
+author: "J. Antonio García Ramirez (tarea 4)"
+date: "1 de octubre de 2018"
+output: 
+  pdf_document: 
+    number_sections: yes
+    toc: yes
+  html_document: 
+    toc: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, warning = FALSE, message = FALSE, fig.width = 12, fig.height = 12)
+```
+
+# Ejercicio 1
+
+En los Estados Unidos de Mundomaravilloso la tasa de crecimiento de ingresos $GNP_t$, la demanda de dinero $M2_t$ y la tasa de interes $IR_t$ siguen un proceso $VAR(2)$ dado por:
+$$
+\begin{pmatrix}
+GNP_t \\ M2_t \\ IR_t
+\end{pmatrix} = v + \phi_1
+\begin{pmatrix}
+GNP_{t-1} \\ M2_{t-1} \\ IR_{t-1}
+\end{pmatrix} + \phi_2
+\begin{pmatrix}
+GNP_{t-2} \\ M2_{t-2} \\ IR_{t-2}
+\end{pmatrix} + 
+\begin{pmatrix}
+Z_{1,t} \\ Z_{2,t} \\ Z_{3,t}
+\end{pmatrix}
+$$
+
+Con $v = \begin{pmatrix}
+2 \\ 1 \\ 0
+\end{pmatrix}, \phi_1 = 
+\begin{pmatrix} 0.7 & 0.1 & 0 \\
+0 & 0.4 & 0.1 \\
+0.4 & 0 & 0.8
+\end{pmatrix}, \phi_2 = 
+\begin{pmatrix} -0.2 & 0 & 0 \\
+0 & 0.1 & 0.1 \\
+0 & 0 & 0
+\end{pmatrix}$ 
+
+a)  *Muestre que el proceso $X_t=(GNP_t, M2_t,IR_t)^t$ es estable.*
+
+Por definición un proceso $VAR(p)$ es estable si las raices del polinomio $I_k-\phi_1z-\phi_2z^2+...+\phi_pz^p$ no estan en el circulo unitario complejo.
+
+Tenemos que el polinomio caracter´´istico inverso del proceso $X_t$ es:7
+
+$$det(I_3-\phi_1z-\phi_1z^2) = det\begin{pmatrix}
+1-0.7z+0.2z^2 & -0.1z^2 & 0\\
+0 & 1-0.4z-0.1z^2 & -0.1z -0.1z^2 \\
+-0.9z & 0& 1-0.8z^2
+\end{pmatrix}$$
+
+De donde $$det(I_3-\phi_1z-\phi_1z^2) = (1-0.7z+0.2z^2)(1-0.4z--0.1z^2)(1-0.8z^2)-(0.9z)(-0.1z)(-0.1z-0.1z^2)$$
+
+Lo cual déspues de simplificar queda como 
+
+$$det(I_3-\phi_1z-\phi_1z^2) = 1-1.1z-0.42z^2+0.861z^3-0.333z^4+0.008z^5+0.016z^6$$
+
+Y obtenemos la raicez del polinomio 
+
+```{r}
+x <- polyroot(c(1, -1.1, -0.42, 0.861, -0.333, 0.008, 0.16))
+x
+```
+
+Cuyos modulos son:
+
+```{r}
+abs(x)
+```
+
+Y como todas las raices del polinomio aracterístico inverso tienen un modulo mayor a la unidad el proceso $X_t$ es estable
+
+b)  Determine el vactor de medias del proceso $X_t$
+
+Déspues de realizar los productos llegamos a que 
+
+\begin{equation*}
+GNP_t = 2 +0.7GNP_{t-1} +0.1M2_{t-1} -0.2GNP_{t-2} +Z_{1,t}
+\end{equation*}
+
+\begin{equation*}
+M2_t = 1 +0.4M2_{t-1} +0.1IR_{t-1} +0.1M2{t-2} +0.1IR_{t-2}+Z_{2,t}
+\end{equation*}
+
+Y 
+
+\begin{equation*}
+IR_t = 0.9GNP_{t-1} + 0.8IR_{t-1} +Z_{3,t}
+\end{equation*}
+
+De las ecuaciones anteriores sacando esperanzas y utilizando que $X_t$ s estacionario y que $E(Z_{i,t})=0$ tenemos las siguientes tres ecuaciones:
+
+
+\begin{equation}
+E(IR_t) = \frac{9}{2}E(GNP_{t-1}) 
+\end{equation}
+
+\begin{equation}
+E(GNP_t) = 4+ 0.2E(M2_{t-1}) 
+\end{equation}
+
+Y
+
+\begin{equation}
+E(M2_t)  = 2 + 4E(IR_{t-1})
+\end{equation}
+
+Y sustituyendo (1) en (3) y luego en (2)
+
+\begin{equation*}
+E(M2_t)  = 2 + \frac{18*4}{10}+\frac{36}{100}E(M2_{t-1}) 
+\end{equation*}
+
+De donde $E(M2_{t})=14.\bar{3}$, y sustituyedo este valor en (2), obtenemos que 
+$$E(GNP_{t})=6.872$$ y utilizando este resultado en (1) obtenemos filamente que $$E(IR_t)=30.9375$$
+
+c)  Expresar el modelo $X_t$ como un modelo $VAR(1)$
+
+Abusando un poco de la notación denotamos como $AR(1)=v + \phi_1X_{t-1}+Z_{t}$
+Para hacer facíl de escribir las siguientes recurrencias:
+
+$$X_2=v + \phi_1X_1+\phi_2X_0 + Z_2 = AR(1) + \phi_2X_0$$
+$$X_3= v + \phi_1X_{2}+ Z_{3} + \phi_2X_{2} = AR(1) + \phi_2X_1$$
+
+$$X_4= AR(1) + \phi_2AR(1) = AR(1) + \phi_2(AR(1) + \phi_2^2X_0)$$
+En general 
+
+$$X_{2n} =AR(1) + \sum_{i=1}^n\phi_2^iX_0$$
+Y 
+$$X_{2n+1} = AR(1) + \sum_{i=1}^{\lfloor{2n+1} \rfloor}\phi_2^{i}X_1$$
+
+Y como el proceso $\phi_2^i$ tiende a cero conforme $i\rightarrow \infty$ entonces $X_{t}$ sigue un proceso $AR(1)$
+
+# Ejercicio 2
+
+*Muestra el procedimiento de cómo presentar las funciones de respuesta-impulso de manera ortogonalizada.*
+
+
+Después de revisar el texto Helmut Lütkepohl  de *Lütkepohl*, por segunda vez en la vida :D,  en vista de que la ayuda de el ambiente $R$ es bastante precaria, al no profundizar claramente en la documentación en la diferencia entre las funciones de respuesta-impulso sin ortogonalización, y después de consultar la pág. 58 del citado texto puedo decir que la diferencia entre las funciones de respuesta impulso no ortogonalización y las ortogonalización es sencilla.
+
+Si en un modelo $VAR(p)$ se encuentra que la matriz de covarianza de los ruidos $\Sigma_u$ presenta elementos fuera de la diagonal esto hace __más__ difícil identificar qué choques afectan a una sola variable por lo que al aprovechar la simetría de $\Sigma_u$ (la matriz de varianzas de los errores) esta se puede factorizar por el método de Cholesky y llevar de un sistema $VAR(p)$ a una forma diagonal (con el método que vimos en clase de formar una gran matriz donde cada entrada de la primer fila es una matriz de coeficientes del modelo $VAR(1)$, __lo cual personalmente no acabo de entender y por ello no lo utilice en el ejercicio anterior en la parte c__ 
+
+Como dato curioso el texto menciona que Herman Wold (el mismo econometrista del que he estado leyendo por PLS) que en estos modelos el investigador debe especificar las variables causales ¡lo cual contradice la primer bondad que enunciamos de los modelos $VAR(p)$!
+
+
+Pero a costa de lo anterior permite-medir -interpretar de mejor manera la causalidad que definimos como de Granger donde los choques de una componente del vector solo afectan a los siguientes que se definen como causales. 
+
+Repetire la simulación que se nos proporcionó primero para reafirmar lo aprendido con un modelo $VAR(1)$ bivariado definido por:
+
+
+$$ X_t = v +
+\begin{pmatrix} 
+0.3966972 & 0\\
+-0.2344913 & -0.1278761
+\end{pmatrix} X_{t-1} +Z_t
+$$
+
+Y simulando uno de estos modelos para comprobar que en efecto $X_{2}$ no es causal de $X_{1}$, tenemos las funciones de respuesta impulso ortogonalizadas siguientes, donde se aprecia que la componente $X_1$ no es causa de $X_2$. 
+
+
+
+```{r noCausalidad, warning=FALSE, echo=FALSE}
+library(vars)
+library(portes)
+library(tseries)
+library(forecast)
+colores <- c('#7327DE', '#188680', '#C74A80', '#2ABDC7', '#495FC2')
+# parAmetros
+T <- 100 # longitud de la serie
+C <- 100 # lag que se quita para aminorar el efecto de punto inicial
+K <- 1   # numero lags
+p <- 2  # numero de series 
+R <- 500
+alpha <- 0.05
+set.seed(0)
+
+# simulamos algunos coeficientes con cero en la posicion (1,2)
+# introcimos un cero
+Phi <- runif(3 , -0.5, 0.5)
+Phi <- c(Phi[1:2], 0, Phi[3]) 
+
+# coeficientes VAR(2)
+Phi  <- array(Phi, dim = c(  p, p, 1) )
+Phi
+Y <- varima.sim(model=(list(ar = Phi)), n = T + C, k= p,
+                  innov.dist = "Gaussian")
+# quitamos las primeras series
+Y <- Y[-(1:C),]
+# rezago
+k <- VARselect(Y, type = "none")
+print('Rezagos')
+k$selection[c("AIC(n)", "SC(n)","HQ(n)")]
+# estimaciOn
+var1 <- VAR(Y, p = 1, type = "none")
+# estacionariedad
+print('Raices más grande del polinomio caracteristico')
+max(roots(var1))
+# pruebas de residuales
+print('Prueba de Pormanteau')
+serial.test(var1)$serial$p.value # prueba de errores correlacionados, test de Portmanteau
+print('Test de presencia de Arch')
+arch.test(var1)$arch$p.value # test de Arch
+# causalidad
+print('Causalidad de X_1 con X_2' )
+causality(var1, cause = paste("Series.", 1, sep = ""))$Granger
+print('Causalidad de X_2 con X_1' )
+causality(var1, cause = paste("Series.", 2, sep = ""))$Granger
+####### Grafica  de funciones respuesta impulso 
+# como buen ejemplo simulado todo va viento en popa
+# causalidad de Granger
+
+# estimamos las funciones de respuesta-impulso
+irff <- irf(var1, ortho=TRUE)
+colnames(Y) <- paste0('Series.', 1:2)
+# plot
+opp <- par(mfrow = c(2, 2))
+for(j in 1 : ncol(Y)){
+  for(i in 1 : ncol(Y)){
+    mea <- irff$irf[[colnames(Y)[j]]][,i]
+    li <- irff$Lower[[colnames(Y)[j]]][,i]
+    ls <- irff$Upper[[colnames(Y)[j]]][,i]
+    mat_irf <- cbind(mea, li, ls)
+    ts.plot(mat_irf, ylab = "", xlab = "", col = colores,
+            lty = c(1, 2))
+    abline(h = 0, lty = 2, col = 3)
+    title(paste(colnames(Y)[j], "->", colnames(Y)[i], sep = ""))
+  }
+}
+```
+
+Mientras que al repetir el mismo experimento pero con funciones de respuesta-impulso no ortogonalizas el mismo ejemplo queda como sigue, las indiferencias son pequeñas en vista de que solo utilizamos un vector vivariado y un lag de 1, sin enbargo que observa que las funciones de respuesta-impulso no ortogonalizadas son más sensibles a cambios pequeños, esto se debe a que observamos el resultado de un mayor número de choques en la respuesta de una sola componente.
+
+
+```{r noCausalidadNoOrtogonal, warning=FALSE, echo=FALSE}
+# parAmetros
+T <- 100 # longitud de la serie
+C <- 100 # lag que se quita para aminorar el efecto de punto inicial
+K <- 1   # numero lags
+p <- 2   # numero de series 
+R <- 50
+alpha <- 0.05
+set.seed(0)
+
+# simulamos algunos coeficientes con cero en la posicion (1,2)
+# introcimos un cero
+Phi <- runif(3 , -0.5, 0.5)
+Phi <- c(Phi[1:2], 0, Phi[3]) 
+
+# coeficientes VAR(2)
+Phi  <- array(Phi, dim = c(  p, p, 1))
+Phi
+Y <- varima.sim(model=(list(ar = Phi)), n = T + C, k = p,
+                  innov.dist = "Gaussian")
+# quitamos las primeras series
+Y <- Y[-(1:C),]
+# rezago
+k <- VARselect(Y, type = "none")
+print('Rezagos')
+k$selection[c("AIC(n)", "SC(n)","HQ(n)")]
+# estimaciOn
+var1 <- VAR(Y, p = K, type = "none")
+# estacionariedad
+print('Raices más grande del polinomio caracteristico')
+max(roots(var1))
+# pruebas de residuales
+##print('Prueba de Pormanteau')
+##serial.test(var1)$serial$p.value # prueba de errores correlacionados, test de Portmanteau
+##print('Test de presencia de Arch')
+##arch.test(var1)$arch$p.value # test de Arch
+# # causalidad
+# print('Causalidad de X_1 con X_2' )
+# causality(var1, cause = paste("Series.", 1, sep = ""))$Granger
+# print('Causalidad de X_2 con X_1' )
+# causality(var1, cause = paste("Series.", 2, sep = ""))$Granger
+####### Grafica  de funciones respuesta impulso 
+# como buen ejemplo simulado todo va viento en popa
+# causalidad de Granger
+
+# estimamos las funciones de respuesta-impulso
+irff <- irf(var1, ortho=FALSE) # no ortogonalizamos
+colnames(Y) <- paste0('Series.', 1:2)
+# plot
+opp <- par(mfrow = c(2, 2))
+for(j in 1 : ncol(Y)){
+  for(i in 1 : ncol(Y)){
+    mea <- irff$irf[[colnames(Y)[j]]][,i]
+    li <- irff$Lower[[colnames(Y)[j]]][,i]
+    ls <- irff$Upper[[colnames(Y)[j]]][,i]
+    mat_irf <- cbind(mea, li, ls)
+    ts.plot(mat_irf, ylab = "", xlab = "", col = colores,
+            lty = c(1, 2))
+    abline(h = 0, lty = 2, col = 3)
+    title(paste(colnames(Y)[j], "->", colnames(Y)[i], sep = ""))
+  }
+}
+remove(list=ls())
+```
+
+
+# Ejercicio 3
+
+*Modifica el experimento Monte Carlo de tal forma que observes el funcionamiento muestral de los diferentes estadísticos que se analizaron en clase. Modifica a tu interés los siguientes parámetros: coeficientes del modelo VAR, rezagos, estructuras de covarianza en los errores y tamaño de muestras y comenta lo hallado. Para cada uno de ellos prueba dos diferentes casos. Idea de trabajo final, nota que estamos analizando el funcionamiento de diferentes pruebas bajo stress.*
+
+En todos las simulaciones realizamos 1,000 repeticiones, con longitud de las series de 1,000, a menos que se indica los conrario.
+
+__Por curiosidad, y ligado al resultado del modulo de matrices aleatorias que dice que la distribución de los valores propios de una matriz aleatoria símetrica y con entradas normales es invariante bajo rotaciones, comencemos con un modelo $AR(1)$ 5-variado con la matriz $\phi_1$ simetríca y veamos como se comporta, donde los coeficientes de $\phi_1$ son menores a la unidad en todos los casos.__
+
+El modelo es $$X_t = v + \phi_1X_t +Z_t$$
+
+Con $$\phi_1=\begin{pmatrix} 
+0.25  &-0.19&  0.21&  0.09  &0.02\\
+ -0.19 &-0.19& -0.11&  0.02  &0.28\\
+  0.21 &-0.11& -0.23& -0.12 &-0.02\\
+  0.09&  0.02& -0.12&  0.09 &-0.04\\
+  0.02 & 0.28& -0.02& -0.04&-0.01
+\end{pmatrix}$$
+
+
+Como era de esperarse el modelo tiene un lag óptimo según el criterio de Akaike de 1, los residuos no muestran correlación serial y tampoco se observa el fenómeno ARCH en las varianzas de los errores estimados, esto según la prueba de Portmanteau y el test de ARCH. Finalmente como podemos ver en la gráfica siguiente todas las series parecen tener causalidad en el sentido de Granger con respecto a las otras componentes del proceso $X_t$
+
+```{r, parametro, echo=FALSE}
+tiempo <- 1000
+repeticiones.cortas <- 1000
+```
+
+```{r primercoeficente, fig.height=7, echo=FALSE}
+Monete.Carlo <- function(m, T=1000, C=1000, K=1, p=5, n)
+{
+  # parAmetros
+  T <- T #longitud deseada de la seria
+  C <- C #periodo de corte
+  K <- K # numero de lags
+  p <- p # numero de series univariadas
+  alpha <- 0.05 #nivel de confianza de las pruebas
+  est <- c("maxroot", "AIC", "SC", "HQ", "serial", "arch",
+         paste("Series",1:p, sep = ""))
+  resultados <- rep(-Inf,  length(est))
+  names(resultados) <- est
+  # me tome la libertad de reescribirlo de manera que sea paralelizable
+  # simulaciOn
+  n <- p
+  function(m)
+  {  
+    Y <- varima.sim(model=(list(ar = m)), n = T + C, k = n,
+                  innov.dist = "Gaussian")
+    Y <- Y[-(1:C),] # quitamos las primeras series
+    # rezago
+    k <- VARselect(Y, type = "none")
+    resultados[c("AIC", "SC", "HQ")] <- k$selection[c("AIC(n)", "SC(n)",
+                                                  "HQ(n)")]
+    # estimaciOn
+    var1 <- VAR(Y, p =K, type = "none")
+    # estacionariedad
+    resultados["maxroot"] <- max(roots(var1))
+    # pruebas de residuales
+    resultados["serial"] <- serial.test(var1)$serial$p.value # prueba de errores correlacionados, test de Portmanteau
+    resultados["arch"] <- arch.test(var1)$arch$p.value # test de Arch
+    # causalidad
+    for(j in 1 : p)
+    {
+      resultados[paste("Series",j, sep = "")] <- c(causality(var1,
+                                         cause = paste("Series.",j,
+                                          sep = ""))$Granger$p.value)
+    }
+    resultados <- t(resultados)
+    colnames(resultados) <- c("maxroot", "AIC", "SC", "HQ", 
+                                       "serial", "arch",
+                                       paste("Series",1:p, sep = ""))
+    
+    return((resultados))
+  }
+}
+####################
+########## parAmetros
+T <- tiempo #longitud deseada de la seria
+C <- tiempo #periodo de corte
+K <- 1 # numero de lags
+p <- 5 # numero de series
+alpha <- 0.05 #nivel de confianza de las pruebas
+R <- repeticiones.cortas #numero de repeticiones
+set.seed(0)
+n <- 5 #tamanio del vector
+m <- matrix(rnorm(n**2, 0, .2), n, n)
+m <- (m + t(m))/2
+m <- round(m, 2)
+dim(m) <- c(n, n, 1)
+Monete.Carlo.init <- Monete.Carlo(  T, C, K, p, n)
+resultados <- replicate( R, Monete.Carlo.init(m))
+dim(resultados) <- c(11, R)
+resultados <- t(resultados)
+colnames(resultados) <- c("maxroot", "AIC", "SC", "HQ", "serial", "arch",
+                          paste("Series",1:p, sep = ""))
+# observamos los resultados
+sum(resultados[,"maxroot"] < 1)/R
+colSums(resultados[, c("AIC", "SC", "HQ")] == K )/R
+colSums(resultados[,c("serial", "arch")] > alpha)/R
+colSums(resultados[,paste("Series",1:p, sep = "")] < alpha)/R
+# funciones de respuesta impulso 
+Y <- varima.sim(model=(list(ar = m)), n = T + C, k = n,
+                innov.dist = "Gaussian")
+p.1 <- VARselect(Y, type = "const")$selection["AIC(n)"]
+# estimamos el var
+varc <- VAR(Y, p = p.1, type = "const")
+#summary(varc)
+# pruebas a los residuales
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+# como otra buena simulación esta bien 
+# causalidad de Granger
+cau <- matrix(0, ncol(Y), 1)
+colnames(cau) <- "p.value"
+rownames(cau) <- colnames(Y)
+colnames(Y) <- paste0('Series.', 1:p )
+for(i in 1 : ncol(Y))
+  cau[i,] <- causality(varc, colnames(Y)[i])$Granger$p.value
+cau <- round(cau, 4)
+cau
+```
+
+```{r primercoeficente2, fig.height=10, echo=FALSE}
+colores <- c('#7327DE', '#188680', '#C74A80', '#2ABDC7', '#495FC2')
+# estimamos las funciones de respuesta-impulso
+irff <- irf(varc, ortho=TRUE)
+colnames(Y) <- paste0('Series.', 1:p)
+opp <- par(mfrow = c(p, p))
+for(j in 1 : ncol(Y))
+{
+  for(i in 1 : ncol(Y))
+  {
+    mea <- irff$irf[[colnames(Y)[j]]][,i]
+    li <- irff$Lower[[colnames(Y)[j]]][,i]
+    ls <- irff$Upper[[colnames(Y)[j]]][,i]
+    mat_irf <- cbind(mea, li, ls)
+    ts.plot(mat_irf, ylab = "", xlab = "", col = colores, lty = c(1, 2, 2, 2, 1))
+    abline(h = 0, lty = 2, col = '#5200CD')
+    title(paste(colnames(Y)[j], "->", colnames(Y)[i], sep = ""))
+  }
+}
+```
+
+Proseguimos a estresar las pruebas con un modelo $AR(3)$ con vectores de dimensión $10$, por ello cuidamos que la longitud de las series simuladas sea 1,000 y no cuidamos que las matrices $\phi_1$, $\phi_2$ y $\phi_3$ sean simétricas, pero que sus coeficientes tengan esperanza de cero para que el proceso sea estable, es decir que todas las raices del polinomio característico inverso del proceso tengan soluciones fuera del circulo unitario en el plano complejo.
+
+Repitiendo cada entrada $\sim N(0,0.1)$
+
+En todas las simulaciones encontramos que el número de rezagos óptimo es 3, segun los criterios $AIC$, $SC$ y $HQ$. De nueva cuenta cada variable por si misma es causal de si misma, no observamos correlación serial en cada componente segun la prueba de Portmanteau ni efectos ARCH con confianza de 0.95. De igual manera todas las series son causales de las demas en el sentido de Granger con la confianza mencionada. Y ninguna raíz del polinomio característico es mayor a la unidad por lo que el proceso es causable.
+
+
+```{r segundosparametros, echo=FALSE, fig.height=7}
+####################
+########## parAmetros
+T <- tiempo #longitud deseada de la seria
+C <- tiempo #periodo de corte
+K <- 3 # numero de lags
+p <- 10 # numero de series
+alpha <- 0.05 #nivel de confianza de las pruebas
+R <- repeticiones.cortas #numero de repeticiones
+set.seed(0)
+n <- 10 #tamanio del vector
+m <- matrix(rnorm(n*n*K, 0, .1))
+dim(m) <- c( n, n, K)
+m <- round(m, 2)
+Monete.Carlo.init <- Monete.Carlo(  T, C, K, p, n)
+resultados <- replicate( R, Monete.Carlo.init(m))
+dim(resultados) <- c(16, R)
+resultados <- t(resultados)
+colnames(resultados) <- c("maxroot", "AIC", "SC", "HQ", "serial", "arch",
+                          paste("Series",1:n, sep = ""))
+# observamos los resultados
+sum(resultados[,"maxroot"] < 1)/R
+colSums(resultados[, c("AIC", "SC", "HQ")] == K )/R
+colSums(resultados[,c("serial", "arch")] > alpha)/R
+colSums(resultados[,paste("Series",1:p, sep = "")] < alpha)/R
+# funciones de respuesta impulso 
+Y <- varima.sim(model=(list(ar = m)), n = T + C, k = n,
+                innov.dist = "Gaussian")
+p.1 <- VARselect(Y, type = "const")$selection["AIC(n)"]
+# estimamos el var
+varc <- VAR(Y, p = p.1, type = "const")
+#summary(varc)
+# pruebas a los residuales
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+cau <- matrix(0, ncol(Y), 1)
+colnames(cau) <- "p.value"
+rownames(cau) <- colnames(Y)
+colnames(Y) <- paste0('Series.', 1:n )
+for(i in 1 : ncol(Y))
+  cau[i,] <- causality(varc, colnames(Y)[i])$Granger$p.value
+cau <- round(cau, 4)
+cau
+fore <- predict(varc, n.ahead = 12)
+#plot(fore, col = colores)
+# estimamos las funciones de respuesta-impulso
+#irff <- irf(varc, orto=TRUE)
+# plot
+```
+
+
+
+
+Encontramos que el proceso es estable pues ninguno de sus valores propios es menor a cero. De nueva cuenta los test de Portmanteau y de ARCH no indican correlación serial ni heterocedasticidad y como en los casos anteriores todas las componentes parece ser causales en el sentido de Granger,  __lo cual es un hecho que concuerda ccon el resultado que hemos visto en el modulo de matrices aleatorias acerca de que el Ensamble Gaussiano es un Ensamble independiente en sus entradas y que mientras vas entradas tiene, tienden a estrecharse ¡aún siendo independientes, solo que muchas!__ 
+
+Para medir qué tan importante es la maldición de la dimensionalidad en estos procesos, repito el mismo ejercicio pero simulando series de longitud 500 y vectores de diez entradas, en el cuadro siguiente se tienen los resultados:
+
+Repitiendo cada simulación 1000 veces, pero con entradas $\sim N(0,0.1)$
+
+
+Encontramos que el proceso es estable pues ninguno de sus valores propios es menor a cero. En esta ocación los test para elegir el rezago óptimo no son consistentes (se reporta el procentaje de los simulaciones que eligieron rezago de 3 de las 1000), el  test de Portmanteau y de ARCH no indican correlación serial ni heterocedasticidad al igual que el caso anterior, todas las componentes parece ser causal de las otras en el sentido de Granger.
+
+```{r segundosparametros500, echo=FALSE, fig.height=7}
+####################
+########## parAmetros
+T <- tiempo/2#longitud deseada de la seria
+C <- tiempo/2 #periodo de corte
+K <- 3 # numero de lags
+p <- 10 # numero de series
+alpha <- 0.05 #nivel de confianza de las pruebas
+R <- repeticiones.cortas
+set.seed(0)
+n <- 10 #tamanio del vector
+m <- matrix(rnorm(n*n*K, 0, .1))
+dim(m) <- c( n, n, K)
+m <- round(m, 2)
+Monete.Carlo.init <- Monete.Carlo(  T, C, K, p, n)
+resultados <- replicate( R, Monete.Carlo.init(m))
+dim(resultados) <- c(16, R)
+resultados <- t(resultados)
+colnames(resultados) <- c("maxroot", "AIC", "SC", "HQ", "serial", "arch",
+                          paste("Series",1:n, sep = ""))
+# observamos los resultados
+sum(resultados[,"maxroot"] < 1)/R
+colSums(resultados[, c("AIC", "SC", "HQ")] == K )/R #rezago promedio por criterio
+colSums(resultados[,c("serial", "arch")] > alpha)/R
+colSums(resultados[,paste("Series",1:p, sep = "")] < alpha)/R
+# funciones de respuesta impulso 
+Y <- varima.sim(model=(list(ar = m)), n = T + C, k = n,
+                innov.dist = "Gaussian")
+p.1 <- VARselect(Y, type = "const")$selection["AIC(n)"]
+# estimamos el var
+varc <- VAR(Y, p = p.1, type = "const")
+#summary(varc)
+# pruebas a los residuales
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+cau <- matrix(0, ncol(Y), 1)
+colnames(cau) <- "p.value"
+rownames(cau) <- colnames(Y)
+colnames(Y) <- paste0('Series.', 1:n )
+for(i in 1 : ncol(Y))
+  cau[i,] <- causality(varc, colnames(Y)[i])$Granger$p.value
+cau <- round(cau, 4)
+cau
+#fore <- predict(varc, n.ahead = 12)
+```
+
+Solo para medir qué tan importante es mantener un modelo parsimonioso o la  maldición de la dimensionalidad, repito el mismo ejercicio pero simulando series de longitud 330 la cantidad mínima y sufiente para estimar el mismo numero de parámetros, en el cuadro siguiente se tienen los resultados (considerando tres rezagos, un vector 10-variado y mil repeticiones).
+
+Como era de esperarse por el alto número de parámetros a estimar con relación al número de observaciones los resultados no concuerdan con los anteriores ejemplos.
+
+El lag óptimo solo fue seleccionado bien en su totalidad por el criterio de AIC.
+Ninguna ejecución de las mil iteraciones pasaron la prueba individual de no correlación al 95%, mientras que todas no pasaron el test de presencia de fenómeno ARCH, el polinomio característico del proceso sigue teniendo sus raíces en la circunferencia unitaria y todas  las variables siguen siendo causales en el sentido de Granger entre sí mismas
+
+
+
+```{r segundosparametros330, echo=FALSE, fig.height=7}
+####################
+########## parAmetros
+T <- 330#longitud deseada de la seria
+C <- 330 #periodo de corte
+K <- 3 # numero de lags
+p <- 10 # numero de series
+alpha <- 0.05 #nivel de confianza de las pruebas
+R <- repeticiones.cortas
+set.seed(0)
+n <- 10 #tamanio del vector
+m <- matrix(rnorm(n*n*K, 0, .1))
+dim(m) <- c( n, n, K)
+m <- round(m, 2)
+Monete.Carlo.init <- Monete.Carlo(  T, C, K, p, n)
+resultados <- replicate( R, Monete.Carlo.init(m))
+dim(resultados) <- c(16, R)
+resultados <- t(resultados)
+colnames(resultados) <- c("maxroot", "AIC", "SC", "HQ", "serial", "arch",
+                          paste("Series",1:n, sep = ""))
+# observamos los resultados
+sum(resultados[,"maxroot"] < 1)/R
+colSums(resultados[, c("AIC", "SC", "HQ")] ==K )/R 
+colSums(resultados[,c("serial", "arch")] > alpha)/R
+colSums(resultados[,paste("Series",1:p, sep = "")] < alpha)/R
+# funciones de respuesta impulso 
+Y <- varima.sim(model=(list(ar = m)), n = T + C, k = n,
+                innov.dist = "Gaussian")
+p.1 <- VARselect(Y, type = "const")$selection["AIC(n)"]
+# estimamos el var
+varc <- VAR(Y, p = p.1, type = "const")
+#summary(varc)
+# pruebas a los residuales
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+cau <- matrix(0, ncol(Y), 1)
+colnames(cau) <- "p.value"
+rownames(cau) <- colnames(Y)
+colnames(Y) <- paste0('Series.', 1:n )
+for(i in 1 : ncol(Y))
+  cau[i,] <- causality(varc, colnames(Y)[i])$Granger$p.value
+cau <- round(cau, 4)
+cau
+```
+
+# Ejercicio 4
+
+*Construye un modelo $VAR$ cuyo objetivo sea analizar y pronosticar la inflación interanual de México para el siguiente periodo no disponible. Elige un periodo de muestra que consideres apropiado y realiza las pruebas que consideres necesarias para verificar que el modelo pronosticará bien a futuro. Puedes utilizar variables relacionadas endógenamente (según la teoría económica) como oferta de billetas y monedas (M0), tipo de cambio nominal, tasa de desempleo y salarios reales.*
+
+Decidí utilizar los ingresos por remesas, pues considero que es una variable importante porque justo cuando deje mi último empleo me ví en la tarea de leer el tratado IMMEX que engloja a las maquiladores y que tiene más de un millon de empleos directos y cerca de 2 millones indirectos, denoto a esta variable como $REM$ y la información la encontre en un portal de [Banxico](http://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=1&accion=consultarCuadro&idCuadro=CE81&locale=es) la información es "Remesas Totales (Millones de dólares)" y anexo los datos en el archivo 'remesas.csv', los datos se reportan desde el primero de enero de 1996.
+
+Para la inflación considere el indice nacional de precios al consumidor que denoto como $INP$, con año base el 2010 ya que siempre he desconfiado de los pronosticos de BANXICO,  sospechando de un cambio estructural antes de ese año, los datos los adquirí del [INEGI](http://www.inegi.org.mx/sistemas/indiceprecios/Estructura.aspx?idEstructura=112000200040&T=%C3%8Dndices%20de%20Precios%20al%20Consumidor&ST=Inflaci%C3%B3n) y corresponden a los publicados en el diario oficial de la federación mes con mes con la etiqueta "Inflación mensual interanual" aunque se reportan mes con mes desde enero de 1971. Los datos los anexo en el archivo 'inpc.csv"
+
+Di un salto de fe y consulte los datos sobre la demanda de billetes y monedas de [BANXICO](http://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=11&accion=consultarCuadro&idCuadro=CF315&locale=es)  considerando lo que está en flujo y lo que está en los bancos. Los datos los anexo en el archivo 'mo.csv' y se reportan mensualmente desde 1985. También consulte los tipos de cambio de peso a dólar de BANXICO etiquetados como tasa de crecimiento anual que anexo en el archivo 'tasa De cambio.csv' que contempla la fecha de publicación en el diario oficial de la federación y que se reporta mensualmente a partir de noviembre de 1992.
+
+Finalmente para la tasa de desempleo la consulte en el banco de información del [INEGI](http://www.inegi.org.mx/Sistemas/BIE/) en el rubro de  "Poblacional nacional tasa de desocupación" ya que son mensuales y se encuentran disponibles desde enero del 2005. Las anexo en el archivo 'tasadesocupacion.csv'.
+
+Por último considere los salarios reales como los que se reportan al [IMSS](http://www.inegi.org.mx/Sistemas/BIE/Default.aspx?Topic=0&idserPadre=10100360#D10100360) en vista de que hace unos meses trabajé con un contador que trabajaba ahí y me explico los diferentes salarios que hay en el léxico contable. Los datos los anexo en el archivo 'salariosreales.csv'.
+
+```{r setupvar, echo=FALSE, message=FALSE, warning=FALSE}
+colores <- c('#7327DE', '#188680', '#C74A80', '#2ABDC7', '#495FC2', '#13E214')
+library(seasonal)
+library(vars)
+library(tseries)
+library(TSstudio) # chida para dibujar facil series de tiempo como en 
+                    #ggplot2 pero interactivas
+###########################################
+Busetti.Harvey <- function(y, option='both', k = k, 
+                           posicion=posicion, 
+                           p=.95)
+{
+    # y (numeric): vector con la serie de tiempo
+    # K (int): numero de posibles saltos estructurales 1<=k<=4
+    # posiciones (int): vector con los indices en donde la serie se sospecha que
+    #presenta cambios estructurales
+    # p (double): confianza a la que se requiere el test
+    if(k >4) stop()
+    serie <- y
+    posicion <- posicion
+    k <- k
+    #creamos un dataframe con las posiciones para particionar la serie
+    particion <- data.frame(start = c(1, posicion+1), 
+                            stop = c(posicion, length(serie)))
+    e <- serie
+    # a continuacion particionamos la serie con el data.frame 'particion'
+    muestras <- lapply(X=1:dim(particion)[1], 
+                       function(x)
+                       {
+                           return(e[particion$start[x]:particion$stop[x]])
+                           
+                       })
+    estadistico.particion <- function(parte)
+    {
+        #calculo del numerados del estadistico dado por la ecuacion (4.5) del paper
+        media.parte <- mean(unlist(parte), na.rm=TRUE ) 
+        e.s <- sum((cumsum( parte- media.parte))**2)
+        return(e.s/(length(parte)**2))
+    }
+    errores <- lapply(muestras, estadistico.particion)
+    sigma <- var(serie) #para ambos casos la varianza se calcula igual
+    # se termina calculo del estadistico de la ecuacion (4.5)
+    estadistico <- sum(unlist(errores))/sigma
+    #tabla de valores de los valores criticos para el modelo de la forma 1
+    tabla1 <- data.frame(k = 1:4, 
+                         p0.9 =c(0.347, 0.607, 0.841, 1.063),
+                         p0.95= c(0.461, 0.748, 1.000, 1.237  ),
+                         p0.99 = c(0.743, 1.074, 1.359, 1.623 ))
+    
+    #tabla de valores de los valores criticos para el modelo de la forma 2
+    tabla2 <- data.frame(k=1:4, 
+                         p0.9= c(0.119, 0.211, 0.296, 0.377),
+                         p0.95= c(0.149, 0.247, 0.332, 0.423 ),
+                         p0.99 = c(0.218, 0.329, 0.428, 0.521  ) )
+    if( option == 'c') #determinacion del valor critico
+    {
+        valor.critico <- tabla1[ k , paste0('p',p)]
+    } else {
+        valor.critico <- tabla2[ k , paste0('p',p)]
+    }
+    a <- ifelse(estadistico >= valor.critico, 'Se rechaza H0, ie sí hay cambio estructural',
+                'No se rechaza H0, ie no hay cambio estructural' )
+    a <- paste0(a, ' en las posiciones: ', posicion, ' con confianza de: ', p)
+    return(a)
+}  #regresamos un mensaje imformativo
+#############################################
+SMAPE <- function(y.hat, y ,n )
+{##funcion para medir el error de prediccion
+    # y.hat (matrix): valores estimados por el arima
+    # y (matrix): valores conocidos
+    n <- n
+    error <- apply(abs(y.hat - y)/(abs(y.hat) + abs(y)), 2, sum)
+    error <- (100/n)*error
+    return(error)
+}
+#################################################
+adf.test.custom <- function(y, option='none')
+{
+    # y (numeric): vector con los datos de la serie de tiempo univariada
+    y <- ts(y) 
+    lag <- floor(log(length(y))) + 1 #acotamos el numero de lags por el que siguiere el 
+    #texto de Chan Ngai
+    datos <- data.frame(y1 = diff(y))
+    for (i in 2:lag) #aumentamos las columnas de lag´s 
+    {
+        datos[, as.character(paste0('y',i))] <- c(diff(y, lag=i), rep(NA, i-1))
+    }
+    names(datos) <- c('y1', names(datos)[2:lag])
+    if (option == 'none')
+    {
+        #aplicamos el test para cada lag
+        resultado <- mapply(function(x)
+        {
+            formula <- paste(names(datos)[x], collapse = '+')
+            formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+            modelo <- lm(formula , data = datos )
+            resumen <- summary(modelo)
+            # nos fijamos si todos los coeficientes de la regresion
+            # son significativos individualmente
+            coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+            coeficientes.significativos <- coeficientes.significativos <= 0.05
+            if(sum(coeficientes.significativos) == 1)
+            {
+                big <- BIC(modelo)
+                # en caso de que todos los coeficientes sean significativos regresamos 
+                # el BIC de la regresion
+                return(big)
+            } else {return(Inf)} #si un coeficiente al menos es no significativo
+            #regresamos un BIC infinito
+        }, 2:lag)
+    }
+    if (option == 'c')
+    {
+        datos[, 'c'] <- rep(1, dim(datos)[1] )
+        #aplicamos el test para cada lag
+        resultado <- mapply(function(x)
+        {
+            formula <- paste(names(datos)[x], collapse = '+')
+            formula <- as.formula(paste0('y1 ~ ', formula))
+            modelo <- lm(formula , data = datos )
+            resumen <- summary(modelo)
+            # nos fijamos si todos los coeficientes de la regresion
+            # son significativos individualmente
+            coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+            coeficientes.significativos <- coeficientes.significativos <= 0.05
+            if( sum(coeficientes.significativos) == 2)
+            {
+                big <- BIC(modelo)
+                # en caso de que todos los coeficientes sean significativos regresamos 
+                #el BIC de la regresion
+                return(big)
+            }else {return(Inf)} #si un coeficiente al menos es no significativo 
+            #regresamos un BIC infinito
+        }, 2:lag)
+    }
+    if (option == 't')
+    {
+        datos[, 't'] <- cumsum(1:dim(datos)[1])
+        #aplicamos el test para cada lag
+        resultado <- mapply(function(x)
+        {
+            formula <- paste(c(names(datos)[x], 't'), collapse = '+')
+            formula <- as.formula(paste0('y1 ~ ', formula, '-1'))
+            modelo <- lm(formula , data = datos )
+            resumen <- summary(modelo)
+            # nos fijamos si todos los coeficientes de la regresion
+            # son significativos individualmente
+            coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+            coeficientes.significativos <- coeficientes.significativos <= 0.05
+            if(sum(coeficientes.significativos) == 2)
+            {
+                big <- BIC(modelo)
+                # en caso de que todos los coeficientes sean significativos regresamos 
+                #el BIC de la regresion
+                return(big)
+            }else { return(Inf)}  #si un coeficiente al menos es no significativo
+            #regresamos un BIC infinito
+        }, 2:lag)
+    }
+    if (option == 'both')
+    {
+        datos[, 't'] <- cumsum(1:dim(datos)[1])
+        #aplicamos el test para cada lag
+        resultado <- mapply(function(x)
+        {
+            formula <- paste(c(names(datos)[2:(x)], 't'), collapse = '+')
+            formula <- as.formula(paste0('y1 ~ ', formula))
+            modelo <- lm(formula , data = datos )
+            resumen <- summary(modelo)
+            # nos fijamos si todos los coeficientes de la regresion
+            # son significativos individualmente
+            coeficientes.significativos <- resumen$coefficients[, 'Pr(>|t|)']
+            coeficientes.significativos <- coeficientes.significativos <= 0.05
+            if(sum(coeficientes.significativos) == 3)
+            {
+                big <- BIC(modelo)
+                # en caso de que todos los coeficientes sean significativos regresamos
+                #el BIC de la regresion
+                return(big)
+            } else { return(Inf)}  #si un coeficiente al menos es no significativo
+            #regresamos un BIC infinito
+        }, 2:lag)
+    }
+    parsimonia <- which.min(resultado) 
+    names(parsimonia) <- 'Lag optimo'
+    return(parsimonia)
+}
+############################################
+predict.VAR.init <- function(n, ensamble)
+{
+    muestra <- ensamble
+    # Entradas:
+            # ensample (data.frame) Donde cada columna es una serie de tiempo ESTACIONALIZADA 
+            # n (int): numero de elementos en el conjunto de prueba
+            # ell conjunto de validacion consiste de la ultima observacion
+    function(n)
+    {
+        m <- dim(muestra)[1]
+        indices <- 1:(m-n)
+        train <- muestra[indices,]
+        test <- muestra[-(indices), ]
+        p <- VARselect(train,type = 'const')
+        p <- p$selection["AIC(n)"] # hay que cuidar la maldicion de la dimensionalidad 
+                         # probar con "HQ(n) SC(n) FPE(n)
+        v.ar <- VAR(train, p = p, type = 'const')
+        y.hat <- predict(v.ar, n.ahead =  n) 
+        y.hat <- lapply(y.hat$fcst[colnames(muestra)],'[',, 'fcst')
+        y.hat <- as.data.frame(y.hat)
+        smape <- SMAPE(y.hat =y.hat, y=test, n)
+        names(p) <- 'p'
+        return(c(smape,p))
+    }   
+}
+modelo1 <- function( historico)
+{
+    ventana <-  30 #la ventana que fijamos
+    m <- dim(historico)[1]
+    muestra <- historico[ (m-ventana+1):m,]
+    # Entradas:
+            # historico (data.frame) Donde cada columna es 
+            #una serie de tiempo ESTACIONALIZADA 
+            # ventana (int): longitud de la ventana
+    p <- VARselect(muestra, type = 'const')
+    p <- p$selection["AIC(n)"] 
+    v.ar <- VAR(muestra, p = p, type = 'none')
+    y.hat <- predict(v.ar, n.ahead =  1) 
+        return(list(pronostico=y.hat, rezago=p))
+}   
+
+```
+
+Este inciso tuvo varios retos, uno de los principales fue la obtención de vectores aleatorios **estacionarios**, para ello expongo tres métodos diferentes con la premisa de  mantener siempre el mayor número posible de observaciones de la variable que nos interesa (el $INP$), posteriormente la estimación y el 'suavizamiento de la estimación' es la misma. Al final indico cual es el pronóstico que doy. 
+
+En vista de que los archivos, aunque las unidades observables son meses, estos difieren tanto en su fecha de inicio como de fin. Se requiere de homologar lo anterior y en descartar observaciones anteriores al inicio del registro que se tiene del $INP$.
+
+Comenzamos con un descripción gráfica de nuestras variables a considerar en la siguiente gráfica
+
+
+```{r etl, echo=FALSE, fig.height=5, fig.width=10}
+par(mfrow=c(1,1))
+##################################################
+# ETL para unir series de tiempo
+inpc <- read.csv("inpc.CSV", header = FALSE)
+inpc <- ts(inpc$V2, frequency = 12, start = c(1971))
+m.o <- read.csv("mo.CSV", header = FALSE)
+#head(m.o)
+m.o <- ts(m.o$V2, frequency = 12, start = c(1985, 12)) #estabilizar varianza
+#dir()
+remesas <- read.csv('remesas.csv', header = FALSE)
+#head(remesas)
+remesas <- ts(remesas$V2, frequency = 12, start = 1996)
+tasa.cambio <- read.csv('tasaDecambio.csv', header = FALSE)
+#head(tasa.cambio)
+tasa.cambio <- ts(tasa.cambio$V2, frequency = 12, start = c(1992,11))
+tasa.desocupacion <- read.csv('tasadesocupacion.csv', header = FALSE)
+#head(tasa.desocupacion)
+tasa.desocupacion <- ts(tasa.desocupacion$V2, frequency = 12, start = 2005)
+salarios <- read.csv('salariosreales.csv', header = FALSE)
+#head(salarios)
+salarios <- ts( salarios$V2, frequency = 12, start=2000)
+datos <- ts.intersect(inpc, m.o, remesas, salarios, 
+                      tasa.cambio, tasa.desocupacion)
+par(mfrow = c(2, 3))
+for(i in 1:6)
+{
+  ts.plot(datos[, i], col=colores[i], main=
+            as.character(colnames(datos))[i], xlab='',
+          ylab='',  lwd=2)
+}
+par(mfrow = c(1, 1))
+#library(TSstudio) graficas del estilo plotly
+#ts_plot(datos, type='multiple')
+#ts_info(datos)
+###################################################
+```
+
+## Primer propuesta
+
+Después de inspeccionar visualmente a las series, el primer enfoque consiste en tirar las observaciones que no hacen match con el histórico al $INP$. Para satisfacer el supuesto de estacionalidad débil realizamos diferentes transformaciones sobre las variables como lo son diferencias, la función de Box, logaritmos \footnote{Aunque oculto el código tiene comentarios sobre las diferentes rutas que se cancelaron y porque.}. Un detalle global de esta situación es que si requerimos de diferencias de segundo orden o de diferencias estacionales estaríamos descartando inmediatamente observaciones de $INP$ por lo que se realizó una búsqueda exhaustiva con métodos del entorno R y algunos que hemos construido en el curso. 
+
+
+
+
+En primer lugar encontramos, con la prueba de Dickey Fuller aumentada cuyos p-valores reportamos, que  la mayoría de nuestras series son raíces unitarias con excepción de las remesas y la tasa de cambio sin embargo exhiben comportamientos no estacionales.
+
+
+```{r noestacionalidad, echo=FALSE}
+###################################################
+# estacionalizar las variables lo mejor que se pueda
+# el detalle va a ser que se pierden observaciones por
+# las diferenciaciones
+############################################
+series <- colnames(datos) 
+series.estacionales <- list()
+round(apply(datos, 2, function(x)adf.test(x)$p.value),2)
+```
+
+```{r pre.estacionalizando, echo=FALSE, eval=FALSE}
+j <- 6 #se itero manualmente sobre todas las variables 
+serie <- datos[,as.character(series[j])]
+#auto.arima(datos[,as.character(series[j])]) para tener un indicio del orden de integracion de la serie individual
+acf(serie) #se examina si el efecto de no estacionalidad es muy grave
+pacf(serie)
+#probar raices unitarias
+n.c <- floor( dim(datos)[1]**.5)+3 #probamos differencias de orden 1 a 3
+                                # con resajos de 1 hasta 15
+for (i in 1:n.c)
+{
+    # para cada lag se considero 
+    lag <- i
+    d.serie <- diff(serie, lag = i ) # 
+    #se verificaba visualmente y analiticamente si teniamos un proceso estacional 
+    #en cada iteracion
+    ts.plot(d.serie, main=as.character(i)) #su tendencia
+    #scan()
+    adf.test(d.serie) #y si se alejaba bastante de la estacionalidad
+    #scan()
+    acf(d.serie)      # a traves de los ACF y PACF
+    #scan()
+    pacf(d.serie)#veamos si es esacional, no lo es
+    #cuando con el primer orden de integracion no se lograba la estacionalidad
+    #recurimmos a nuestro test implementado para fijar dos lags o mas 
+    #adf.test.custom(d.serie, option = 'both')
+    #scan()
+}
+###############
+```
+
+
+```{r, echo=FALSE, fig.width=3}
+#al encontrar una transformacion prudente la guardabamos
+#prudente <- diff(diff(serie, lag= 1), lag=12)
+#adf.test(prudente) #no hay raiz
+#ts.plot(prudente, main=series[j])
+#acf(prudente)
+#pacf(prudente)
+# aqui las hicimos explicitas para ahorrar tiempo de computo 
+series.estacionales <- cbind(diff(datos[, 1], 1), diff(diff(datos[,2], 12), 1),
+                         diff(datos[, 3], 11), diff(diff(datos[,4], 12), 1),
+                         diff(datos[, 5], 1), diff(diff(datos[, 6], 12)))
+# inpc:solo 1
+# m.0 : 1x12
+# remesas lag 11
+# salarios 1x12
+# tasa.cambio 1
+# tasa.desocupacion 1x12
+datos.estacionales <- series.estacionales
+colnames(datos.estacionales) <- series
+meta.ts <- ts.intersect(datos.estacionales[,"inpc"], datos.estacionales[,"m.o"],
+                        datos.estacionales[,'remesas'], datos.estacionales[,'salarios'],
+                        datos.estacionales[,'tasa.cambio'],
+                        datos.estacionales[,'tasa.desocupacion']   )
+colnames(meta.ts) <- series
+meta.ts <- na.omit(meta.ts)
+```
+
+Después de una búsqueda exhaustiva entre funciones que aminoran la varianza , la transformación de Box-Cox y regresiones lineales para eliminar la tendencia, recurrimos al operador de diferencias en diferentes lags y órdenes, cuidando de no sobre diferencias las series originales. Las mejores estacionalidades de las series por este medio se presentan a continuación con su respectivas muestras visuales y analiticas de que son estacionales.
+
+```{r estacionalidad.pruebas, echo=FALSE,  fig.height=2.5}
+for( i in 1:dim(meta.ts)[2])
+{
+    print( series[i])
+    print(adf.test(meta.ts[,i])$p.value)
+    acf(meta.ts[, i], main=series[i]) 
+    pacf(meta.ts[, i], main=series[i]) 
+}
+```
+
+Aunque los resultados no son perfectos consideran todas las observaciones de $INP$ excepto la más antigua en el tiempo, las series estacionalizadas con las que se ajustara un modelo $VAR(P)$ son las siguientes:
+
+```{r estacionalidad, echo=FALSE}
+#################Graficamos
+# el metodo facil
+#############
+par(mfrow = c(2, 3))
+for(i in 1:6)
+{
+    ts.plot(meta.ts[, i], col=colores[i],
+            main=paste0(as.character(colnames(datos))[i], ' estacionalizado'),
+            xlab='',  ylab='',  lwd=2)
+}
+par(mfrow = c(1, 1))
+```
+
+
+En cuanto a la estimación se consideró un retraso elegido por el criterio $AIC$, que en esta tarea demostró ser adecuado en otras circunstancias y a pesar de tender a elegir un número grande de rezagos en cuanto a desempeño le ganó a los que requieren menor rezago. En este punto siempre fuimos cuidadosos de no exceder el número de parámetros que estamos estimando al número de observaciones que tenemos o bien que la diferencia entre estos dos números no fuese muy grande para mantener estabilidad en los parámetros. 
+
+Una lección aprendida aquí fue la dependencia entre $p\sim n$ es exponencial. 
+
+
+En la siguiente gráfica mostramos el desempeño del error relativo al pronosticar $n$ días del $INP$ usando un modelo $AR(8)$ (el parámetro $p$ se vario pero los resultados no fueron contundentemente mejores) ajustado con las respantes $150-n$ anteriores, el número de rezagos promedio fue de 8. Se trabajo con 150 observaciones mensuales completas de las 6 variables estacionalizadas en el intervalo febrero de 2006 a julio del 2018, el error de predicción aumenta al incluir la información de dos a tres años atras (de 0 a 30).
+
+Por ejemplo si queremos predecir $n=3$ meses posteriores a la fecha de hoy nuestro conjunto de entrenamiento para ajustar el modelo eran los anteriores $150-n=147$ meses con lo cual estimamos un modelo $AR(8)$. Como podemos ver en la gráfica el error de predicción disminuye en los primeros 30 meses y posteriormente haciende lo cual podemos interpretar que las relaciones a largo plazo no se darán y que nuestra ventana de tiempo para calibrar y ajustar otro modelo $AR(p)$ tendra una ventana de tiempo de los 30 meses más recientes. Así que estimamos un modelo $AR(p)$ con la información de los 30 meses más recientes (pues queremos un pronostico para el siguiente mes es decir a corto plazo) lo que llevó al siguiente modelo:
+
+
+
+
+```{r estimacion1, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height=3}
+####################
+# Estimacion y suavecimiento
+##################
+muestra <- meta.ts
+set.seed(0)
+predic.VAR.p <- predict.VAR.init(ensamble=muestra)
+M.predic.VAR <- mapply(predic.VAR.p, 1:125)
+AI <- as.data.frame(t(M.predic.VAR))
+AI$n <- 1:125
+library(ggplot2)
+ggplot(AI, aes(x=n ,y=inpc, color=I(colores[2])))+ 
+    xlab('n obs. más nuevas usadas en el conjunto de entrenamiento')+
+    geom_line()+ theme_minimal() +ylab('SMAPE') +
+    ggtitle('Error en % al pronosticar el INP')
+#apply(AI, 2, mean, na.rm=TRUE)
+#apply(AI, 2, sd, na.rm=TRUE)
+#a <- which.min(AI$inpc)
+#a
+#AI[a,]
+pronostico1 <- modelo1(historico = muestra)
+rezago <- pronostico1$rezago
+a <- pronostico1$pronostico$fcst$inpc[1]
+pronostico1 <- a + inpc[length(inpc)-rezago]
+```
+
+Bajo este enfoque mi pronostico puntual para la siguiente observación del $INP$ es de `r pronostico1`
+
+## Segunda propuesta
+
+En un principio prestamos mayor atención al comportamiento del $INP$, el cual mostramos en la siguiente gráfica, donde podemos apreciar que existen indicios de un cambio estructural alrededor de la observacion 315 esto aunado al experimento anterior donde parece ser que no requerimos de un número grande del historico para hacer observaciones, nos indujo a replicar la idea pero acotando al intervalo en donde $INP$ ya no sufre cambios estructurales.
+
+```{r, fig.width=7, fig.height=4, echo=FALSE }
+ts.plot(inpc, col = 'purple',  xlab='', ylab='',
+        main='INPC no estacional') #varianza no constante
+ts.plot(inpc, col = 'purple',xlim=c(1994, 1998), 
+        main='Zoom alrededor de 1995', xlab='', ylab='') #varianza no constante
+```
+La sospecha de un solo cambio estructural en la posición 315, o bien hacia finales de 1995, se ve respaldada por el resultado del test de Busetti.Harvey sobre ubicación de cambios estructurales.
+
+
+```{r}
+Busetti.Harvey(as.numeric(inpc), option = 'c', posicion =315, k=1)
+```
+
+
+```{r, echo=FALSE, fig.width=5}
+sub.inpc <- subset(inpc, start=315, end=571)
+sub.m.o <- subset(m.o, start =138, end = 394 )
+sub.remesas <- subset(remesas, start =16 , end = 272 )
+sub.tasa.cambio <- subset(tasa.cambio, start = 55, end = 311)
+par(mfrow=c(1,1))
+##################################################
+datos2 <- ts.intersect(sub.inpc, sub.m.o, sub.remesas,  
+                      sub.tasa.cambio)
+par(mfrow = c(2, 2))
+for(i in 1:4)
+{
+    ts.plot(datos2[, i], col=colores[i], main=
+                as.character(colnames(datos2))[i], xlab='',
+            ylab='',  lwd=2)
+}
+par(mfrow = c(1, 1))
+```
+
+En vista de lo anterior se realizó el test ADG a la cuatro variables que estamos considerando pero solo en el intervalo donde el $INP$ ya no presenta cambios estructurales desde marzo de 1997 a julio del 2018, descartamos a la variable de los salarios reales y a la tasa de desocupación por no tener la longitud suficiente para no recortar registros de la variable $INP$ además en el esquema anterior estas dos variables fueron de un orden de integración diferente a las otras. 
+
+En lo siguiente mostramos los resultados de los test ADG en el intervalo citado para las cuatro series, descartando que tengan raíces unitarias o bien cabios estructurales a a excepción de $M0$ por su notoria tendencia creciente.
+
+
+```{r}
+adf.test(sub.inpc)
+adf.test(sub.m.o)
+adf.test(sub.remesas)
+adf.test(sub.tasa.cambio)
+```
+
+
+De nueva cuenta estas series recortadas se tuvieron que llevar a una forma estacional lo cual lo reportamos en lo siguiente:
+
+```{r, echo=FALSE, fig.width=6, fig.height=3.5}
+
+d.sub.inpc <- diff(sub.inpc, lag=1)
+d.sub.m.o <- diff(diff(sub.m.o, 1), 12)
+d.sub.remesas <- diff(diff(sub.remesas, lag=12), 1)
+d.sub.tasa.cambio <- diff(sub.tasa.cambio, 4)
+datos.sub <- ts.intersect(d.sub.inpc, d.sub.m.o, d.sub.remesas, d.sub.tasa.cambio)
+datos.sub <- na.omit(datos.sub)
+series <- colnames(datos.sub)
+for( i in 1:dim(datos.sub)[2])
+{
+    print( series[i])
+    print(adf.test(datos.sub[,i])$p.value)
+    acf(datos.sub[, i], main=series[i]) 
+    pacf(datos.sub[, i], main=series[i]) 
+}
+```
+
+
+Aunque de nueva cuenta los resultados no son perfectos se  consideran estacionales en el sentido debíl, las series recortadas y estacionalizadas con las que se ajustara un modelo $VAR(P)$ son las siguientes:
+
+```{r, echo=FALSE }
+#################Graficamos
+# el metodo facil
+#############
+par(mfrow = c(2, 2))
+for(i in 1:4)
+{
+    ts.plot(datos.sub[, i], col=colores[i],
+            main=paste0(as.character(colnames(datos.sub))[i], ' estacionalizado'),
+            xlab='',  ylab='',  lwd=2)
+}
+par(mfrow = c(1, 1))
+```
+
+De manera analoga al primer enfoque la siguientes gráficas muestra el desempeño del error relativo al pronosticar $n$ meses del $INP$ usando un modelo $AR (8)$ (el parámetro $p$ se vario pero los resultados fueron contundentemente mejores) ajustado con
+las correspantes $242 - n$ anteriores, el número de rezagos promedio fue de 8. Se trabajo con 242 observaciones mensuales completas de las 4 variables estacionalizadas en el intervalo junio de 1998 a julio del 2018, el error de predicción aumenta conforme incorporamos información de más meses alcanzo su minimo con una menor cantidad de meses.
+
+Cabe destacar que esto puede deberse a la selección de las variables, o bien a su longitud mayor.
+
+En este caso la gráfica tiene una interpretación directa existe un mínimo de error al que podemos llegar con pocos históricos, lo cual fue estimable gracias a que teníamos más muestras de menos variables. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=7, fig.height=3}
+####################
+# Estimacion y suavecimiento
+##################
+muestra <- datos.sub
+set.seed(0)
+predic.VAR.p <- predict.VAR.init(ensamble=muestra)
+M.predic.VAR <- mapply(predic.VAR.p, 1:200)
+AI <- as.data.frame(t(M.predic.VAR))
+AI$n <- 1:200
+a <- ggplot(AI, aes(x=n ,y=d.sub.inpc, color=I(colores[4])))+ 
+    xlab('n obs. más nuevas usadas en el conjunto de entrenamiento')+
+    geom_line()+ theme_minimal() +ylab('SMAPE') +
+    ggtitle('Error en % al pronosticar el INP con datos mejor ubicados')
+a
+a <- ggplot(AI, aes(x=n ,y=d.sub.inpc, color=I(colores[4])))+ 
+    xlab('n obs. más nuevas usadas en el conjunto de entrenamiento')+
+    geom_line()+ theme_minimal() +ylab('SMAPE') +
+    ggtitle('Error en % al pronosticar el INP con datos mejor ubicados') +xlim(c(1,5))
+a
+```
+
+Esto permite hacer directamente una interpretación en que al usar más datos históricos estamos aumentando la varianza, y el ejercicio de regularización funcionó bien, procedemos a estimar directamente un modelo y hacer inferencia sobre él.
+
+Como podemos ver hasta el momento el mejor modelo que propusimos es un $VAR(10)$ que depende las series estacionales $INP$, $M0$, las remesas y la tasa de cambio, en el enorme resumen que sigue lo importante es destacar que aunque la significancia individual y global de los coeficientes no es buena y que el modelo tiene errores correlacionados, pero sin presencia del efecto ARCH.
+
+```{r modelo2, fig.width=12, fig.width=12}
+p <- VARselect(datos.sub, type = "const")$selection["AIC(n)"]
+p
+varc <- VAR(datos.sub, p = p)
+summary(varc)
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+```
+
+ Con este escenario mi pronóstico para el siguiente mes del $INP$ estaría dado aproximadamente por :
+
+
+```{r}
+fore <- predict(varc, n.ahead = 1)
+inpc[571-p]+fore$fcst$d.sub.inpc[1]
+```
+Finalmente en vista de que las ecuaciones de respuesta-impulso en el sentido de Granger parecen evidenciar que la variable que yo incluí en el modelo, las remesas no es tan importe lo que nos lleva al tercer modelo.
+ 
+```{r}
+# causalidad de Granger
+cau <- matrix(0, ncol(datos.sub), 1)
+colnames(cau) <- "p.value"
+rownames(cau) <- colnames(datos.sub)
+
+for(i in 1 : ncol(datos.sub))
+  cau[i,] <- causality(varc, colnames(datos.sub)[i])$Granger$p.value # ya esta ortogonal
+cau <- round(cau, 4)
+cau
+```
+
+## Tercer propuesta
+
+Como las ecuaciones de causalidad en el sentido de Granger indica que remover la variable que propuse (que tiene un orden de integración diferente) sobre las remesas mejoraría el pronóstico lo realizamos sobre el mismo intervalo que en el inciso anterior pero sin considerar esta variable.
+
+```{r estimacionmodelo3}
+datos.sub.sin.remesas <- ts.intersect(d.sub.inpc, d.sub.m.o,
+                                      d.sub.tasa.cambio)
+####################
+# Estimacion y suavecimiento
+##################
+muestra <- datos.sub.sin.remesas
+set.seed(0)
+predic.VAR.p <- predict.VAR.init(ensamble=muestra)
+M.predic.VAR <- mapply(predic.VAR.p, 1:200)
+AI <- as.data.frame(t(M.predic.VAR))
+AI$n <- 1:200
+a <- ggplot(AI, aes(x=n ,y=d.sub.inpc, color=I(colores[5])))+ 
+    xlab('n obs. más nuevas usadas en el conjunto de entrenamiento')+
+    geom_line()+ theme_minimal() +ylab('SMAPE') +
+    ggtitle("Error en % al pronosticar el INP sin variable 'reservas' datos mejor ubicados")
+a
+```
+
+Y bien concluimos esta sección evaluando el modelo $AR(10)$ trivariado para notar sus características, aunque como podemos ver en la gráfica anterior este modelo tiene mayor varianza en los errores.
+
+
+```{r}
+p <- VARselect(datos.sub.sin.remesas,
+               type = "const")$selection["AIC(n)"]
+p
+varc <- VAR(datos.sub.sin.remesas, p = p)
+#summary(varc)
+serial <- serial.test(varc)
+arch <- arch.test(varc)
+serial
+arch
+```
+
+Como podemos comprobar el mejor modelo fue el propuesto es la segunda parte, pues el modelo de la sección tres tienen mayores problemas de significancia junta e individual, además presenta además de problemas de correlación serial también tiene el efecto ARCH.
+

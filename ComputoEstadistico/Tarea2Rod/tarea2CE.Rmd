@@ -1,0 +1,157 @@
+---
+title: "Cómputo Estadístico (Tarea 2)"
+author: "J. Antonio García Ramirez"
+date: "10 de septiembre de 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+library(ggplot2)
+```
+
+1.  *Generación de datos simulados y aplicación de los métodos de selección de subconjuntos (selección de los mejores subconjuntos y selección paso a paso)*.
+
+a)  *Usa una función en __R__ para generar una variable predictora $X$ de longitud $n = 100$, así como un vector de ruido $\epsilon$ de tamaño $n = 100$.*
+
+Retomando la tarea anterior, correspondiente a $GLM$, usare la distribución de $Rayleigh(\sigma=1)$  para generar la v.a. $X$, en las siguientes gráficas podemos apreciar la distribución de la muestra generada.
+
+
+```{r, fig.height=3, echo=FALSE}
+set.seed(0)
+sigma <- 1
+n <- 100
+z1 <- rnorm(n, mean=0, sd = sigma)**2
+z2 <- rnorm(n, mean=0, sd = sigma)**2
+epsilon <- rnorm(n, 0, 1 )
+x <- (z1+z2)**.5
+betas <- runif(4)
+names(betas) <- c("(Intercept)", "x", "x2", "x3")
+y <- betas[1] + betas[2]*x+ betas[3]*x**2
+data <- data.frame(x=x, x2= x**2, x3=x**3, 
+                   y = y + betas[4]*x**3) 
+ggplot(data, aes(x)) +
+  geom_histogram(aes(y=..density.., fill=I('purple')), bins = 20)+
+  theme_minimal() + xlab('') + ylab('') + ggtitle('Distribución de X~ Rayleigh(1)')
+```
+
+b)  *Genera un vector de respuestas $Y$ de longitud $n = 100$ de acuerdo al modelo*
+
+$$Y = \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \epsilon$$
+*Donde $\beta_0,\beta_1,\beta_2$ y $b_3$ son constantes de tu elección.*
+
+Y en la siguiente gráfica podemos apreciar la distribución de la variable de respuesta $Y$
+
+
+
+```{r, fig.height=3,echo=FALSE}
+ggplot(data, aes(y)) +
+  geom_histogram(aes(y=..density.., fill=I('purple4')), bins = 20)+
+  theme_minimal() + xlab('') + ylab('') + ggtitle('Distribución de y')
+```
+
+c)  *Utiliza la función <code> regsubsets() </code> para realizar la selección de los mejores subconjuntos con el fin de elegir el mejor modelo que contenga los predictores $X, X^2,...,X^{10}$. ¿Cuál es el mejor modelo obtenido según el $C_p$ , $BIC$ y el $R_2$ ajustado?, Muestra algunas gráficas que proporcionen evidencia de tu respuesta y reporta los coeficientes del mejor modelo obtenido.*
+
+Considerando el criterio $C_p$ tenemos la siguiente gráfica que muestra el desempeño utilizando este estadístico:
+
+```{r, fig.height=4}
+library(leaps)
+z <- data.frame(x=x)
+for ( i in 2:10) z[, as.character(i)] <- z$x**i
+names(z) <- paste0('x',1:10)
+modelos <- regsubsets(y~., data =  z, method = 'exhaustive', nvmax = 10)
+#summary(modelos)
+plot(modelos, scale="Cp", col=rainbow(10))
+```
+
+Donde podemos ver que el estadístico $C_p$ se incrementa de $-1.5$ a $.0014$ cuando pasamos del conjunto de predictores $\{ intercepto, X, X^2  \}$ al conjunto $\{intercepto, X, X^2, X^3\}$ solo por confirmar observemos el $RSS$ asociado a los dos conjuntos anteriores.  
+
+```{r, warning=FALSE}
+summary(lm(y ~ x+x2, data=z))$sigma
+#summary(lm(y ~x3 + x4+x5+x6+x7+x8+x9+x10-1, data=z)) 
+  #salida para diferenciar de colores
+summary(lm(y ~ x + x2 +x3, data=z))$sigma
+```
+
+Donde se cumple que al incrementar el número de predictores el $RSS$ disminuye, concluimos que según el criterio del estadístico $C_p$ y la búsqueda exhaustiva de subconjuntos el mejor modelo es el que incluye a los dos primeros predictores y el intercepto. En la siguiente sección mostramos los coeficientes con los que se generó el modelo $Y$ y las estimaciones $\hat{\beta}$, que son iguales a presición de millonésimas.
+
+
+```{r}
+betas #coeficientes con los que se genero Y
+coef(lm(y ~ x+x2, data=z))#coeficientes estimados
+```
+
+Continuando con el enfoque exhaustivo, pero considerando el criterio bayesiano, $BIC$ tenemos el siguiente gráfico informativo: 
+
+```{r, fig.height=4}
+plot(modelos, scale="bic", col=c('green', 'red'))
+```
+
+
+Donde nuevamente el modelo con los dos primeros predictores es el recomendado por el estadístico $BIC$, por lo que los coeficientes estimados son los mismos que en la sección anterior.
+
+Finalmente repitiendo la metodología para el estadístico $R^2$ ajustado tenemos el desempeño en la siguiente imagen, donde podemos apreciar que este estadístico es el menos específico ya que vale la unidad en la mayoría de los casos; en esta circunstancia y como conocemos el modelo generador para $Y$ evauaremos los modelo con el tres primeros predictores y por parsimonia el modelo con los dos primeros predictores:
+
+
+```{r, fig.height=4}
+plot(modelos, scale="adjr2", col=c('green', 'red'))
+summary(lm(y~ x1+x2+x3, data=z))
+summary(lm(y~ x1+x2, data=z))
+```
+
+De donde observamos que el coeficiente del tercer regresor no es significativo y teniendo el mismo $R^2$ ajustado, optamos por el modelo con solo los primeros dos regresores nuevamente. 
+
+
+
+d)  *Repite c), usando la selección paso a paso adelante y la selección paso paso atrás. ¿Cómo se compara tu respuesta con los resultados obtenidos en c)?*
+
+Usando la selección hacia adelante tenemos nuevamente, que el mejor modelo es el que contienen a los dos primeros regresores y el intercepto (con los tres estadísticos). 
+
+```{r, fig.height=4}
+modelos <- regsubsets(y~ ., data =z, method = 'forward')
+plot(modelos, scale="Cp", col=c('green', 'red'))
+plot(modelos, scale="bic", col=c('green', 'red'))
+plot(modelos, scale="adjr2", col=c('green', 'red'))
+```
+
+En vista de que son los mismos modelos que en la sección anterior los parámetros estimados son los mismos y por brevedad no los incluyo en el reporte.
+
+Usando la selección hacia atrás tenemos resultados identicos para los tres estadísticos.
+
+```{r, fig.height=4}
+modelos <- regsubsets(y~ ., data =z, method = 'backward')
+plot(modelos, scale="Cp", col=c('green', 'red'))
+plot(modelos, scale="bic", col=c('green', 'red'))
+plot(modelos, scale="adjr2", col=c('green', 'red'))
+```
+
+En vista de que son los mismos modelos que en las secciones anteriores los parámetros estimados son los mismos y por brevedad no los incluyo en el reporte.
+
+Como conclusión tenemos que los tres criterios son consistentes. Si bien el criterio $R^2$ no es tan automatizable, pues en nuestro ejemplo este criterio sugiere a primera vista un modelo con tres variables (y parece ser menos estable) no es gran ventaja frente al sencillo con solo los dos primeros predictores y el intercepto, de manera general sugiere los mismos conjuntos de variables que los otros dos criterios.
+
+Parte importante de los resultados fue la generación del modelo $Y$ pues elegimos una distribución con colas pesadas, si bien en la práctica se suelen transformar las variables que se identifican como tales, estas se presentan con mucha frecuencia (como los ingresos declarados ante Hacienda, los ingresos personales, etc) y en contra de nuestra intuición (que sugeriría un modelo con la variable $X^3$) el predictor $X$ ajusta bien pero no perfectamente.
+
+__En un trabajo futuro preferiría al criteria bayesiano__ pues presenta mayor sensibilidad o penalización y considera en la penalización de manera más activa el tamaño de muestra y el número de regresores.
+
+Terminamos mostrando los errores del modelo seleccionado, que si bien no son normales y muestran correlación y no independencia... recordemos que son los residuos de un modelo que busca reducir error de predicción (pronóstico) no inferencia (conocer acerca del modelo generador de las observaciones).
+
+```{r, warning=FALSE, message=FALSE,fig.height=3}
+modelo <- lm(y~x1+x2, data=z)
+e <- modelo$residuals
+a <- data.frame(y_hat=fitted(modelo), res=e)
+a$index <- 1:dim(a)[1]
+ggplot(a, aes(y_hat, e)) + geom_point(aes(colour=I('purple'))) +
+  theme_minimal()
+cor(a$res, a$y_hat)
+library(nortest)
+ad.test(e)
+ggplot(a, aes(index, res) )+  geom_point(aes(colour=I('purple'))) +
+  theme_minimal() + ggtitle('Residuos ') +xlab('')
+library(qqplotr)
+set.seed(0)
+ggplot(data = a, mapping = aes(sample = res , color = I('#619CFF')) ) +
+  stat_qq_line() +  stat_qq_point() +
+  geom_qq_band(bandType = "ts", mapping = aes(fill = "TS"), alpha = 0.1) +
+  labs(x = "Theoretical Quantiles", y = "Sample Quantiles")+ theme_minimal() + ggtitle('QQ-normal, residuales') 
+
+```

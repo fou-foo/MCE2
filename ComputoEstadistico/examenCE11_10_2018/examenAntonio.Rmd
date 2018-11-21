@@ -1,0 +1,120 @@
+---
+title: "EXAMEN Cómputo estadístico"
+author: "J. Antonio García Ramirez"
+date: "Octobre 11, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+MSE <- function(y.hat, y)
+{
+  return(mean((y-y.hat)**2))
+}
+```
+
+# Ejercicio 7
+
+a)  Comenzaré estandarizando el conjunto de datos para poder comparar los modelos de mejor subconjunto, Lasso, Ridge y PCR
+
+
+En vista de que se nos requiere trabajar  todas las variables como continuamos transformamos las nominales y ordinales en flotantes.
+
+El conjunto de datos no presenta valores faltantes dividire el conjunto original en 320 observaciones de entrenamiento y el resto de prueba. Los errores los reporto en términos del MSE.
+
+
+Primero la regresión Ridge y lasso sobre el conjunto de entrenamiento y reportó lo MCE pertinentes obtenidos con 10-fold cv
+
+comenzamos con los resultados de Ridge
+
+```{r}
+set.seed(0)
+library(ISLR)
+datos <- Carseats
+class(datos)
+sapply(datos, class)
+datos$ShelveLoc <- as.numeric(datos$ShelveLoc)
+datos$Urban <- as.numeric(datos$Urban)
+datos$US <- as.numeric(datos$US)
+n <- dim(datos)[1]
+class(datos)
+datos <- as.matrix(datos)
+datos <- scale((datos))
+index <- sample(1:dim(datos)[1], n*.8 )
+datos <- as.data.frame(datos)
+y <- datos$Sales
+y.test <- y[-index]
+y.train <- y[index]
+train <- datos[index, ]
+test <- datos[-index, ]
+###############
+library(glmnet)
+train2 <- model.matrix (Sales~., train )
+grid <- 10^seq(-3,10,length =1000)
+set.seed(0)
+modelo.Ridge <- cv.glmnet(train2, train$Sales, alpha =0,
+                          lambda =grid, nfolds = 10)
+plot(modelo.Ridge, main='Modelo Ridge')
+(l <- modelo.Ridge$lambda.min)
+test2 <- model.matrix(Sales ~. , test)
+y.hat.rige <- predict(modelo.Ridge, test2)
+MSE(as.numeric(y.hat.rige), y.test)
+
+```
+
+
+Continuamos con el modelo de Lasso
+
+```{r}
+set.seed(0)
+modelo.lasso <- cv.glmnet(train2, train$Sales, alpha =1,
+                          lambda =grid, nfolds = 10)
+plot(modelo.lasso)
+(l <- modelo.lasso$lambda.min)
+test2 <- model.matrix(Sales ~. , test)
+y.hat.lasso <- predict(modelo.lasso, test2)
+MSE(y.hat.lasso, y.test)
+
+```
+
+Por brevedad sólo mostraremos resultados del modelo de selección de variables exhaustivo 
+
+```{r}
+library(leaps)
+modelos <- regsubsets(y.train ~ ., data =train, method = 'exhaustive', nvmax = 20)
+plot(modelos, scale="bic", col=c('green', 'red'))
+```
+
+
+Finalmente probamos con los modelos PCR y PLS
+
+```{r}
+library(pls)
+set.seed(0)
+modelo.pcr <- pcr(Sales ~ ., data=train,
+                  validation ="CV")
+summary(modelo.pcr)
+validationplot(modelo.pcr, val.type="MSEP")
+y.hat.pcr <- predict(modelo.pcr, test, ncomp = 7)
+MSE(as.numeric(y.hat.pcr), y.test)
+```
+
+e)  *Ajusta un modelo __PLS__ en el conjunto de entrenamiento, con __M__ elegido por la validación cruzada. Informe el error de prueba obtenido, junto con el valor de __M__ seleccionado mediante validación cruzada*
+
+
+Utilizando validación cruzada, PLS como método de regresión y 7 componentes principales (en vista de que en el conjunto de entrenamiento la octava componente de ppls es de poca significancia) se obtiene un error de prueba de $0.06016777$ sobre los datos escalados. 
+
+
+```{r}
+library(pls)
+set.seed(0)
+modelo.pls <- plsr(Sales ~ ., data=train, validation ="CV")
+#summary(modelo.pls)
+#validationplot(modelo.pls ,val.type="MSEP")
+y.hat.pls <- predict(modelo.pls, test, ncomp = 7)
+MSE(as.numeric(y.hat.pls), y.test)
+validationplot(modelo.pls, val.type="MSEP")
+```
+
+
+del análisis final observamos que el modelo de regresión con PLS mejora el MSE además de proporcionar un modelo más parsimonioso, por que al final del dia nunca sabemos en qué dimensión vive nuestro problema 
