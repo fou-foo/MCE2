@@ -1,5 +1,5 @@
 ---
-title: "When is that song?"
+title: "Reducción de canciones"
 author: J. Antonio García Ramírez
 date: 22 de noviembre, 2018
 output:
