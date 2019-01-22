@@ -30,6 +30,7 @@ calcula.mediana <- function(x)
 ###############################################
     # correcion de tipos de Datos y construccion del transformador base para la simulacion en la app ###########
 datos <- read.csv("dataframeVerdesPresentes.csv", stringsAsFactors = FALSE) #
+s <- datos
 sapply(datos, class)
     # cast de numericas a factores 'character' para que las salidas de 'predict' sean caracteres y no niveles
 datos[, categoricas] <- lapply(datos[, categoricas], function(x) as.character(x))
@@ -46,24 +47,35 @@ save(entrada, file ='entrada.rdata')
 write.csv(datos, file='VariablesVerdesCorrectas.csv', row.names = FALSE)
 ################################################
 ################## Modelos ###################
-arbol <- function(variable.predecir, data=datos2)
+# En analisis de sensibilidad mostro que las 5 variables numericas mas importantes son
+importantes.numericas <- c('Enfriamiento.i_ElevTempP3', 'Enfriamiento.i_ElevTempP2',
+                            'Tanque.iSegConservador', 'Enfriamiento.i_ElevTempP1',
+                            'Enfriamiento.bLlevaConservador')
+importantes.categoricas <- c('Garantias.dCapExcitacion', 'Garantias.dCapEficReg',
+                             'Configurables.bFreeBuckling', 'bLlevaTerciario',
+                             'tNormaGar')
+
+arbol <- function(variable.predecir, data=datos)
 {
     # Closure para crear MUCHOS MODELOS
     # nombre.variable (string): Nombre de la variable que se va a sugerir
     # data (dataframe): Data frame con el historico
     # REGRESA UN MODELO ENTRENADO
-    library(rpart)
+    library(adabag)
     # generamos la formula para el modelo
     formula.foo <- as.formula(paste0(variable.predecir, "~ ."))
-    rpart(formula.foo, data=data ) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
+    boosting(formula.foo, data=data ) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
 }
 # CREACION DE N MODELOS ########################
+sapply(datos[, importantes.categoricas], class)
+sapply(datos[, importantes.numericas], class)
 inicio <- Sys.time()
 library(parallel)
-MODELOS <- mclapply(names(datos2), function(x) arbol( variable.predecir=x), mc.cores = 1)
-fin <- Sys.time()
-fin-inicio
-names(MODELOS) <- names(datos2)
-names(datos2)
-save(MODELOS, file='MODELOS.rdata')
-MODELOS[['iNumFases']]
+MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 1)
+MODELOS <- list()
+for (i in 1:length(c(importantes.categoricas, importantes.numericas)))
+{
+    variable <- c(importantes.categoricas, importantes.numericas)[i]
+    print(variable)
+    MODELOS[[i]] <- boosting(as.formula(paste0(variable, '~.')), data=datos)
+}
