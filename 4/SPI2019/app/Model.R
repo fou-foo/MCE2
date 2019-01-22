@@ -1,4 +1,12 @@
-setwd("C:\\Users\\fou-f\\Desktop\\MCE2\\4\\SPI2019\\app")
+# En analisis de sensibilidad mostro que las 5 variables numericas mas importantes son
+importantes.numericas <- c('Enfriamiento.i_ElevTempP3', 'Enfriamiento.i_ElevTempP2',
+                           'Tanque.iSegConservador', 'Enfriamiento.i_ElevTempP1',
+                           'Enfriamiento.bLlevaConservador')
+importantes.categoricas <- c('Garantias.dCapExcitacion', 'Garantias.dCapEficReg',
+                             'Configurables.bFreeBuckling', 'bLlevaTerciario',
+                             'tNormaGar')
+####################################################################
+setwd('/home/fou/Desktop/MCE2/4/SPI2019/app')
 dir()
 administrativas <- c(1,2,3,8,9)
 categoricas <- c(4, 5, 6, 11, 12, 18, 19, 20, 21, 28, 29, 30, 31, 35, 55,
@@ -43,19 +51,13 @@ entrada[1, numericas] <- mapply(datos[, numericas], FUN=calcula.mediana)
 
 datos <- datos[, -embarque]    # eliminamos las variables 'administrativas' por no ser importantes para la prediccion
 entrada <- entrada[, -embarque]
+entrada <- entrada[, c(importantes.categoricas, importantes.numericas)]
 save(entrada, file ='entrada.rdata')
 write.csv(datos, file='VariablesVerdesCorrectas.csv', row.names = FALSE)
 ################################################
 ################## Modelos ###################
-# En analisis de sensibilidad mostro que las 5 variables numericas mas importantes son
-importantes.numericas <- c('Enfriamiento.i_ElevTempP3', 'Enfriamiento.i_ElevTempP2',
-                            'Tanque.iSegConservador', 'Enfriamiento.i_ElevTempP1',
-                            'Enfriamiento.bLlevaConservador')
-importantes.categoricas <- c('Garantias.dCapExcitacion', 'Garantias.dCapEficReg',
-                             'Configurables.bFreeBuckling', 'bLlevaTerciario',
-                             'tNormaGar')
 
-arbol <- function(variable.predecir, data=datos)
+arbol <- function(variable.predecir, data=datos[, c(importantes.categoricas, importantes.numericas)])
 {
     # Closure para crear MUCHOS MODELOS
     # nombre.variable (string): Nombre de la variable que se va a sugerir
@@ -64,7 +66,7 @@ arbol <- function(variable.predecir, data=datos)
     library(adabag)
     # generamos la formula para el modelo
     formula.foo <- as.formula(paste0(variable.predecir, "~ ."))
-    boosting(formula.foo, data=data ) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
+    boosting(formula.foo, data=data , mfinal = 50) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
 }
 # CREACION DE N MODELOS ########################
 sapply(datos[, importantes.categoricas], class)
