@@ -56,22 +56,40 @@ body <- dashboardBody(
         box(   width=6, h1('Sugerencia automatica basada en datos'),
                #variables numericas
                h4("Enfriamiento.i_TORElev4"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto"))),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto1"))),
             
             h4("Enfriamiento.i_HSRElev4"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev4Auto"))),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev4Auto1"))),
             
             
             h4("Enfriamiento.i_TORElev5"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev5Auto"))),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev5Auto1"))),
             
             
             h4("Enfriamiento.i_HSRElev5"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev5Auto"))),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev5Auto1"))),
             
             
             h4("dRuido2"),
-            fluidRow(column(6, verbatimTextOutput("dRuido2Auto")))
+            fluidRow(column(6, verbatimTextOutput("dRuido2Auto1"))),
+            
+            
+            ####################################################
+            h4("Garantias.dCapExcitacion"),
+            fluidRow(column(6, verbatimTextOutput("Garantias.dCapExcitacionAuto1"))),
+            
+            h4("Garantias.dCapEficReg"),
+            fluidRow(column(6, verbatimTextOutput("Garantias.dCapEficRegAuto1"))),
+            
+            h4("Garantias.dCapPerd"),
+            fluidRow(column(6, verbatimTextOutput("Garantias.dCapPerdAuto1"))),
+            
+            h4("Enfriamiento.i_ElevTempP3"),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_ElevTempP3Auto1"))),
+            
+            h4("iDestino"),
+            fluidRow(column(6, verbatimTextOutput("iDestinoAuto1")))
+            
             )),
 
 
@@ -122,9 +140,8 @@ body <- dashboardBody(
                    fluidRow(column(3, verbatimTextOutput("Garantias.dCapPerdselect"))),
                    
                    selectInput("Enfriamiento.i_ElevTempP3", label = h4("Enfriamiento.i_ElevTempP3"), 
-                               choices = list("NULL" = -2, "-1"=-1,    "10"= 10,   "12"=12,   "14"=14,   "16"=16,    "19"=19,   "22"=22,  "23"=23,
-                                              "29"=29, "3"=3,   "4"=4,   "40"=40,    "43"=43,   "54"=54,    "57"=57,
-                                              "7"=7 ), selected = -2),
+                               choices = list("NULL" = -2, "-1"=-1,    "45"= 45,   "55"=55,   "56"=56,   "60"=60,    "65"=65 )
+                               , selected = -2),
                    fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_ElevTempP3select"))),
                    
                    selectInput("iDestino", label = h4("iDestino"), 
@@ -141,20 +158,40 @@ body <- dashboardBody(
             ),
             box(   width=6, h1('Sugerencia automatica basada en datos'),
                    #variables numericas
+                   h4("Enfriamiento.i_TORElev4"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto2"))),
+                   
+                   h4("Enfriamiento.i_HSRElev4"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev4Auto2"))),
+                   
+                   
+                   h4("Enfriamiento.i_TORElev5"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev5Auto2"))),
+                   
+                   
+                   h4("Enfriamiento.i_HSRElev5"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev5Auto2"))),
+                   
+                   
+                   h4("dRuido2"),
+                   fluidRow(column(6, verbatimTextOutput("dRuido2Auto2"))),
+                   
+                   
+                   ####################################################
                    h4("Garantias.dCapExcitacion"),
-                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapExcitacionAuto"))),
+                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapExcitacionAuto2"))),
                    
                    h4("Garantias.dCapEficReg"),
-                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapEficRegAuto"))),
+                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapEficRegAuto2"))),
                    
                    h4("Garantias.dCapPerd"),
-                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapPerdAuto"))),
+                   fluidRow(column(6, verbatimTextOutput("Garantias.dCapPerdAuto2"))),
                    
                    h4("Enfriamiento.i_ElevTempP3"),
-                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_ElevTempP3Auto"))),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_ElevTempP3Auto2"))),
                    
                    h4("iDestino"),
-                   fluidRow(column(6, verbatimTextOutput("iDestinoAuto")))
+                   fluidRow(column(6, verbatimTextOutput("iDestinoAuto2")))
                    
                       
                    
