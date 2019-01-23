@@ -1,17 +1,10 @@
 ####################################
 #####    J. Antonio Garcia #########
 #####   jose.ramirez@cimat.mx ######
-####     Eduardo Uresti Charre     #
-####     Luis Daniel Mendoza       #
 ####################################
 library(shinydashboard)
 library(shiny)
 library(plotly)
-library(knitr)
-library(rmarkdown)
-library(leaflet)
-library(shinyLP)
-library(gapminder)
 library(ggplot2)
 library(shiny)
 load('entrada.rdata')
@@ -22,11 +15,8 @@ theme_set(theme_bw())
 sidebar <- dashboardSidebar(
   #comenzamos con el menu
   sidebarMenu(
-    menuItem("General", icon = icon("database"), tabName = "General"),
-    menuItem("Otros", icon = icon("th"), tabName = "Otros")#,
-    #menuItem("Kriging", icon = icon("th"), tabName = "Kriging"),
-    #menuItem("coKriging", icon = icon("th"), tabName = "coKriging"),
-    #menuItem("CTemporal", icon = icon("clock"), tabName = "CTemporal")
+    menuItem("General", icon = icon("database"), tabName = "General")#,
+    #menuItem("Otros", icon = icon("th"), tabName = "Otros")#,
   )
 )
 #cramos varias tabs
@@ -34,15 +24,6 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "General",
             box(   width=6, h1('Seleccion del operador'),
-                   radioButtons("tTipoAparato", label = h4("tTipoAparato"),
-                                choices = list("NULL" = 0,
-                                               "Eleccion 1" = 1, "Eleccion 2" = 2)),
-                   fluidRow(column(6, verbatimTextOutput("tTipoAparatoselect"))),
-
-                   radioButtons("iNumFases", label = h4("iNumFases"),
-                                choices = list("NULL" = 0,
-                                               "Eleccion 1" = 1, "Eleccion 3" = 3)),
-                   fluidRow(column(6, verbatimTextOutput("iNumFasesselect"))),
                    selectInput("tTipoArreglo", label = h4("tTipoArreglo"),
                                choices = list("NULL" = 0, "3" = 3, "4" = 4,
                                               '5'=5, '7'=7, '10'=10, '11'= 11, '12'=12,
@@ -50,15 +31,6 @@ body <- dashboardBody(
                                               '19'=19),
                                selected = 0),
                    fluidRow(column(3, verbatimTextOutput("tTipoArregloselect"))),
-                   radioButtons("tTipoOptimizador", label = h4("tTipoOptimizador"),
-                                choices = list("NULL" = -2,
-                                               "-1" = -1, "0" = 0,
-                                               '1'=1, '2'=2, '3'=3)),
-                   fluidRow(column(6, verbatimTextOutput("tTipoOptimizadorselect"))),
-                   radioButtons("bLlevaTerciario", label = h4("bLlevaTerciario"),
-                                choices = list("NULL" = -1,
-                                                "0" = 0, '1'=1)),
-                   fluidRow(column(6, verbatimTextOutput("bLlevaTerciarioselect")))
             ),
         box(   width=6, h1('Sugerencia automatica basada en datos'),
                h4("tTipoAparato"),

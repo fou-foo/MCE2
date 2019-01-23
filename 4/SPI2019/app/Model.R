@@ -1,10 +1,10 @@
 # En analisis de sensibilidad mostro que las 5 variables numericas mas importantes son
-importantes.numericas <- c('Enfriamiento.i_ElevTempP3', 'Enfriamiento.i_ElevTempP2',
-                           'Tanque.iSegConservador', 'Enfriamiento.i_ElevTempP1',
-                           'Enfriamiento.bLlevaConservador')
+importantes.numericas <- c('Enfriamiento.i_TORElev4', 'Enfriamiento.i_HSRElev4',
+                           'Enfriamiento.i_TORElev5', 'Enfriamiento.i_HSRElev5',
+                           'dRuido2')
 importantes.categoricas <- c('Garantias.dCapExcitacion', 'Garantias.dCapEficReg',
-                             'Configurables.bFreeBuckling', 'bLlevaTerciario',
-                             'tNormaGar')
+                             'Garantias.dCapPerd', 'Enfriamiento.i_ElevTempP3',
+                             'iDestino')
 ####################################################################
 setwd('/home/fou/Desktop/MCE2/4/SPI2019/app')
 dir()
@@ -49,8 +49,8 @@ entrada[1, categoricas] <- mapply(datos[, categoricas], FUN=calcula.moda)
 entrada[1, embarque] <- mapply(datos[, embarque], FUN=calcula.moda)
 entrada[1, numericas] <- mapply(datos[, numericas], FUN=calcula.mediana)
 
-datos <- datos[, -embarque]    # eliminamos las variables 'administrativas' por no ser importantes para la prediccion
-entrada <- entrada[, -embarque]
+datos <- datos[, -administrativas]    # eliminamos las variables 'administrativas' por no ser importantes para la prediccion
+entrada <- entrada[, -administrativas]
 entrada <- entrada[, c(importantes.categoricas, importantes.numericas)]
 save(entrada, file ='entrada.rdata')
 write.csv(datos, file='VariablesVerdesCorrectas.csv', row.names = FALSE)
@@ -66,14 +66,19 @@ arbol <- function(variable.predecir, data=datos[, c(importantes.categoricas, imp
     library(adabag)
     # generamos la formula para el modelo
     formula.foo <- as.formula(paste0(variable.predecir, "~ ."))
-    boosting(formula.foo, data=data , mfinal = 50) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
+    boosting(formula.foo, data=data , mfinal = 1) # 5 arboles peque FALTA MAXIMO NUMERO DE OPCIONES
 }
 # CREACION DE N MODELOS ########################
 sapply(datos[, importantes.categoricas], class)
 sapply(datos[, importantes.numericas], class)
 inicio <- Sys.time()
 library(parallel)
-MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 1)
+MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 6)
+fin <- Sys.time()
+save(MODELOS, file = 'MODELOSadaRedox.rdata')
+
+
+
 MODELOS <- list()
 for (i in 1:length(c(importantes.categoricas, importantes.numericas)))
 {
