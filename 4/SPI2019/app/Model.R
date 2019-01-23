@@ -86,5 +86,7 @@ for (i in 1:length(c(importantes.categoricas, importantes.numericas)))
     MODELOS[[i]] <- arbol(variable.predecir = variable)
 }
 fin <- Sys.time()
+names(MODELOS) <- c(importantes.categoricas, importantes.numericas)
 save(MODELOS, file = 'MODELOSRFRedox.rdata')
 fin - inicio
+

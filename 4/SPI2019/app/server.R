@@ -14,7 +14,7 @@ theme_set(theme_bw())
 server <- function(input, output) {
     #load('MODELOS.rdata')
     load('entrada.rdata')
-
+    load('MODELOSRFRedox.rdata')
   #seleccion de datos simulados
   output$Enfriamiento.i_TORElev4select <- renderPrint({ as.numeric(input$Enfriamiento.i_TORElev4) })
   output$Enfriamiento.i_HSRElev4select <- renderPrint({ as.numeric(input$Enfriamiento.i_HSRElev4) })
@@ -35,12 +35,12 @@ server <- function(input, output) {
     #variables numericas 
       if( as.numeric(input$Enfriamiento.i_TORElev4) != -1 )
       {
-        entrada$Enfriamiento.i_TORElev4 <<- input$Enfriamiento.i_TORElev4
-        #vriables continuas
-        #entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)
-         # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
-        #  entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
-         # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
+        entrada$Enfriamiento.i_TORElev4 <<- as.numeric(input$Enfriamiento.i_TORElev4)
+        #vAriables continuas
+        entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)$predicted
+        entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)$predicted
+        entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )$predicted
+        entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)$predicted
         
         # variables categoricas
         #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
@@ -55,12 +55,12 @@ server <- function(input, output) {
       }
       if( as.numeric(input$Enfriamiento.i_HSRElev4)!= -1)
       {
-        entrada$Enfriamiento.i_HSRElev4 <<- input$Enfriamiento.i_HSRElev4
+        entrada$Enfriamiento.i_HSRElev4 <<- as.numeric(input$Enfriamiento.i_HSRElev4)
         #variables continuas
-        # entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )
-        # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
-        # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
-        # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
+        entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )$predicted
+        entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)$predicted
+        entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )$predicted
+        entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)$predicted
         # 
         # variables categoricas
         #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
@@ -77,14 +77,14 @@ server <- function(input, output) {
       }
       if( as.numeric(input$Enfriamiento.i_TORElev5) != -1)
       {
-        entrada$Enfriamiento.i_TORElev5 <<- input$Enfriamiento.i_TORElev5
+        entrada$Enfriamiento.i_TORElev5 <<- as.numeric(input$Enfriamiento.i_TORElev5)
         
         # variables continuas
-        # entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )
-        # entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)
-        # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
-        # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
-        # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
+        entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )$predicted
+        entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)$predicted
+        entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)$predicted
+        entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )$predicted
+        entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)$predicted
         # 
         # variables categoricas
         #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
@@ -101,13 +101,13 @@ server <- function(input, output) {
       }
       if( as.numeric(input$Enfriamiento.i_HSRElev5)!= -1 )
       {
-        entrada$Enfriamiento.i_HSRElev5 <<- input$Enfriamiento.i_HSRElev5
+        entrada$Enfriamiento.i_HSRElev5 <<- as.numeric(input$Enfriamiento.i_HSRElev5)
         
         #variables numericas
-        # entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )
-        # entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)
-        # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
-        # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
+        entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )$predicted
+        entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)$predicted
+        entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)$predicted
+        entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)$predicted
         # 
         # variables categoricas
         #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
@@ -126,12 +126,12 @@ server <- function(input, output) {
       }
       if( as.numeric(input$dRuido2) != 0 )
       {
-        entrada$dRuido2 <<- input$dRuido2
+        entrada$dRuido2 <<- as.numeric(input$dRuido2)
         #variables numericas
-        # entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )
-        # entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)
-        # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
-        # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
+        entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )$predicted
+        entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)$predicted
+        entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)$predicted
+        entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )$predicted
         # 
         
         # variables categoricas
