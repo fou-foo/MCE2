@@ -15,32 +15,37 @@ theme_set(theme_bw())
 sidebar <- dashboardSidebar(
   #comenzamos con el menu
   sidebarMenu(
-    menuItem("General", icon = icon("database"), tabName = "General")#,
-    #menuItem("Otros", icon = icon("th"), tabName = "Otros")#,
+    menuItem("General", icon = icon("database"), tabName = "General"),
+    menuItem("Otros", icon = icon("th"), tabName = "Otros")#,
   )
 )
 #cramos varias tabs
 body <- dashboardBody(
   tabItems(
-    tabItem(tabName = "General",
-            box(   width=6, h1('Seleccion del operador'),
+    tabItem(tabName = "General",h1('Seleccion del operador'),
+            box(   width=6, 
                    #variables continuas
-                   sliderInput("Enfriamiento.i_TORElev4", label = h3("Enfriamiento.i_TORElev4"),
-                               min = 0, max = 85, value = 0),
+                   selectInput("Enfriamiento.i_TORElev4", label = h4("Enfriamiento.i_TORElev4"), 
+                               choices = list("NULL" = -1, "0" = 0, "53" = 53, "55" = 55, 
+                                              "65" = 65), 
+                               selected = -1),
                    fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_TORElev4select"))),
                    
-                   sliderInput("Enfriamiento.i_HSRElev4", label = h3("Enfriamiento.i_HSRElev4"),
-                               min = 0, max = 65, value = 0),
-                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_TORElev4select"))),
+                   selectInput("Enfriamiento.i_HSRElev4", label = h4("Enfriamiento.i_HSRElev4"), 
+                               choices = list("NULL" = -1, "0" = 0, "58" = 58, "70" = 70, 
+                                              "80" = 80), 
+                               selected = -1),
+                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_HSRElev4select"))),
                    
-                   sliderInput("Enfriamiento.i_TORElev5", label = h3("Enfriamiento.i_TORElev5"),
-                               min = 0, max = 65, value = 0),
+                   selectInput("Enfriamiento.i_TORElev5", label = h4("Enfriamiento.i_TORElev5"), 
+                               choices = list("NULL" = -1, "0" = 0, "65" = 65), 
+                               selected = -1),
                    fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_TORElev5select"))),
                    
-                   sliderInput("Enfriamiento.i_HSRElev5", label = h3("Enfriamiento.i_HSRElev5"),
-                               min = 0, max = 80, value = 0),
+                   selectInput("Enfriamiento.i_HSRElev5", label = h4("Enfriamiento.i_HSRElev5"), 
+                               choices = list("NULL" = -1, "0" = 0, "80" = 80), 
+                               selected = -1),
                    fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_HSRElev5select"))),
-                   
                    
                    sliderInput("dRuido2", label = h3("dRuido2"),
                                min = 0, max = 88, value = 0),
@@ -62,7 +67,7 @@ body <- dashboardBody(
             
             
             h4("Enfriamiento.i_HSRElev5"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto"))),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev5Auto"))),
             
             
             h4("dRuido2"),
@@ -72,25 +77,30 @@ body <- dashboardBody(
 
 
     tabItem(tabName = "Otros",
-            box(   width=6, h1('Seleccion del operador')
-                 
-
-
+            column(4,
+                   
+                   # Copy the line below to make a slider bar 
+                   sliderInput("slider1", label = h3("Slider"), min = 0, 
+                               max = 100, value = 50)
             ),
-            box(width=6, h1('Sugerencia automatica basada en datos')
+            fluidRow(
+              column(4, verbatimTextOutput("value")))
+            
                 
 
 
 
     )
-  )))
+    
+  )
+  )
 
 
 
 
 # Put them together into a dashboardPage
 dashboardPage(skin = "red",
-  dashboardHeader(title = "PROLEC-SPI2019"),
+  dashboardHeader(title = "PROLEC-CIMAT"),
   sidebar,
   body
 )

@@ -57,7 +57,7 @@ write.csv(datos, file='VariablesVerdesCorrectas.csv', row.names = FALSE)
 ################################################
 ################## Modelos ###################
 
-arbol <- function(variable.predecir, data=datos[, c(importantes.categoricas, importantes.numericas)])
+arbol <- function(variable.predecir, data=datos[1:5, c(importantes.categoricas, importantes.numericas)])
 {
     # Closure para crear MUCHOS MODELOS
     # nombre.variable (string): Nombre de la variable que se va a sugerir
@@ -76,7 +76,7 @@ library(parallel)
 MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 6)
 fin <- Sys.time()
 save(MODELOS, file = 'MODELOSadaRedox.rdata')
-
+fin - inicio
 
 
 MODELOS <- list()
