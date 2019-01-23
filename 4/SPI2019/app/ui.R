@@ -22,8 +22,8 @@ sidebar <- dashboardSidebar(
 #cramos varias tabs
 body <- dashboardBody(
   tabItems(
-    tabItem(tabName = "General",h1('Seleccion del operador'),
-            box(   width=6, 
+    tabItem(tabName = "General",
+            box(   width=6, h1('Seleccion del operador'),
                    #variables continuas
                    selectInput("Enfriamiento.i_TORElev4", label = h4("Enfriamiento.i_TORElev4"), 
                                choices = list("NULL" = -1, "0" = 0, "53" = 53, "55" = 55, 
@@ -72,28 +72,75 @@ body <- dashboardBody(
             
             h4("dRuido2"),
             fluidRow(column(6, verbatimTextOutput("dRuido2Auto")))
-            #variables categoricas 
             )),
 
 
     tabItem(tabName = "Otros",
-            column(4,
+            #variables categoricas 
+            box(   width=6, h1('Seleccion del operador'),
+                   #variables continuas
+                   selectInput("Garantias.dCapExcitacion", label = h4("Garantias.dCapExcitacion"), 
+                               choices = list("NULL" = 0, "5" = 0, "7.5" = 7.5, "10" = 10, 
+                                              "12" = 12, "13.2" = 13.2, "13.30" = 13.30, "14.00" = 14.00,
+                              "15.00" = 15.00, "16.00" = 16.00, "16.50" = 16.50, "16.80" = 16.80,
+                              "18" = 18, "19" = 19, "20" = 20, "22" = 22.40,
+                              "25" = 25, "27" = 27, "28" = 28, "30" = 30,
+                              "33.6" = 33.6, "35.5" = 35.5, "36" = 36, "37.6" = 37.6,
+                              "38" = 38, "39" = 39, "40" = 40, "42" = 14.00,
+                              
+                               ), 
+                               selected = -1),
+                   fluidRow(column(3, verbatimTextOutput("Garantias.dCapExcitacionselect"))),
                    
-                   # Copy the line below to make a slider bar 
-                   sliderInput("slider1", label = h3("Slider"), min = 0, 
-                               max = 100, value = 50)
+                   selectInput("Enfriamiento.i_HSRElev4", label = h4("Enfriamiento.i_HSRElev4"), 
+                               choices = list("NULL" = -1, "0" = 0, "58" = 58, "70" = 70, 
+                                              "80" = 80), 
+                               selected = -1),
+                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_HSRElev4select"))),
+                   
+                   selectInput("Enfriamiento.i_TORElev5", label = h4("Enfriamiento.i_TORElev5"), 
+                               choices = list("NULL" = -1, "0" = 0, "65" = 65), 
+                               selected = -1),
+                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_TORElev5select"))),
+                   
+                   selectInput("Enfriamiento.i_HSRElev5", label = h4("Enfriamiento.i_HSRElev5"), 
+                               choices = list("NULL" = -1, "0" = 0, "80" = 80), 
+                               selected = -1),
+                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_HSRElev5select"))),
+                   
+                   sliderInput("dRuido2", label = h3("dRuido2"),
+                               min = 0, max = 88, value = 0),
+                   fluidRow(column(3, verbatimTextOutput("dRuido2select")))
+                   
+                   
             ),
-            fluidRow(
-              column(4, verbatimTextOutput("value")))
-            
-                
+            box(   width=6, h1('Sugerencia automatica basada en datos'),
+                   #variables numericas
+                   h4("Enfriamiento.i_TORElev4"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto"))),
+                   
+                   h4("Enfriamiento.i_HSRElev4"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev4Auto"))),
+                   
+                   
+                   h4("Enfriamiento.i_TORElev5"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev5Auto"))),
+                   
+                   
+                   h4("Enfriamiento.i_HSRElev5"),
+                   fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_HSRElev5Auto"))),
+                   
+                   
+                   h4("dRuido2"),
+                   fluidRow(column(6, verbatimTextOutput("dRuido2Auto")))
+            ))
 
 
 
     )
     
   )
-  )
+
 
 
 
