@@ -22,13 +22,14 @@ server <- function(input, output) {
   output$Enfriamiento.i_HSRElev5select <- renderPrint({ as.numeric(input$Enfriamiento.i_HSRElev5) })
   output$dRuido2select <- renderPrint({ as.numeric(input$dRuido2) })
   
+  # variables categoricas
+  output$Garantias.dCapExcitacionselect <- renderPrint({ input$Garantias.dCapExcitacion })
+  output$Garantias.dCapEficRegselect <- renderPrint({ input$Garantias.dCapEficReg })
+  output$Garantias.dCapPerdselect <- renderPrint({ input$Garantias.dCapPerd })
+  output$Enfriamiento.i_ElevTempP3select <- renderPrint({ input$Enfriamiento.i_ElevTempP3 })
+  output$iDestinoselect <- renderPrint({ input$iDestino })
   
-  output$value <- renderPrint({ input$slider1 })
   
-  #output$dVoltajeSistATselect <- renderPrint({ (input$dVoltajeSistAT) })
-  #output$dVoltajeSistATInterfazselect <- renderPrint({ (input$dVoltajeSistATInterfaz) })
-  #output$MSNMselect <- renderPrint({ (input$MSNM) })
-
   ############################################
   pronostico <- reactive({
     #variables numericas 
@@ -40,7 +41,11 @@ server <- function(input, output) {
          # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
         #  entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
          # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
-          
+        
+        # variables categoricas
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+        
+        
           #entrada$bLlevaTerciario <<- predict(MODELOS[['bLlevaTerciario']],entrada, type='class' )
           #entrada$dVoltajeSistAT <<- predict(MODELOS[['dVoltajeSistAT']],entrada )
           #entrada$dVoltajeSistATInterfaz <<- predict(MODELOS[['dVoltajeSistATInterfaz']],entrada )
@@ -57,6 +62,9 @@ server <- function(input, output) {
         # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
         # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
         # 
+        # variables categoricas
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+        
         
         #  entrada$tTipoArreglo <<- predict(MODELOS[['tTipoArreglo']],entrada, type='class' )
          # entrada$tTipoOptimizador <<- predict(MODELOS[['tTipoOptimizador']],entrada, type='class' )
@@ -78,6 +86,9 @@ server <- function(input, output) {
         # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
         # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
         # 
+        # variables categoricas
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+        
         
         #  entrada$iNumFases <<- predict(MODELOS[['iNumFases']],entrada, type='class' )
          # entrada$tTipoOptimizador <<- predict(MODELOS[['tTipoOptimizador']],entrada, type='class' )
@@ -98,6 +109,9 @@ server <- function(input, output) {
         # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
         # entrada$dRuido2 <<- predict(MODELOS[['dRuido2']],entrada)
         # 
+        # variables categoricas
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+        
         
          # entrada$tTipoOptimizador <<- input$tTipoOptimizador
           #entrada$tTipoAparato <<- predict(MODELOS[['tTipoAparato']],entrada, type='class' )
@@ -120,8 +134,12 @@ server <- function(input, output) {
         # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
         # 
         
-         # entrada$bLlevaTerciario <<- input$bLlevaTerciario
-          #entrada$tTipoAparato <<- predict(MODELOS[['tTipoAparato']],entrada, type='class' )
+        # variables categoricas
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+        #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+      
+          
+        #entrada$tTipoAparato <<- predict(MODELOS[['tTipoAparato']],entrada, type='class' )
           #entrada$iNumFases <<- predict(MODELOS[['iNumFases']],entrada, type='class' )
           #entrada$tTipoArreglo <<- predict(MODELOS[['tTipoArreglo']],entrada, type='class' )
           #entrada$tTipoOptimizador <<- predict(MODELOS[['tTipoOptimizador']],entrada, type='class' )
@@ -132,6 +150,29 @@ server <- function(input, output) {
           return(entrada)
       }
       ###########segundo tab
+    if( input$Garantias.dCapExcitacion != '0' )
+    {
+      entrada$Garantias.dCapExcitacion <<- input$Garantias.dCapExcitacion
+      #variables numericas
+      # entrada$Enfriamiento.i_TORElev4 <<- predict(MODELOS[['Enfriamiento.i_TORElev4']],entrada )
+      # entrada$Enfriamiento.i_HSRElev4 <<- predict(MODELOS[['Enfriamiento.i_HSRElev4']],entrada)
+      # entrada$Enfriamiento.i_TORElev5 <<- predict(MODELOS[['Enfriamiento.i_TORElev5']],entrada)
+      # entrada$Enfriamiento.i_HSRElev5 <<- predict(MODELOS[['Enfriamiento.i_HSRElev5']],entrada )
+      # 
+      
+      #variables categoricas   
+      #entrada$Garantias.dCapExcitacion <<- predict(MODELOS[['Garantias.dCapExcitacion']],entrada, type='class' )
+      
+      #entrada$tTipoArreglo <<- predict(MODELOS[['tTipoArreglo']],entrada, type='class' )
+      #entrada$tTipoOptimizador <<- predict(MODELOS[['tTipoOptimizador']],entrada, type='class' )
+      #entrada$dVoltajeSistAT <<- predict(MODELOS[['dVoltajeSistAT']],entrada )
+      #entrada$dVoltajeSistATInterfaz <<- predict(MODELOS[['dVoltajeSistATInterfaz']],entrada )
+      #entrada$MSNM <<- predict(MODELOS[['MSNM']],entrada, type='class' )
+      
+      return(entrada)
+    }
+    
+  
      
 
       })
@@ -147,11 +188,13 @@ server <- function(input, output) {
   output$Enfriamiento.i_TORElev5Auto <- renderPrint({ as.character(pronostico()[, 'Enfriamiento.i_TORElev5']) })
   output$Enfriamiento.i_HSRElev5Auto<- renderPrint({as.character(pronostico()[1, 'Enfriamiento.i_HSRElev5'] )})
   output$dRuido2Auto <- renderPrint({ as.character( pronostico()[, 'dRuido2']) })
+#variables categorcias 
+  output$Garantias.dCapExcitacionAuto <- renderPrint({ as.character( pronostico()[, 'Garantias.dCapExcitacion']) })
+  output$Garantias.dCapEficRegAuto <- renderPrint({ as.character( pronostico()[, 'Garantias.dCapEficReg']) })
+  output$Garantias.dCapPerdAuto <- renderPrint({ as.character( pronostico()[, 'Garantias.dCapPerd']) })
+  output$Enfriamiento.i_ElevTempP3Auto <- renderPrint({ as.character( pronostico()[, 'Enfriamiento.i_ElevTempP3']) })
+  output$iDestinoAuto <- renderPrint({ as.character( pronostico()[, 'iDestino']) })
   
-  #output$bLlevaTerciarioAuto <- renderPrint({ as.character(pronostico()[, 'bLlevaTerciario'] )})
-  #output$dVoltajeSistATAuto <- renderPrint({ (pronostico()[, 'dVoltajeSistAT'] )})
-  #output$dVoltajeSistATInterfazAuto <- renderPrint({ (pronostico()[, 'dVoltajeSistATInterfaz'] )})
-  #output$MSNMAuto <- renderPrint({ as.character(pronostico()[, 'MSNM'] )})
 
   #############################################################################
 

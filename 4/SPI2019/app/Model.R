@@ -73,7 +73,7 @@ sapply(datos[, importantes.categoricas], class)
 sapply(datos[, importantes.numericas], class)
 inicio <- Sys.time()
 library(parallel)
-MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 6)
+MODELOS <- mclapply(c(importantes.categoricas, importantes.numericas), function(x) arbol( variable.predecir=x), mc.cores = 8)
 fin <- Sys.time()
 save(MODELOS, file = 'MODELOSadaRedox.rdata')
 fin - inicio
