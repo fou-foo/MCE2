@@ -183,11 +183,11 @@ server <- function(input, output) {
 
 
 #variables numericas
-  output$Enfriamiento.i_TORElev4Auto <- renderPrint({ as.character(pronostico()[1, 'Enfriamiento.i_TORElev4']) })
-  output$Enfriamiento.i_HSRElev4Auto<- renderPrint({as.character(pronostico()[1, 'Enfriamiento.i_HSRElev4'] )})
-  output$Enfriamiento.i_TORElev5Auto <- renderPrint({ as.character(pronostico()[, 'Enfriamiento.i_TORElev5']) })
-  output$Enfriamiento.i_HSRElev5Auto<- renderPrint({as.character(pronostico()[1, 'Enfriamiento.i_HSRElev5'] )})
-  output$dRuido2Auto <- renderPrint({ as.character( pronostico()[, 'dRuido2']) })
+  output$Enfriamiento.i_TORElev4Auto <- renderPrint({ as.numeric(pronostico()[1, 'Enfriamiento.i_TORElev4']) })
+  output$Enfriamiento.i_HSRElev4Auto<- renderPrint({as.numeric(pronostico()[1, 'Enfriamiento.i_HSRElev4'] )})
+  output$Enfriamiento.i_TORElev5Auto <- renderPrint({ as.numeric(pronostico()[, 'Enfriamiento.i_TORElev5']) })
+  output$Enfriamiento.i_HSRElev5Auto<- renderPrint({as.numeric(pronostico()[1, 'Enfriamiento.i_HSRElev5'] )})
+  output$dRuido2Auto <- renderPrint({ as.numeric( pronostico()[, 'dRuido2']) })
 #variables categorcias 
   output$Garantias.dCapExcitacionAuto <- renderPrint({ as.character( pronostico()[, 'Garantias.dCapExcitacion']) })
   output$Garantias.dCapEficRegAuto <- renderPrint({ as.character( pronostico()[, 'Garantias.dCapEficReg']) })
