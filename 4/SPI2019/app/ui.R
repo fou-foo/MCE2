@@ -37,6 +37,16 @@ body <- dashboardBody(
                                min = 0, max = 65, value = 0),
                    fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_TORElev5select"))),
                    
+                   sliderInput("Enfriamiento.i_HSRElev5", label = h3("Enfriamiento.i_HSRElev5"),
+                               min = 0, max = 80, value = 0),
+                   fluidRow(column(3, verbatimTextOutput("Enfriamiento.i_HSRElev5select"))),
+                   
+                   
+                   sliderInput("dRuido2", label = h3("dRuido2"),
+                               min = 0, max = 88, value = 0),
+                   fluidRow(column(3, verbatimTextOutput("dRuido2select")))
+                   
+                   
             ),
         box(   width=6, h1('Sugerencia automatica basada en datos'),
                #variables numericas
@@ -51,17 +61,12 @@ body <- dashboardBody(
             fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev5Auto"))),
             
             
-            h4("Enfriamiento.i_TORElev4"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4"))),
+            h4("Enfriamiento.i_HSRElev5"),
+            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4Auto"))),
             
             
-            h4("Enfriamiento.i_TORElev4"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4"))),
-            
-            
-            h4("Enfriamiento.i_TORElev4"),
-            fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_TORElev4"))),
-            
+            h4("dRuido2"),
+            fluidRow(column(6, verbatimTextOutput("dRuido2Auto")))
             #variables categoricas 
             )),
 
