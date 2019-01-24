@@ -88,7 +88,10 @@ body <- dashboardBody(
             fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_ElevTempP3Auto1"))),
             
             h4("iDestino"),
-            fluidRow(column(6, verbatimTextOutput("iDestinoAuto1")))
+            fluidRow(column(6, verbatimTextOutput("iDestinoAuto1"))),
+            
+            ########proyeccion
+            plotlyOutput("plot1")
             
             )),
 
@@ -191,7 +194,9 @@ body <- dashboardBody(
                    fluidRow(column(6, verbatimTextOutput("Enfriamiento.i_ElevTempP3Auto2"))),
                    
                    h4("iDestino"),
-                   fluidRow(column(6, verbatimTextOutput("iDestinoAuto2")))
+                   fluidRow(column(6, verbatimTextOutput("iDestinoAuto2"))),
+                   ########proyeccion
+                   plotlyOutput("plot2")
                    
                       
                    

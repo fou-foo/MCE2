@@ -89,4 +89,4 @@ fin <- Sys.time()
 names(MODELOS) <- c(importantes.categoricas, importantes.numericas)
 save(MODELOS, file = 'MODELOSRFRedox.rdata')
 fin - inicio
-
+sapply(MODELOS, class)
