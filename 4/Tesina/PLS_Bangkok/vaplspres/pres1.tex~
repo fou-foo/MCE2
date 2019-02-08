@@ -1,0 +1,351 @@
+\documentclass{beamer}
+
+\usetheme{Warsaw}
+%\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{verbatim}
+\usepackage{amsbsy}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{multirow}
+%\usepackage[dvipdf]{graphicx}
+
+\setbeamercovered{transparent}
+
+\newcommand{\?}{?`}
+\newtheorem{definicion}{Definici\'on}
+
+\mode<presentation>
+{
+  \setbeamertemplate{background canvas}[vertical shading][bottom=white!10,top=blue!10]
+  \setbeamercolor{itemize item}{fg=red}
+  \usetheme{CambridgeUS}
+  \usefonttheme[onlysmall]{structurebold}
+}
+
+%
+% The following info should normally be given in you main file:
+%
+
+\title[Var-PLS]{Var-PLS}
+\author[Graciela Gonz\'alez Farias] {Graciela Gonz\'alez Farias}
+\institute[CIMAT Monterrey]{CIMAT Monterrey\\
+Monterrey, NL.}
+\date{Mayo 2012}
+
+
+\begin{document}
+
+
+%\frame{\titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \begin{center}
+    % \vspace{8mm}
+    \begin{block}{}
+      \begin{center}
+        \vspace{3mm}
+        {\Large Var PLS}
+        \vspace{3mm}
+      \end{center}
+    \end{block}
+    \vspace{5mm}
+    Graciela Gonz\'alez Farias \\
+    \vspace{5mm}
+    {\small Centro de Investigaci\'on en Matem\'aticas.\\
+      Monterrey, NL.\\
+      Mayo de 2012}
+    \vspace{5mm}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}{Contenido}
+  \begin{itemize}
+  \item Motivaci\'on
+  \item PLSAR
+  \item Revisi\'on breve de modelos VAR y PLS
+  \item Definici\'on de VAR-PLS
+  \item Bootstrap para VAR-PLS
+  \item Aplicaciones
+  \item Conclusiones
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Motivaci\'on}
+  \begin{itemize}
+    \item PLS es una t\'ecnica que ha mostrado su utilidad en muchas
+      \'areas de aplicaci\'on, tales como el control de procesos en la
+      industria qu\'imica, producci\'on por \emph{batches}, im\'agenes
+      m\'edicas, donde se introducen modelos espacio-temporales PLS,
+      Path Modeling, Clasificaci\'on, microarreglos, solo por
+      mencionar algunos (ver los trabajos de McGregor, Nomikos,
+      MacIntosh, Esposito Vinz, Paul Garthwaite, entre otros).
+    \item El m\'etodo puede aplicarse a datos univariados y
+      multivariados.
+    \item PLS ha mostrado mejor capacidad predictiva que otros
+      m\'etodos, incluso cuando no se cumplen totalmente los supuestos
+      est\'andar. (SI ES ESTO LO QUE QUERIAS DECIR???)
+    \item Philip Hans Franses (2006), propuso una metodolog\'ia para
+      realizar pron\'osticos $h$ pasos adelante de manera \'optima a
+      trav\'es de una representaci\'on autorregresiva de orden $p$. El
+      m\'etodo es llamado Autorregresive Partial Least Squares, y lo
+      denotamos mediante $PLSAR(h,p)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Nuestro caso de inter\'es}
+  \begin{itemize}
+    \item Desarrollar un modelo para predecir la inflaci\'on en M\'exico.
+    \item El modelo considerar\'a el crecimiento o variaci\'on de las
+      condiciones monetarias del pa\'is como fuente principal de la
+      din\'amica inflacionaria.
+    \item Existe una gran discusi\'on, incluso hoy en d\'ia, sobre si
+      existe una relaci\'on de largo plazo entre el fen\'omeno
+      monetario y el traspaso inflacionario que tiene
+    \item No obstante, hay un concenso en que la inflaci\'on, en el
+      largo plazo, es un fen\'omeno netamente monetario.
+    \item En este trabajo no abordaremos tal discusi\'on, sino que
+      mostraremos las propiedades emp\'iricas del modelo desarrollado
+      en t\'erminos del error de predicci\'on fuera de muestra.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Nuestro caso de inter\'es}
+  Utilizaremos las siguientes variables en el periodo comprendido
+  entre enero de 2000 a febrero de 2012:
+  \begin{itemize}
+    \item $p$: el \'indice nacional de precios al consumidor
+    \item $m0$: billetes y monedas en circulaci\'on
+    \item $r$: la tasa de inter\'es interbancaria a 28 d\'ias
+    \item $y$: el indicador global de la actividad econ\'omica
+  \end{itemize}
+  FALTA PARTE DE LA PAGINA 2!!!!!!!
+\end{frame}
+
+\begin{frame}{Nuestro caso de inter\'es}
+  \begin{itemize}
+    \item Nosotros generalizamos la propuesta de Franses para lo que
+      llamaremos $VAR-PLS(h,p)$, y se aplicar\'a al modelo en
+      cuesti\'on, aunque solo se mostrar\'an resultados
+      comparativos. Esta generalizaci\'on comprende lo siguiente:
+      \begin{enumerate}
+      \item Extensi\'on al caso multivariado aprovechando la
+        flexibilidad de los modelos de Vectores Autoregresivos (VAR),
+        generando un modelo llamado VAR-PLS.
+      \item Introducir variables determin\'isticas (dummies,
+        tendencias, etc\'etera) y ex\'ogenas.
+      \item Construcci\'on de intervalos de predicci\'on via Bootstrap.
+      \item Construcci\'on de un modelo VAR con capacidad predictiva y
+        compararlo con los pron\'osticos realizados con el modelo
+        VAR-PLS.
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{}
+    \begin{center}
+      \vspace{3mm}
+      {\Large $PLSAR(h,p)$}
+      \vspace{3mm}
+    \end{center}
+  \end{block}
+\end{frame}
+
+\begin{frame}{$PLSAR(h,p)$}
+  Franses plantea la comparaci\'on entre tres formas de hacer
+  pron\'osticos bajo un $AR(p)$:
+  \begin{itemize}
+    \item[\textbf{1-}] Un modelo \'unico para todos los horizontes,
+      usando un procedimiento iterativo
+      \begin{displaymath}
+        AR(p): y_{T+h}=\mu+
+        \rho_1y_{T+h-1}+\rho_2y_{T+h-2}+\cdots + \rho_py_{T+h-p} + \epsilon_T
+      \end{displaymath}
+      
+      El modelo $AR(p)$ es la forma cl\'asica de realizar los $h$
+      pasos hacia adelante, cuyos par\'ametros son estimados
+      generalmente mediante M\'inimos Cuadrados Ordinarios (OLS).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{$PLSAR(h,p)$}
+  \begin{itemize}
+  \item[\textbf{2-}] Un modelo para cada horizonte, donde la
+    varianza cambia con cada horizonte 
+    \begin{displaymath}
+      AR_h(p): y_{t+h}=\mu+
+      \rho_{1,h}y_{t}+\rho_{2,h}y_{t-1}+\cdots + \rho_py_{t-p}+\epsilon_t
+    \end{displaymath}
+    \begin{itemize}
+    \item El $AR_h(p)$ es una alternativa al caso anterior, ya que OLS
+      minimiza la suma cuadrada de $\epsilon_t$, pero no garantiza que
+      sea m\'inima para $h$ errores futuros.
+    \item Una opci\'on es contar con diferentes modelos para cada
+      horizonte de pron\'ostico.
+    \item Para series de tiempo estacionarias, recordemos que el
+      pron'ostico de un $AR(p)$ converge r\'apidamente a la media
+      incondicional (obviamente, la rapidez depende directamente de
+      $h\geq p$.
+    \item Para m\'as detalles sobre este tipo de modelos, puede
+      consultarse Pesaran \& Pick (2010), Marcellino, Stock \& Watson
+      (2004), Carreiro, Kapeterios \& Marcellino (2010), Tiao \& Xu
+      (1993), entre otros.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{$PLSAR(h,p)$}
+  \begin{itemize}
+  \item[\textbf{2-}] Algo intermedio: $PLSAR$. Este modelo se
+    sit\'ua entre un $AR(p)$ que pronostica todos los $h$ pasos
+    adelante y diferentes modelos $AR$ para cada horizonte.
+    \begin{displaymath}
+      PLSAR(h,p): \hat{Y}=XB_{PLS}
+    \end{displaymath}
+    \begin{itemize}
+    \item Es claro que existen correlaciones entre las series de
+      tiempo que los dos modelos anteriores no explotan. Dicho en
+      otras palabras: sabemos que $(y_t,t_{t-j})$ est\'an
+      correlacionadas, mas a\'un $(y_{T+h},t_{T+h-j})$ tambi\'en lo
+      est\'an, entonces, una alternativa viable es predecir
+      conjuntamente $(y_{t+h},y_{t+h-1},y_{t+h-2},\ldots,y_{t+1})$
+      con la ayuda de $(y_{t},y_{t-1},y_{t-2},\ldots,y_{t-p})$, y PLS
+      es una t\'ecnica atractiva para ello.
+      \item Franses propone reorganizar la informaci\'on de la
+        siguiente manera:
+        \begin{displaymath}
+          (y_{t},y_{t-1},y_{t-2},\ldots,y_{t-p}) \text{ en una matriz
+            de predictores } X
+        \end{displaymath}
+        \begin{displaymath}
+          (y_{t+h},y_{t+h-1},y_{t+h-2},\ldots,y_{t+1})
+           \text{ en una matriz de respuestas } Y
+        \end{displaymath}
+        y realizar la regresi\'on con PLS, de tal manera que el
+        proceso de construcci\'on de variables latentes y cargas
+        asociadas contengan la informaci\'on relevante que tiene $X$
+        en $Y$.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{$Var-PLS$}
+  \begin{definicion}[Proceso $Var(p)$]
+    \begin{displaymath}
+      y_t=A_1y_{t-1} + A_2y_{t-2} + \cdots + A_py_{t-p} + CD_t + u_t,
+    \end{displaymath}
+    donde
+    \begin{itemize}
+    \item $A_i$, $i=1,2,\ldots, p$, son matrices de coeficientes
+    \item $u_t$ es un proceso de ruido blanco con matriz de
+      covarianzas $\Sigma_u=E(u_t,u_t')$
+    \item $C$ es una matriz de regresores deterministicos
+    \item $D_t$ es un vector de regresores determin\'isticos apropiados
+    \end{itemize}
+  \end{definicion}
+\end{frame}
+
+\begin{frame}{$Var-PLS$}
+  Notemos que el $Var(p)$ puede definirse como un $Var(1)$ mediante 
+    \begin{displaymath}
+      Y_t=AY_{t-1} + V_t,
+    \end{displaymath}
+    con
+    \begin{small}
+    \begin{displaymath}
+      Y_t=\left(
+        \begin{array}{c}
+          y_t \\
+          y_{t-1} \\
+          \vdots \\
+          y_{t-p+1}
+        \end{array}
+        \right), \quad
+        A=\left(
+        \begin{array}{ccccc}
+          A_1 & A_2 & \cdots & A_{p-1} & A_p \\
+          I & 0 & \cdots & 0 & 0 \\
+          0 & I & \cdots & 0 & 0 \\
+          \vdots & \vdots & \ddots & \vdots & \vdots \\
+          0 & 0 & \cdots & I & 0
+        \end{array}
+        \right), \quad
+        V_t=\left(
+        \begin{array}{c}
+          u_t \\
+          0 \\
+          \vdots \\
+          0
+        \end{array}
+        \right).
+    \end{displaymath}
+    \end{small}
+    Si los valores propios de $A$ son menores que 1, entonces el
+    proceso $Var(p)$ es estable.
+\end{frame}
+
+\begin{frame}{$Var-PLS$}
+  \begin{itemize}
+  \item Si los valores propios de $A$ son menores que 1, entonces el
+    proceso $Var(p)$ es estable.
+  \item Un procedimiento para encontrar el orden $p$ del modelo
+    consiste en ordenar los $p=0,\ldots,p_{\max}$ y elegir el valor
+    $p$ que minimice cierto criterio de informaci\'on de la forma
+    \begin{displaymath}
+      IC(p)-\log \vert \hat{\Sigma(p)} \vert + C_T \varphi(K,p),
+    \end{displaymath}
+    donde
+    \begin{itemize}
+      \item $\hat{\Sigma(p)}=T^{-1} \sum_{i=1}^T\hat{u}_t'\hat{u}_t$,
+      \item $C_T$ es una secuencia indexada por el n\'umero de
+        realizaciones de $T$
+      \item $\varphi(K,p)$ es una funci\'on que penaliza la
+        complejidad del modelo
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{$Var-PLS$}
+  \begin{itemize}
+  \item Los cuatro criterios de informaci\'on m\'as utilizados son
+    \begin{itemize}
+    \item Akaike: $AIC(p)=\vert \hat{\Sigma(p)} \vert +
+      \frac{2}{t}pK^2$
+    \item Schwartz-Bayesiano: $BIC(p)=\vert \hat{\Sigma(p)} \vert +
+      \frac{\log T}{t}pK^2$
+    \item Hannan-Quinn: $HQ(p)=\vert \hat{\Sigma(p)} \vert +
+      \frac{2\log T}{t}pK^2$
+    \item Error final de predicci\'on:
+      $FPE(p)=\left(\frac{T+p^{*}}{T-p^{*}}\right)^K
+      \text{det}(\hat{\Sigma(p)})$  
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{}
+  \begin{block}{}
+    \begin{center}
+      \vspace{3mm}
+      {\Large Gracias por su atenci\'on !}
+      \vspace{3mm}
+    \end{center}
+  \end{block}
+\end{frame}
+
+
+
+
+
+\end{document}
