@@ -1,0 +1,445 @@
+---
+title: "Cervezas2"
+author: "Equipo chingon"
+date: "February 23, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache=TRUE,
+                      warnings = FALSE,
+                      message=FALSE, 
+                      fig.height=6, fig.width=12)
+library(RColorBrewer)
+```
+
+
+```{r barras1}
+load(file = 'cervezasFiltro.rdata')
+load( file = 'catalogoCervezas.rdata') #catalogo con los detalles SOLO de las cervezas
+library(dplyr)
+#names(catalogo.cervezas)
+index <- grep('[pP]ack', catalogo.cervezas$SUBSEGMENTO_DES)
+catalogo.cervezas$Categoria <- 'Individual'
+catalogo.cervezas$Categoria[index] <- 'Pack'
+catalogo.util <- catalogo.cervezas[, c('PRODUCTO_KEY', 'PRODUCTO_DES', 'SUBSEGMENTO_DES', 'Categoria' )]
+sku.remove <- c('10034321','10074735','10047930', '10057271','10048582',
+                '54146584' , '54146586', '54150830', '54150844', '54157852', '10017307')
+catalogo.util %>% filter(!(PRODUCTO_KEY %in% sku.remove))-> catalogo.util
+remove(catalogo.cervezas)
+gc()
+Sys.sleep(10)
+####
+#names(cervezas)
+library(lubridate)
+cervezas %>% group_by(id_producto, mday(id_fecha)) %>%
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen)) -> temp
+temp <- merge(temp, catalogo.util,
+                  all.x=TRUE, by.x='id_producto', by.y='PRODUCTO_KEY')
+names(temp)[2] <- 'Dia_mes'
+temp%>% group_by(Categoria, Dia_mes)%>%
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen)) -> temp
+library(ggplot2)
+var <- c('Individual', 'Pack')
+colores <- c('#E8001A', '#FBB208')
+index <- 1
+ggplot(subset(temp, Categoria==var[index]), aes(x= Dia_mes, y=cantidad, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día del mes')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels = scales::comma)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x= Dia_mes, y=cantidad, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día del mes')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)
+# graficos de montos
+index <- 1
+ggplot(subset(temp, Categoria==var[index]), aes(x= Dia_mes, y=montomargen, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día del mes')+ ylab('Margen de venta ')+
+    scale_y_continuous(labels = scales::dollar)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x= Dia_mes, y=montomargen, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día del mes')+ ylab('Margen de venta')+
+    scale_y_continuous(labels =scales::dollar)
+```
+
+\newpage
+
+```{r barras2}
+###################
+# graficos día de la semana
+cervezas %>% group_by(id_producto, wday(id_fecha, label=TRUE)) %>%
+    summarise(cantidad=sum(cantidad),
+              montomargen=sum(montomargen)) -> temp
+temp <- merge(temp, catalogo.util,
+              all.x=TRUE, by.x='id_producto', by.y='PRODUCTO_KEY')
+names(temp)[2] <- 'Dia_semana'
+levels(temp$Dia_semana) <- c('Domingo', 'Lunes', 'Martes',
+                             'Miercoles', 'Jueves',
+                             'Viernes', 'Sabado')
+temp%>% group_by(Categoria, Dia_semana)%>%
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen)) -> temp
+index <- 1
+ggplot(subset(temp, Categoria==var[index]), aes(x= Dia_semana, y=cantidad, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día de la semana')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels = scales::comma)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x= Dia_semana, y=cantidad, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día de la semana')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)
+# montos por dia de la semana
+index <- 1
+ggplot(subset(temp, Categoria==var[index]), aes(x= Dia_semana, y=montomargen, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día de la semana')+ ylab('Margen de venta')+
+    scale_y_continuous(labels = scales::dollar)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x= Dia_semana, y=cantidad, fill=I(colores[index]))) +
+    geom_col()+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    theme_minimal()+ xlab('Día de la semana')+ ylab('Margen de venta')+
+    scale_y_continuous(labels =scales::dollar)
+```
+
+
+\newpage
+
+```{r series_sd}
+#mejor hago una tabla con toda la info
+#names(cervezas)
+#cervezas$monto <- NULL
+#remove(temp)
+#gc()
+#Sys.sleep(10)
+#cervezas <- merge(cervezas, 
+ #       catalogo.util[, c("PRODUCTO_KEY", "PRODUCTO_DES", "Categoria")],
+  #                all.x=TRUE,
+   #               by.x='id_producto',
+    #          by.y='PRODUCTO_KEY')
+#names(cervezas)
+#cervezas$id_producto <-  NULL
+#gc()
+#Sys.sleep(10)
+#save(cervezas, file = 'tablota.rdata')
+load(file = 'tablota.rdata')
+# grafica de montos y cantidades en serie de tiempo 
+cervezas %>% group_by(Categoria, id_fecha) %>%
+    summarise(
+        cantidad=  sum(cantidad),
+        montomargen=sum(montomargen))-> temp
+index <- 1
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x=id_fecha, y= cantidad, color=I(colores[index]))) +
+    geom_line()+theme_minimal()+theme(legend.position="none")+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    xlab('Fecha')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x=id_fecha, y= cantidad, color=I(colores[index]))) +
+    geom_line()+theme_minimal()+theme(legend.position="none")+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    xlab('Fecha')+ ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)
+index <- 1
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x=id_fecha, y= montomargen, color=I(colores[index]))) +
+    geom_line()+theme_minimal()+theme(legend.position="none")+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    xlab('Fecha')+  ylab('Margen de venta')+
+    scale_y_continuous(labels =scales::dollar)
+index <- 2
+ggplot(subset(temp, Categoria==var[index]),
+       aes(x=id_fecha, y= montomargen, color=I(colores[index]))) +
+    geom_line()+theme_minimal()+theme(legend.position="none")+
+    ggtitle(paste0('Ventas de categoria ', var[index]))+
+    xlab('Fecha')+  ylab('Margen de venta')+
+    scale_y_continuous(labels =scales::dollar)
+```
+
+```{r proporciones, fig.width=12, fig.height=12}
+index <- 1
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES)%>% 
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen),
+              Categoria=head(Categoria,1))-> temp
+temp <- temp[ order(temp$cantidad), ]
+temp$PRODUCTO_DES[1:5] <- 'Otras'
+temp %>% group_by(PRODUCTO_DES)%>%
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen),
+              Categoria=head(Categoria,1))-> temp
+p1 <- ggplot(data=temp, aes(x=Categoria, y=cantidad, 
+                      fill=PRODUCTO_DES))+geom_col()+
+    theme_minimal()+
+    theme(legend.position="bottom", legend.title = element_blank())+
+    ggtitle(paste0('Proporción de ventas piezas: ', var[index]))+
+    xlab('')+  ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)+coord_flip()+
+    scale_fill_manual(values=brewer.pal(n = 12,
+                      name = "Paired")[c(1:12,1:3)])+coord_polar("y", start=0)
+index <-  2
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES)%>% 
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen),
+              Categoria=head(Categoria,1))-> temp
+p2 <- ggplot(data=temp, aes(x=Categoria, y=cantidad, 
+                      fill=PRODUCTO_DES))+geom_col()+
+    theme_minimal()+
+    theme(legend.position="bottom", legend.title = element_blank())+
+    ggtitle(paste0('Proporción de ventas piezas: ', var[index]))+
+    xlab('')+  ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::comma)+coord_flip()+
+    scale_fill_manual(values=brewer.pal(n = 8,
+                      name = "Paired"))+coord_polar("y", start=0)
+library(ggpubr)
+ggarrange(p1, p2, ncol = 1,  nrow = 2)
+index <- 1
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES)%>% 
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen),
+              Categoria=head(Categoria,1))-> temp
+temp <- temp[ order(temp$montomargen), ]
+temp$PRODUCTO_DES[1:5] <- 'Otras'
+p1 <- ggplot(data=temp, aes(x=Categoria, y=montomargen, 
+                      fill=PRODUCTO_DES))+geom_col()+
+    theme_minimal()+
+    theme(legend.position="bottom", legend.title = element_blank())+
+    ggtitle(paste0('Proporción de ventas margen: ', var[index]))+
+    xlab('')+  ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::dollar)+coord_flip()+
+    scale_fill_manual(values=brewer.pal(n = 12,
+                      name = "Paired")[c(1:12,1:3)])+coord_polar("y", start=0)
+index <-  2
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES)%>% 
+    summarise(cantidad=sum(cantidad), 
+              montomargen=sum(montomargen),
+              Categoria=head(Categoria,1))-> temp
+p2 <- ggplot(data=temp, aes(x=Categoria, y=montomargen, 
+                      fill=PRODUCTO_DES))+geom_col()+
+    theme_minimal()+
+    theme(legend.position="bottom", legend.title = element_blank())+
+    ggtitle(paste0('Proporción de ventas margen: ', var[index]))+
+    xlab('')+  ylab('Unidades vendidas')+
+    scale_y_continuous(labels =scales::dollar)+coord_flip()+
+    scale_fill_manual(values=brewer.pal(n = 8,
+                      name = "Paired"))+coord_polar("y", start=0)
+ggarrange(p1, p2, ncol = 1,  nrow = 2)
+```
+
+# Estas son las que pidio Jorge (o como le entendi) con la suma de las ventas en volumen y por montos. 
+
+```{r promociones_3meses1, fig.width=7, fig.height=12, eval=FALSE}
+ultima.fecha <- max(cervezas$id_fecha)
+#grafica con el maximo en los ultimos 3 meses
+index <- 1
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(3))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.3=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.3=max(montomargen.max.3))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+cervezas$cantidad <- NULL
+gc()
+Sys.sleep(10)
+names(temp)
+names(maximos)
+temp1 <- merge(temp, maximos, all.x =TRUE)
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.3))+
+    facet_grid(PRODUCTO_DES~.)+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 12, name = "Paired")[c(1:12,1:3)])+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de tres meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+# solo aparecen unique(maximos$PRODUCTO_DES) >>13 productos de los 15
+#
+```
+
+
+
+```{r promociones_3meses2, fig.width=7, fig.height=12, eval=FALSE}
+#grafica con el maximo en los ultimos 3 meses
+index <- 2
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(3))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.3=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.3=max(montomargen.max.3))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+names(temp)
+names(maximos)
+temp1 <- merge(temp, maximos, all.x =TRUE)
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.3))+
+    facet_grid(PRODUCTO_DES~.)+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 8, name = "Paired"))+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de tres meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+# aqui aparecen todos
+```
+
+
+
+## *Precio maximo en los ultimos 6 meses*
+
+```{r promociones_6meses1, fig.width=7, fig.height=12}
+#grafica con el maximo en los ultimos 60 dias
+names(cervezas)
+ultima.fecha <- max(cervezas$id_fecha)
+index <- 1
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(6))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.6=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.6=max(montomargen.max.6))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+temp1 <- merge(temp, maximos, all.x =TRUE)
+temp1 <- temp1[order(temp1$montomargen.max.6), ]
+temp1 %>% filter(PRODUCTO_DES %in% c(
+                                     "TECATE 24OZ", "TECATE 355ML", 
+                                     "TECATE LIGHT 24OZ" ,"TECATE LIGHT 355ML" 
+                                     ))-> temp1
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.6))+
+    facet_grid(PRODUCTO_DES~., scales = "free")+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 12, name = "Paired")[c(1:12,1:3)])+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de seis meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+# unique(maximos$PRODUCTO_DES) solo aparecen 14
+```
+
+
+
+```{r promociones_6meses2, fig.width=7, fig.height=12}
+#grafica con el maximo en los ultimos 30 dias
+index <- 2
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(6))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.6=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.6=max(montomargen.max.6))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+temp1 <- merge(temp, maximos, all.x =TRUE)
+temp1%>% filter(PRODUCTO_DES %in% c("TECATE 12P 355ML" , "TECATE 18P 355ML",
+                                    "TECATE L 12P 355ML"  , "TECATE L 18P 355ML"
+    
+))->temp1
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.6))+
+    facet_grid(PRODUCTO_DES~., scales = "free")+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 8, name = "Paired"))+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de seis meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+#
+```
+
+
+
+
+
+```{r promociones_12meses1, fig.width=7, fig.height=12, eval=FALSE}
+#grafica con el maximo en los ultimos 60 dias
+index <- 1
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(12))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.12=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.12=max(montomargen.max.12))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+temp1 <- merge(temp, maximos, all.x =TRUE)
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.12))+
+    facet_grid(PRODUCTO_DES~.)+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 12, name = "Paired")[c(1:12,1:3)])+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de 12 meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+```
+
+
+```{r promociones_12meses2, fig.width=7, fig.height=12, eval=FALSE}
+#grafica con el maximo en los ultimos 12 meses
+index <- 2
+cervezas %>% filter(Categoria==var[index],
+                    id_fecha>= ultima.fecha-months(12))  %>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen.max.12=sum(montomargen))-> maximos
+maximos <- maximos %>% group_by(PRODUCTO_DES)%>%
+    summarise(montomargen.max.12=max(montomargen.max.12))
+cervezas %>% filter(Categoria==var[index])%>%
+    group_by(PRODUCTO_DES, id_fecha) %>%
+    summarise(montomargen=sum(montomargen))-> temp
+temp1 <- merge(temp, maximos, all.x =TRUE)
+ggplot(temp1, aes(x=id_fecha, y=montomargen, 
+                  color = PRODUCTO_DES))+ geom_line()+
+    geom_line(aes(x=id_fecha, y=montomargen.max.12))+
+    facet_grid(PRODUCTO_DES~.)+ theme_minimal() +
+     theme(legend.position="bottom", legend.title = element_blank())+
+    scale_y_continuous(labels =scales::dollar)+
+scale_color_manual(
+    values=brewer.pal(n = 8, name = "Paired"))+
+    ggtitle(paste0('Ventas por producto: ', var[index],
+            ' acotado por el maximo de 12 meses'))+
+    xlab('Fecha')+  ylab('Margen de  venta')
+```
