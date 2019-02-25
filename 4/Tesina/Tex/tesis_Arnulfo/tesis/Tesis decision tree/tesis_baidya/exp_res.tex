@@ -1,0 +1,796 @@
+\chapter{Aplicación de los árboles de decisión en el síndrome metabólico}
+
+\section{Origen de los datos}
+
+En esta sección se detalla con mas profundidad la obtención de las bases de datos utilizadas en este trabajo. Los resultados serán discutidos en el texto y se mostrarán en las tablas. Se debe comentar que de las bases de datos obtenidas en los diferentes estudios, se computaron las metas características para cada una de las bases de datos. Estas meta características, refieren a nuevas variables que son construidas de las bases de datos mediante combinaciones lineales de las variables. Estas combinaciones lineales son obtenidas mediante el uso de operaciones aritméticas básicas (suma, resta multiplicación y división). En las tablas donde se refiera a los datos obtenidos mediante meta características se les agrega un símbolo de (+) cuando los datos son analizados en crudo más las meta características. 
+
+\subsection{Hígado graso no alcohólico y retinopatía.}
+
+La base de datos para el el estudio de el Hígado graso no alcohólico y retinopatía se obtuvo de un proyecto llevado acabo en el Hospital General de México. Se diseñó un estudio transversal, observacional, comparativo y prolectivo en el que completamos cuatro grupos de pacientes: 
+
+\begin{enumerate}
+\item Pacientes con EHNA y obesidad (IMC>30), 
+\item Pacientes con EHNA sin obesidad  (IMC<25), 
+\item Pacientes sin EHNA con obesidad 
+\item Pacientes sin EHNA sin obesidad
+\end{enumerate}
+Estos grupos son desbalanceados (tamaños de muestra diferentes), y con los siguientes criterios de:
+Inclusión: 
+\begin{itemize}
+\item Edad: 18-45 años
+\item Hombres y mujeres por igual
+\item IMC para los obesos: >30; para los no obesos: 20 -25
+\end{itemize}
+
+Exclusión:
+\begin{itemize}
+\item Pacientes con hábito de fumar que tengan índice tabáquico>1.
+\item Ingestión de alcohol >10g a la semana.
+\item Pacientes con historia clínica de Diabetes, Hipertensión, Insuficiencia renal crónica, cáncer enfermedad inflamatoria o infecciosa aguda o crónica.
+\item Pacientes que estuvieran tomando medicamentos hepatotóxicos.
+\item Pacientes que no son conocidos por alguna de las condiciones del inciso anterior pero que durante el examen físico o los resultados de laboratorios fueran diagnosticadas. 
+\item Pacientes con alguna patología ocular que impida visualización de fondo de ojo o presencia de alguna otra retinopatía asociada.
+\item Pacientes embarazadas.
+\item Pacientes que no acepten participar.
+\item Pacientes que hayan aceptado participar que no acudan a las citas programadas para medición de variables.
+\end{itemize}
+
+\subsubsection{Escala de medición de las variables.}
+
+Acorde al tratamiento estadístico las variables pueden modificarse como predictoras (independientes) o predichas (dependientes). En general las podemos clasificar en los siguientes grupos:\par
+Variables independientes (ver anexo1): talla, peso, índice de masa corporal, obesidad, cintura, porcentaje de grasa corporal, presión arterial, curva de tolerancia a la glucosa, índice de sensibilidad a la insulina por Matsuda \cite{matsuda1999insulin},colesterol total, triglicéridos, colesterol de alta densidad (c-HDL), colesterol de baja densidad (c-LDL). \par
+Variables dependientes (ver anexo 1): Factor estimulante de colonias de granulocito-macrófago (GM-CSF), Interferón Gama (IFN-?) , Interleucina 10 (IL-10), Interleucina 2 (IL-2), Interleucina 4 (IL-4), Interleucina 6 (IL-6),Interleucina 8 (IL-8), Factor de necrosistumoral alfa (TNF $\alpha$), Proteína C Reactiva. Diámetro arteriolar y venular de la retina,  cruces arteriovenosos, relación arteriovenular, tortuosidad, alanino amino transferasa (ALT), glutamino amino transferasa (AST).\par
+Se incluyeron a pacientes de la consulta externa del Hospital General de México (febrero - agosto 2012). Posterior a aplicar criterios de inclusión y exclusión se citaron  a los pacientes un único día de acuerdo a las preferencias y conveniencias del mismo. Previo firma de consentimiento informado se realizó una breve historia clínica donde se interrogó sobre los antecedentes de tabaquismo, alcoholismo, consumo de medicamentos hepatotóxicos, hepatitis, hipertensión, diabetes, enfermedades crónicas o agudas infecciosas; historia familiar de diabetes, obesidad e hipertensión. 
+Se tomó presión arterial, aplicando los criterios de la JNC7 para descartar hipertensión, peso, talla y cálculo de IMC, así como realización de impedancia bioeléctrica con aparato RJL, modelo Quantium IV (EUA).\par
+La toma de muestra para análisis de parámetros bioquímicos se realizó de la siguiente manera: el personal de enfermería calificado colocó un punzocat de12-16Gen venas superficiales de antebrazo. Se tomó una muestra sanguínea basal, de la cual se obtuvo suero para la medición de: glucosa, urea, creatinina, ácido úrico, colesterol total, colesterol HDL, colesterol LDL, Triglicéridos, Proteína C reactiva, AST, ALT; los que se analizaron con un equipo Beckman automatizado . También se obtuvo suero para medición de insulina la que se analizó  por método de ELISA con el equipo Multiskan Ascent V1.24 (USA).El coeficiente de variación de las replicaciones (CV\%) osciló entre 1.81 y 2.94\%.  Además se midió la concentración  en suero de  IL 2, IL4, IL6, IL8, IL10, IFN, GM-CSF, TNF? a través de ELISA múltiples con equipo Bioplex-ProTMAssays (Bio Rad, USA). El coeficiente de variación de las repeticiones (CV\%) fue el siguiente: GM-CSF: 19, IFN-$\gamma$: 15, IL-10: 8, IL-2: 12, IL-4: 11, IL-6: 16, IL8: 17, TNF$\alpha$: 4 .\par
+Además se realizó curva de tolerancia a la glucosa oral con 75 gr de glucosa anhidra, se tomaron muestras sanguíneas a los 30, 60, 90 y 120 minutos.\par
+Para la fotografía de fondo de ojo se administró el midriático TP (tropicamida). La fotografía digital se realizó con la cámara Visucam NM/SA número 07740. Las fotos fueron tomadas con foco en papila central, temporal, nasal y se realizó una reconstrucción de 7 imágenes en una sola por computadora. Estas imágenes fueron analizadas de manera ciega, al azar por el retinólogo que mostró a través de la prueba de concepto mayor correlación clínica intraobservador (ver marco teórico). El retinólogo consideró como fondo de ojo anormal ( FOa) la presencia de al menos 2/3 de los siguientes características clínicas:  pérdida de la relación arteria-vena, tortuosidad y cruces arteriovenosos patológicos.\par
+Finalmente se realizó en los pacientes ultrasonido de hígado y vías biliares con equipo Voluson Pro V de General Electric (USA), con un transductor de 3.5MHz, para determinar la presencia de EHNA de manera clínica apreciativa de acuerdo a la imagen observada por operador con base a tres parámetros \cite{charatcharoenwitthaya2007role} \cite{pluma2009higado}: 1) Ecotextura: la esteatosis se observa como un incremento de  la ecogenicidad en ecos muy finos y condensados, con apariencia de ?hígado brillante?. 2) Aumento en la atenuación: a mayor atenuación mayor dificultad de penetrar el hígado, lo que causa oscurecimiento posterior y pérdida de la definición del diafragma, lo que también resulta en un riñón relativamente hipoecoico. 3) Vasos hepáticos: disminuye la visualización de las venas porta y hepáticas, dando lugar a una apariencia blanda o sin características del hígado, por la compresión del parénquima lleno de grasa; estos hallazgos hacen difícil la diferenciación entre esteatosis hepática difusa y otras enfermedades parenquimatosas difusas. Además se calculó la distribución del tono gris de los pixeles en el lóbulo derecho del hígado y se comparó con la densidad en pixeles del riñón derecho, con lo que se calculó el índice:\par
+
+ 
+\[\frac{\hat{x}_{pix}\text{hepático}}{\hat{x}_{pix}\text{renal}}, \]
+
+donde el numerador corresponde al promedio de grises de los pixeles registrados en el hígado; y el denominador al promedio de los mismos en el riñón correspondiente
+
+
+\subsection{Diabetes mellitus}
+
+Este estudio fue llevado a cabo en el Departamento de Endocrinología del Hospital Universitario ``José E. González'', a los pacientes que acudieron a la consulta externa, se les invito a participar a nuestro estudio previo consentimiento informado. Se  incluyeron 124 pacientes los cuales fueron categorizados de la siguiente forma:\par
+
+\begin{figure}
+\centering
+\includegraphics[height=7cm]{hu_px}
+\caption{Grupos de pacientes de donde se obtuvieron los datos para la predicción de Diabetes}
+\end{figure}
+
+Para este trabajo solo se incluyeron, los grupos de sujetos normales y de los sujetos con diabetes meliitus. Y fueron reclutados bajo los siguientes criterios de inclusión.\par
+
+\begin{itemize}
+\item Sujetos sin antecedentes de diabetes mellitus, no diabéticos, sin sobrepeso (IMC <25kg/m2).
+\item Sujetos con Diabetes mellitus
+\end{itemize}
+
+\subsubsection{Metodología}
+A los pacientes que cumplieron con los criterios de inclusión se les realizo una antropometría además de la recolección de muestra para la evaluación bioquímica:
+
+\subsubsection{Obtención de muestras de sangre}
+Previa firma de consentimiento informado se colocó una canalización y se les tomaron muestras basales que incluyen: glucosa, perfil de lípidos, insulina, acil carnitinas; aproximadamente se extrajeron 60 ml. de sangre. Posteriormente se les dará 75g de glucosa y se les mantendrá en reposo en el área de Pruebas Dinámicas de Endocrinología. En el transcurso de la prueba se realizará Curva de Tolerancia a la Glucosa de 2 horas. Al las dos horas de ingerido se repetirá la insulina, acilcarnitinas. Aproximadamente se extraerán 20 ml adicionales de sangre, para un total de 80 ml. Las muestras serán enviadas al laboratorio correspondiente para análisis. Se removerá la canalización y se citará al paciente para entrega de resultados de laboratorio y discusión de los hallazgos. Se tomarán 2 tubos de sangre, los que serán guardados en congelador para su análisis posterior.\par
+
+Glucosa Enzimática. Método de Trinder-Colorimétrico. La determinación de la glucosa se realizara utilizando la glucosa oxidasa (GOD). La glucosa es oxidada por la GOD a acido glucurónico y agua oxigenada. En otra reacción secuencial interviene la peroxidasa que une al p-hidroxibenzoato con 4-aminoantipirina formando un cromógeno con absorbancia máxima de 505nm.\par
+
+Acil carnitinas por espectrometría de masas en tandem. El espectrómetro de masas es un detector que identifica masas (peso) de moléculas individuales y sus fragmentos. Lo detectado se presenta en una grafica; eje de las x representa las masas y el eje de las y la cantidad de iones. El espectrómetro tiene alta sensibilidad y especificidad y capacidad de multi análisis.\par
+
+
+Insulina por Electro quimioluminiscencia.  Se realizan dos incubaciones en técnica de sándwich que duran en total 18 minutos. En la primera incubación se ponen 20$^o$ de la muestra con un anticuerpo monoclonal biotinilado específico anti-insulina y otro anticuerpo monoclonal específico marcado con quelato de rutenio. La segunda incubación incluye la adición de micropartículas de estreptavidina, dando como resultado un complejo que se fija a la base sólida por interacción entre la biotina y la estreptavidina. La mezcla se transfiere a un lector que por magnetismo separa la micro partículas. Los elementos no fijados se eliminan. Se aplica una corriente eléctrica definida y se produce una reacción de quimioluminicencia cuya emisión de luz se mide directamente con un fotomultiplicador. Los resultados se obtienen mediante curva de calibración.\par
+
+Hemoglobina glucosilada. Se basa en la inhibición de la inmunoaglutinación de partículas látex. Tras introducir el cartucho en la cámara analítica del sistema DCA 2000, el resultado aparecerá en 6 minutos. En este análisis se determinan la concentración de HbA1c, la concentración de hemoglobina total y la relación entre ambas, se reporta como porcentaje de hemoglobina A1c. \par
+%\section{Implementación}
+
+\newpage
+\section{Hígado graso no alcohólico (NAFLD)}
+
+En esta sección se desarrolla la aplicación de árboles de decisión para la clasificación de pacientes con hígado graso no alcohólico (NAFLD). Se aplicaran los algoritmos descritos de C4.5, C5.0, look ahead y cost sensitive; así como la reducción de dimensión con la regresión logística con paso adelante.
+
+\subsection{Algoritmo C4.5 y C5.0}
+
+Para resolver el problema de clasificación de pacientes con hígado graso no alcohólico, se utilizaron todas las variables reportadas (no solo las relacionadas a las acilcarnitinas). En la figura \ref{fig:c45_nafld} se puede observar como el modelo obtenido por el algoritmo C4.5 toma encuentra variables clínicas y bioquímicas básicas como la circunferencia abdominal, glucosa de ayuno y triglicéridos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{c45_nafld}
+\caption{Modelo obtenido del algoritmo C4.5}
+\label{fig:c45_nafld}
+\end{figure}
+
+El desempeño de este modelo es bastante aceptable en general, teniendo un buen balance en cuanto a sensibilidad y especificidad. La exactitud del modelo es muy alta, 89.2\%, tabla \ref{tab:c45nafld} .
+
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline \hline
+Estadístico & Valor \\\hline \hline
+Exactitud & 89.2\% \\
+Sensibilidad & 77.7\% \\
+Especificidad & 94.7\% \\
+V. Predictivo Positivo & 87.5\% \\
+V. Predictivo Negativo & 90\% \\ \hline \hline
+Validación cruzada & \\\hline \hline
+Exactitud & 97.6\% (IC 94.3\%, 100\%)\\
+Sensibilidad & 91.8\% (IC 81.2\%, 100\%)\\
+Especificidad & 100\% \\
+V. Predictivo Positivo & 100\% \\
+V. Predictivo Negativo & 97\% (IC 92.9\%, 100\%)\\ \hline \hline
+\end{tabular}
+\caption{Desempeño de modelo obtenido por C4.5}
+\label{tab:c45nafld}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=7cm]{c45_auc_nafld}
+\caption{AUC del modelo obtenido por C4.5}
+\end{figure}
+
+No se muestra el modelo obtenido con C5.0 ni su tabla de desempeño porque es exactamente la misma que la obtenida por C4.5.
+
+\subsection{Reducción de dimensiones realizado mediante regresión logística}
+
+En la figura \ref{fig:c45_fs_nafld} se aprecia como las variables de peso, triglicéridos y acilcarnitnas de cadena larga (C14 - C18) son fuertes predictores de la presencia de hígado graso. El desempeño de este modelo es muy competitivo y sigue caracterizandose por buena especificidad, tabla \ref{tab:esp_c4.5fs}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{c45_fs_nafld}
+\caption{Modelo obtenido mediante C4.5 y FS/LR}
+\label{fig:c45_fs_nafld}
+\end{figure}
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{||c||c||}\hline\hline
+Estadístico & valor\\\hline \hline
+Exactitud & 85.7\%\\
+Sensibilidad & 77.7\%\\
+Especificidad & 89.4\%\\
+V. Predictivo Positivo & 77.7\% \\
+V. Predictivo Negativo & 89.4\% \\ \hline \hline
+Validación cruzada & \\
+Exactitud & 94.9\% (IC 78.1, 91.7)\\
+Sensibilidad & 80\% (IC 65.8\%,94.1\%)\\
+Especificidad & 87.4\% (IC 82.4\%, 92.5\%)\\
+V. Predictivo Positivo & 66.6\% (IC 54.5\%, 78.7\%)\\
+V. Predictivo Negativo & 92.2\% (IC 86.3\%, 98.1\%)\\ \hline \hline
+\end{tabular}
+\caption{Desempeño de algoritmo C4.5 FS/LR}
+\label{tab:esp_c4.5fs}
+\end{table}
+
+\subsection{Evaluación del desempeño mediante bootstrap}
+
+Como en la sección anterior, describimos el resultado de la evaluación de los modelos mediante bootstrap.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{b_nafld}
+\caption{Desempeño de los algoritmos mediante bootstrap}
+\label{fig:b_nafld}
+\end{figure}
+
+Como se muestra en la figura \ref{fig:b_nafld}, los algoritmos tienen una tendencia a ser muy específicos y en este caso C4.5 y C5.0 en conjunto con FS/LR presentan la misma especificidad ya que se obtienen los mismos modelos.
+
+
+
+\subsection{Aplicación de árbol de decisión costo sensible}
+
+Como se observa en la tabla \ref{tab:cs_nafld}, el árbol de decisión costo sensible puede incrementar de manera sobresaliente en comparación a C4.5 y C5.0, pero no hay gran diferencia entre la exactitud derivada de diferentes costos.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+\begin{minipage}{.33\textwidth}
+Costo (Estimado = NAFLD/ \\Actual = Normal) 
+\end{minipage}
+& \begin{minipage}{0.33\textwidth}
+ Costo (Estimado = Normal/\\Actual = NAFLD) 
+ \end{minipage}
+ & Exactitud\\\hline
+0.25 & 0.75 & 90.6  \\\hline
+0.75 & 0.25 & 91.24  \\\hline
+0.33 & 0.67 &  90.73 \\\hline
+0.67 & 0.33 &  92.45  \\\hline
+0.5 & 0.5 &  91.24 \\\hline
+\end{tabular}
+\caption{Resultados de clasificación de NAFLD con diferentes costos}
+\label{tab:cs_nafld}
+\end{table}
+\newpage
+%
+%
+\subsection{Look Ahead Decision Tree.}
+
+Como se muestra en la tabla \ref{tab:look_nafld}, este algoritmo no supera al anterior y de hecho empeora la clasificación. Aunque si se utilizan dos nodos adelante para la clasificación se mantiene con casi la misma clasificación que los algoritmos base de C4.5 y C5.0.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+B = 0.01 & 78 &  84.6 & 78.7 \\\hline
+B = 0.03 & 78.9& 77.4 & 76.7\\\hline
+B= 0.06 & 78.6& 73.6 & 74.5\\\hline
+B = 0.09 & 78.7& 80.9 & 79.6\\\hline
+B = 0.1& 81.8& 82.4 & 77.3\\\hline
+\end{tabular}
+\caption{Resultados para clasificar pacientes con NAFLD con diferente beta (B) y diferente profundidad  (Deep) de vista hacia adelante.}
+\label{tab:look_nafld}
+\end{table}
+
+\subsection{Meta características}
+
+En este segmento se describe la aportación de las meta características para la clasificación de hígado graso. Como se ve en la tabla \ref{tab:meta_c4.5_nafld}, El algoritmo C5.0 puede mejorar su clasificación sobre todo con los datos generados de por el método de suma. El resto no muestra un gran cambio.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+ 				& C4.5 & C5.0  \\\hline
+Suma & 83.9 &   92.8     \\\hline
+Suma + & 83.9 &     92.8   \\\hline
+Resta & 81.7	& 89.1      \\\hline
+Resta + & 81  &    89.8      \\\hline
+Multiplicación & 83.9 &   87.8     \\\hline
+Multiplicación + & 83.9  &  87.8      \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas en NAFLD}
+\label{tab:meta_c4.5_nafld}
+\end{table}
+
+En la tabla \ref{tab:meta_look_nafld1} se observa como el algoritmo costo sensible puede mejorar la clasificación con practicamente cualquier costo y sin una predilección entre el origen de los datos.
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+ 	Costos	& 0.25 - 0.75 & 0.75 - 0.25 & 0.33 - 0.67 & 0.67 - 0.33 & 0.5 - 0.5   \\\hline
+Suma & 93.6 & 87.5   & 93.4 & 90 &  94.5  \\\hline
+Suma + & 93.7  & 90.3  & 94.8 &91.2 &  92.7   \\\hline
+Resta & 92.1	&  87.9 &89.2 & 90.2 &   91.2  \\\hline
+Resta + & 92.5  & 91.4    & 90.7 & 91.4 & 90.5     \\\hline
+Multiplicación &89.4  & 93    & 90 & 93.6 & 89.7   \\\hline
+Multiplicación + & 92.3  & 95   &89.76 & 93.4 & 90.8   \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas con CSDT en NAFLD}
+\label{tab:meta_look_nafld1}
+\end{table}
+
+Por otro lado, el algoritmo look ahead incrementa la exactitud en combinación con las meta características originadas por resta y en Deep 2.Tabla \ref{tab:meta_look_nafld}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+Suma & 75.2   &  76.4  &  75.9 \\\hline
+Suma + & 74.5  & 75   & 75.8     \\\hline
+Resta & 84.6 & 90.4   &   86.7    \\\hline
+Resta + &  82.3  &  85.4  & 83.1  \\\hline
+Multiplicación & 82.5   &  84    &   82.4 \\\hline
+Multiplicación + &  83.2  &  81  & 83.2  \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas con LADT previa selección de variables en NAFLD (todos fueron con B = 0.1)}
+\label{tab:meta_look_nafld}
+\end{table}
+
+
+
+%
+%
+%
+\section{Diabetes mellitus}
+
+En esta sección se aplican los diferentes algoritmos de árboles de decisión para la clasificación de sujetos con y sin diabetes mellitus tipo 2.\vspace{-1.cm}
+
+\subsection{Algoritmo C4.5 y C5.0}
+
+Los modelos resultantes de evaluar la información metabolómica de los pacientes con diabetes mellitus tipo 2 se observan en las figuras \ref{fig:dm_j48} y \ref{fig:dm_c50}  .
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{dm_j48}
+\caption{Árbol obtenido el algoritmo C4.5}
+\label{fig:dm_j48}
+\end{figure}
+Estos árboles de decisión muestran como las variables explicativas relacionadas a las acilcarnitinas de cadena larga son muy importantes en la clasificación de los pacientes con diabetes mellitus tipo 2. Ambos son muy parecidos en tamaño y en las variables tomadas en cuenta para clasificar.\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{modc5}
+\caption{Modelo propuesto por el algoritmo C5.0}
+\label{fig:dm_c50}
+\end{figure}
+
+
+Para la comparación de ambos modelos se utilizó el análisis de área bajo la curva, la figura \ref{fig:auc_dm}, donde se demuestra que el modelo mostrado por el algoritmo C5.0 es superior.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{auc_mod_dm}
+\caption{Comparación de los resultados de los algoritmos C4.5 y C5.0 por AUC}
+\label{fig:auc_dm}
+\end{figure}
+
+En la tabla \ref{tab:mod_c45_dm}  se muestra como el modelo propuesto por el algoritmo C4.5 se mantiene con adecuada sensibilidad, especificidad y respetable exactitud. En su validación cruzada, continua teniendo una mayor sensibilidad que especificidad. En cuanto al desempeño del algoritmo mediante validación cruzada, se muestra el mismo resultado en la relación sensibilidad y especificidad (tabla \ref{tab:al_c4.5}). \par
+\newpage
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Estadístico & Valor \\\hline \hline
+Exactitud & 75\%\\
+Sensibilidad & 88.8\%\\
+Especificidad & 63.6\%\\
+V. Predictivo Positivo & 66.6\%\\
+V. Predictivo Negativo & 87.5\%\\\hline\hline
+Validación cruzada&\\\hline\hline
+Exactitud  & 91.2\%  (IC 88.4\%, 94\%)\\
+Sensibilidad & 91.6\% (IC 88.6\%, 94.6\%)\\
+Especificidad & 90\% (IC 86.5\%, 93.4\%)\\
+V. Predictivo Positivo & 94.1\% (IC 92.1\%, 96.2\%)\\
+V. Predictivo Negativo &  90.8\% (IC 86.9\%, 94.7\%)\\
+%AUC & 89.6 \% (IC 88.1\%,  891.1\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del modelo propuesto por el Algoritmo C4.5}
+\label{tab:mod_c45_dm}
+\end{table}
+
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Estadístico & Valor \\\hline \hline
+Exactitud  & 66\%  (IC 63.1\%, 68.9\%)\\
+Sensibilidad & 75\% (IC 71.2\%, 78.7\%)\\
+Especificidad & 61.5\% (IC 56.6\%, 66.3\%)\\
+V. Predictivo Positivo & 71.1\% (IC 67\%, 75.2\%)\\
+V. Predictivo Negativo &  68\% (IC 63.8\%, 73.7\%)\\
+%AUC & 63.5\% (IC 60.7\%,66.2\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del Algoritmo C4.5 en validación cruzada}
+\label{tab:al_c4.5}
+\end{table}
+
+% De aqui en adelante es C5.0
+En la tabla \ref{tab:c50}  , correspondiente al desempeño del modelo dado por el algoritmo c5.0 se observa como pierde algo de exactitud, sin embargo,  se mantiene competitivo en cuanto a sensibilidad no así en el valor predictivo positivo y negativo. En la validación cruzada del modelo, se mantiene con adecuado VPP y VPN. 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Estadístico & Valor \\\hline \hline
+Exactitud & 70\%\\
+Sensibilidad & 87.5\%\\
+Especificidad & 58.3\%\\
+V. Predictivo Positivo & 58.3\%\\
+V. Predictivo Negativo & 87.5\%\\\hline\hline
+Validación cruzada&\\\hline\hline
+Exactitud  & 90.2\%  (IC 83.1\%, 97.4\%)\\
+Sensibilidad & 90.7\% (IC 80.9\%, 100\%)\\
+Especificidad & 92.7\% (IC 87\%, 98.4\%)\\
+V. Predictivo Positivo & 91.2\% (IC 84.2\%, 98.3\%)\\
+V. Predictivo Negativo &  91.1\% (IC 80.5\%, 100\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del modelo propuesto por el Algoritmo C5.0}
+\label{tab:c50}
+\end{table}
+
+En la validación cruzada, tabla \ref{tab:c50_1} se mantiene competitivo con respecto al algoritmo algoritmo c4.5, con excepción de la AUC donde el c5.0 es mayor, (figura \ref{fig:algos_dm}).
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Validación cruzada&\\\hline\hline
+Exactitud  & 69.4\%  (IC 57.1\%, 81.7\%)\\
+Sensibilidad & 72.2\% (IC 57.8\%, 86.5\%)\\
+Especificidad & 69.8\% (IC 49.8\%, 89.8\%)\\
+V. Predictivo Positivo & 77.3\% (IC 61.9\%, 92.8\%)\\
+V. Predictivo Negativo &  67.4\% (IC 47.4\%, 87.3\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del algoritmo C5.0 en validación cruzada}
+\label{tab:c50_1}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{algos_auc_dm}
+\caption{Validación cruzada de AUC de algoritmo C5.0}
+\label{fig:algos_dm}
+\end{figure}
+
+\subsection{Selección de variables previamente realizado mediante regresión logística}
+
+En las tablas \ref{tab:cf4.5} y \ref{tab:cf50}, siguientes se puede observar que utilizar una reducción de dimensiones mediante la regresión logística con pasos adelante (FS/LR) empeora el desempeño de ambos algoritmos, el algoritmo con mejor desempeño global es el C4.5. En la figura \ref{fig:auc_fs_dm}  se muestra el AUC  para ambos modelos.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Estadístico & Valor\\\hline\hline
+Exactitud  & 55\%  \\
+Sensibilidad & 33.3\% \\
+Especificidad & 87.5\% \\
+V. Predictivo Positivo & 80\% \\
+V. Predictivo Negativo &  46\% \\  \hline \hline
+Vallidación cruzada & \\ \hline \hline
+Exactitud & 81\% (IC 69.2\%, 94.6\%)\\
+Sensibilidad & 72.5\% (IC 56.3\%, 88.6\%)\\
+Especificidad & 90\% (IC 79\%, 100\%)\\
+V. Predictivo Positivo & 91.6\% (IC 82.2\%, 100\%)\\
+V. Predictivo Negativo & 78.9\% (63.9\%, 93.8\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del modelo C4.5 con FS/LR}
+\label{tab:cf4.5}
+\end{table}
+%%%% sigue con c5.0 fslr
+
+\begin{table}[h]
+\centering
+\begin{tabular}{||c||c||}
+\hline\hline
+Estadístico & Valor\\\hline\hline
+Exactitud  & 50\%  \\
+Sensibilidad & 25\% \\
+Especificidad & 87.5\% \\
+V. Predictivo Positivo & 75\% \\
+V. Predictivo Negativo &  43.7\% \\  \hline \hline
+Vallidación cruzada & \\ \hline \hline%
+Exactitud & 69.4\% (IC 59\%, 79.8\%)\\
+Sensibilidad & 72.2\% (IC 60\%, 84.3\%)\\
+Especificidad & 69.8\% (IC 52.8\%, 86.7\%)\\
+V. Predictivo Positivo & 77.3\% (IC 64.2\%, 90.4\%)\\
+V. Predictivo Negativo & 67.4\% (50.5\%, 84.2\%)\\
+\hline\hline
+\end{tabular}
+\caption{Desempeño del modelo C5.0 con FS/LR}
+\label{tab:cf50}
+\end{table}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{auc_modfs_dm}
+\caption{AUC de modelos dados con reducción de dimensiones con FS/LR} 
+\label{fig:auc_fs_dm}
+\end{figure}
+\vspace{-1cm}
+
+
+\subsection{Evaluación del desempeño mediante bootstrap}
+
+
+
+En esta sección se muestra el desempeño de los algoritmos mediante un remuestreo bootstrap de los datos de entrenamiento. Este remuestreo se realizó 1000 veces y se obtuvo la media y el intervalo de confianza para cada variable.
+
+En la figura \ref{fig:b_dm} se observa claramente que el algoritmo con mayor área bajo la curva fue el que reunió el C5.0 FS/LR, además presento una de las mayores especificidades, aunque todos los algoritmos tienden a tener resultados muy similares.
+\vspace{3cm}
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{b_diabetes}
+\caption{Desempeño de los algoritmos mediante bootstrap}
+\label{fig:b_dm}
+\end{figure}
+
+\subsection{Árbol de decisión costo sensible}
+
+Se puede observar como en la tabla \ref{tab:dm_costo} se puede obtener una mejor exactitud al darle un peso distinto al 0.5. El mejor árbol fue al que se le dio 0.67  con Estimado DM / Actual = Normal), con una exactitud del 84.6\%. \vspace{1cm}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+\begin{minipage}{.33\textwidth}
+Costo (Estimado = DM/ \\Actual = Normal) 
+\end{minipage}
+& \begin{minipage}{0.33\textwidth}
+ Costo (Estimado = Normal/\\Actual = DM) 
+ \end{minipage}
+ & Exactitud\\\hline
+0.25 & 0.75 & 81.3  \\\hline
+0.75 & 0.25 & 84.8  \\\hline
+0.33 & 0.67 & 83.5  \\\hline
+0.67 & 0.33 &  84  \\\hline
+0.5 & 0.5 &  81 \\\hline
+\end{tabular}
+\caption{Resultados de clasificación de DM con diferentes costos}
+\label{tab:dm_costo}
+\end{table}
+\newpage
+
+\section{Look Ahead Decision Tree.}
+
+En la tabla \ref{tab:dm_look}, se puede observar que este algoritmo no es eficiente para clasificar a los pacientes con diabetes, ya que se mantiene con una exactitud muy cercana o inferior al 50\%. Esto con diferentes Deep y parametros B para su ajuste.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+B = 0.01 &  45.5 &  53.0 & 53.2   \\\hline
+B = 0.03 &  45.5& 53.2 & 45.7  \\\hline
+B= 0.06 & 53.3  &52.8  & 38.9  \\\hline
+B = 0.09 & 53.2 &  53.0& 45.8  \\\hline
+B = 0.1&  43.7  &  53.3 & 53.2 \\\hline
+\end{tabular}
+\caption{Resultados para clasificar pacientes con Diabetes Mellitus con diferente beta (B) y diferente profundidad  (Deep) de vista hacia adelante.}
+\label{tab:dm_look}
+\end{table}
+
+
+\subsection{Meta características}
+
+Esta dificultad en la clasificación de diabetes mellitus, se demuestra de nueva cuenta en la tabla \ref{tab:meta_dm}, donde se muestra que los algoritmos C4.5 y C5.0 mejoran ligeramente la exactitud de clasificación, sin embargo no alcanzan el 80\% de exactitud. La mejor exactitud la tuvo el algoritmo C5.0 con los datos originados de la Multiplicación de variables sin los datos crudos.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+ 				& C4.5 & C5.0  \\\hline
+Suma &  56.9  &  72.2      \\\hline
+Suma + & 56.9   &   73.5     \\\hline
+Resta & 60.7  &    73.5   \\\hline
+Resta + &   62.0  &  68.8        \\\hline
+Multiplicación &  63.2  &    74.7    \\\hline
+Multiplicación + & 64.5   &   71     \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas en Diabetes mellitus}
+\label{tab:meta_dm}
+\end{table}
+
+En este caso de clasificar pacientes con diabetes mellitus agregando las meta características, mediante el algoritmo costo sensible, se puede ver en la tabla \ref{tab:csdt_metadm} que no se mejora la exactitud, siendo muy parecido en exactitud el que da un costo (25 - 75) y las meta características originadas por multiplicación (las originadas con la resta también tienen una exactitud del 84.1\%). 
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+ 	Costos	& 0.25 - 0.75 & 0.75 - 0.25 & 0.33 - 0.67 & 0.67 - 0.33 & 0.5 - 0.5   \\\hline
+Suma & 77.2  & 86   &  77.6 & 81 &  75.9  \\\hline
+Suma + & 83.2   & 84.8   &76.7  & 80.5 &  82.9   \\\hline
+Resta & 78.4	&  80.6 & 82.6 & 81 &  84.1   \\\hline
+Resta + &  78.4 &  84.4   & 79.3 & 79.3  &  81.6    \\\hline
+Multiplicación & 84.1 &  76.5   &  81.4&  78.8 &  83.5  \\\hline
+Multiplicación + & 79.1  &  82.2 & 80.6 & 83.5 & 77.8   \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas con CSDT en Diabetes Mellitus}
+\label{tab:csdt_metadm}
+\end{table}
+
+
+El algoritmo look ahead no mejora la clasificación aún con las meta características (tabla \ref{tab:metalook_dm}).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+Suma &  45.8  &  45.5  &  52.8 \\\hline
+Suma + & 53.2  &   52.8 &   45.5   \\\hline
+Resta & 65.7 & 64.4   &  66.7     \\\hline
+Resta + &  63 &  63.5  & 63.2  \\\hline
+Multiplicación &  45.5  &   53.2   &  53   \\\hline
+Multiplicación + &  53.3  &   53.2 & 53.3  \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con metacaracteristicas con LADT previa selección de variables en Diabetes Mellitus (todos fueron con B = 0.1)}
+\label{tab:metalook_dm}
+\end{table}
+
+
+%
+%
+%
+\section{Retinopatía}
+
+En esta sección se comentan los resultados de la aplicación de los diferentes algoritmos para la clasificación de pacientes con retinopatía diabética.
+
+\newpage
+
+\subsection{Algoritmo C4.5 y C5.0}
+
+En las figuras \ref{fig:retino_c45} y \ref{fig:retino_c50} , se muestran los modelos obtenidos por los algoritmos C4.5 y C5.0 en la predicción de retinopatía diabética.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=10cm]{retino_c45}
+\caption{Modelo obtenido por C4.5 para la clasificación de retinopatía diabética}
+\label{fig:retino_c45}
+\end{figure}
+
+
+En este caso, se muestra (que como es de suponer por cuestiones biológicas) las variables obtenidas están relacionadas con un proceso inflamatorio (TNFa, IL4, plaquetas) y un proceso de alteración metabólica como es GLY (aminoácido, Glicina). En la tabla \ref{tab:retino_c45} se observa como al partir los datos (80\% de entrenamiento y 20\% de prueba) se tiene una alta sensibilidad pero con una exactitud no aceptable. Pudiendo sugerir que este modelo puede ser utilizado como escrutinio. Por otro lado, al realizarse una validación cruzada 10 Folds se muestra un incremento en la exactitud y en el resto de parámetros de evaluación del modelo.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline \hline
+Estadístico &  Valor \\\hline \hline
+Exactitud & 50\%\\
+Sensibilidad & 100\% \\
+Especificidad & 45\% \\
+V. Predictivo Positivo & 14.2\% \\
+V. Predictivo Negativo & 100\% \\ \hline \hline
+Validación cruzada & \\ \hline \hline
+Exactitud & 91\% (IC 79.3\%, 100\%)\\
+Sensibilidad & 92.5\% (IC( 77.8\%, 100\%)\\
+Especificidad & 96.8\% (IC 90.7\%, 100\%)\\
+V. Predictivo Positivo & 95.8\% (IC 87.6\%, 100\%)\\
+V. Predictivo Negativo & 90.6\% (IC 72.2\%, 100\%\\\hline \hline
+\end{tabular}
+\caption{Desempeño de modelo C4.5}
+\label{tab:retino_c45}
+\end{table}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=12cm]{retino_c50}
+\caption{Modelo obtenido por C5.0 para la clasificación de retinopatía diabética}
+\label{fig:retino_c50}
+\end{figure}
+\newpage
+El modelo C5.0 también incluye una acilcarnitina de cadena corta (relacionada a problemas metabólicos) pero no carboxilada. Este cambio puede ser debido al algoritmo que trata de producir árboles de menor tamaño que su antecesor. Así también este algoritmo se mantiene con excelente sensibilidad, pero incrementa la exactitud y especificidad, tabla \ref{tab:c5.0_retino1}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline \hline
+Estadístico & Valor \\ \hline \hline
+Exactitud & 75\%  \\
+Sensibilidad & 100\% \\
+Especificidad & 72.7\% \\
+V. Predictivo Positivo & 25\% \\
+V. Predictivo Negativo & 100\% \\ \hline \hline
+Validación cruzada & \\ \hline \hline
+Exactitud & 97.9\%(IC 93.8\%, 100\%) \\
+Sensibilidad & 93.7\% (IC 81.5\%, 100\%)\\
+Especificidad & 100\% \\
+V. Predictivo Positivo & 100\% \\
+V. Predictivo Negativo & 97.5\% (IC 92.6\%, 100\%)\\ \hline \hline
+\end{tabular}
+\caption{Desempeño de modelo obtenido del algoritmo C5.0}
+\label{tab:c5.0_retino1}
+\end{table}
+
+\subsection{Selección de variables previamente realizado mediante regresión logística}
+
+En las tablas \ref{tab:frlr}, se puede observar que la selección de variables mediante regresión logística no mejora la exactitud del modelo.
+\newpage
+
+\begin{table}[H]
+\centering
+\begin{tabular}{||c||c||}
+\hline \hline
+Estadístico & Valor \\ \hline \hline
+Exactitud & 58.3\% \\
+Sensibilidad & 100\% \\
+Especificidad & 54.5\% \\
+V. Predictivo Positivo & 16.6\% \\
+V. Predictivo Negativo & 100\% \\ \hline \hline
+Validación cruzada & \\ \hline \hline
+Exactitud & 68.7\% (IC 64.1\%, 73.3\%)\\
+Sensibilidad & 68.7\% (IC 57.5\%, 79.9\%)\\
+Especificidad & 72.5\% (IC 67.1\%, 77.8\%)\\
+V. Predictivo Positivo & 44.7\% (IC 35.2\%, 54.3\%)\\
+V. Predictivo Negativo & 87.5\% (IC 83\%, 91.9\%)\\ \hline \hline
+\end{tabular}
+\caption{Exactitud de modelos C4.5 y C5.0, mediante regresión logística con paso hacia adelante.}
+\label{tab:frlr}
+\end{table}
+
+\subsection{Árbol de decisión costo sensible}
+
+En la tabla \ref{tab:costs_retino} se muestra como el algoritmo costo sensible puede mejorar la exactitud de la clasificación mediante cualquier costo aplicado a la mala clasificación de los sujetos. Llegando a tener una exactitud del 88.7\% en el modelo con el costo 0.25 - 0.75.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+\begin{minipage}{.33\textwidth}
+Costo (Estimado = Retinopatía/ \\Actual = Normal) 
+\end{minipage}
+& \begin{minipage}{0.33\textwidth}
+ Costo (Estimado = Normal/\\Actual = Retinopatía) 
+ \end{minipage}
+ & Exactitud\\\hline
+0.25 & 0.75 &  88.7 \\\hline
+0.75 & 0.25 &  87.9 \\\hline
+0.33 & 0.67 &  89 \\\hline
+0.67 & 0.33 &   84.5 \\\hline
+0.5 & 0.5 &   84.4\\\hline
+\end{tabular}
+\caption{Resultados de clasificación de Retinopatía con diferentes costos}
+\label{tab:costs_retino}
+\end{table}
+
+
+\section{Look Ahead Decision Tree.}
+
+El árbol de decisión obtenido por el algoritmo de Look Ahead, con diferentes Deep, puede incrementar ligeramente la exactitud, sobre todo con Deep 2 y parámetro Beta = 0.01, (tabla \ref{tab:deep_1}). Sin embargo no llega a ser tan competitivo como el árbol obtenido con el modelo sensible a costo.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+B = 0.01 & 62.6  &  76.3 & 68.0 \\\hline
+B = 0.03 & 69.6 & 66.3 & 76.6\\\hline
+B= 0.06 & 71.0  & 76.0 & 68.6\\\hline
+B = 0.09 & 67.6 & 72.3 & 68.6\\\hline
+B = 0.1& 63.0   &  71.0 & 70.6\\\hline
+\end{tabular}
+\caption{Resultados para clasificar pacientes con Retinopatía con diferente beta (B) y diferente profundidad  (Deep) de vista hacia adelante.}
+\label{tab:deep_1}
+\end{table}
+
+\subsection{Meta características}
+
+En esta sección se expondrán los resultados de la aplicación de los algoritmos en la base de datos creada mediante meta características.  En la tabla \ref{tab:meta_base} se puede observar que las meta características mejoran ligeramente la exactitud de la clasificación. Sobre todo mediante el algoritmo C5.0 y con los datos obtenidos mediante multiplicación con o sin los datos crudos.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}\hline
+ 				& C4.5 & C5.0  \\\hline
+Suma & 58.6   &  73.6      \\\hline
+Suma + & 58.6   &   73.3     \\\hline
+Resta & 65.5   &   77.6    \\\hline
+Resta + & 65.5    &   76       \\\hline
+Multiplicación &  72.4  &    82.3    \\\hline
+Multiplicación + &  72.4  &   82.3     \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con meta caracteristicas en Retinopatia}
+\label{tab:meta_base}
+\end{table}
+
+En la tabla \ref{tab:meta_csdt}, se muestra como las meta características y el algoritmo costo sensible pueden incrementar la exactitud de la clasificación de manera importante llegando a ser superior al 90\% como en los datos originados de la resta (90.9\%) y de la multiplicación.
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+ 	Costos	& 0.25 - 0.75 & 0.75 - 0.25 & 0.33 - 0.67 & 0.67 - 0.33 & 0.5 - 0.5   \\\hline
+Suma & 87.5  &  82.7  & 87.3  & 83.3 &  77.5  \\\hline
+Suma + &  81.8  & 83.1   & 79.9 & 82.7 & 83.6    \\\hline
+Resta & 83.6	&  90.9 & 85 &  86.7 &  85.3   \\\hline
+Resta + & 87.5  & 89.2  & 87.9  &  86.2 & 86.2     \\\hline
+Multiplicación & 87.9 &  90   & 85 & 85.6  & 82.7   \\\hline
+Multiplicación + &  84 & 88.7  & 83.3 & 85.6  & 81.8   \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con meta características con CSDT en Retinopatía}
+\label{tab:meta_csdt}
+\end{table}
+
+El algoritmo de Look Ahead, incremento de manera ligera la exactitud del modelo. El árbol con Depp 1 originado de los datos de Resta sin los datos crudos fue el que tuvo la mejor exactitud con 74.3\%. (Tabla \ref{tab:metaladt}).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+                  & Deep 1 & Deep 2 & Deep 3 \\ \hline
+Suma & 67.3   &  67.3  &  66.6 \\\hline
+Suma + &  66.6 & 66.6   &   67   \\\hline
+Resta & 74.3 &  71.6  &   72.6    \\\hline
+Resta + &  70.3 &  69.3  & 62.6  \\\hline
+Multiplicación &  67  &  67.3    &  67   \\\hline
+Multiplicación + &  67.3  &  67.6  & 67  \\\hline
+\end{tabular}
+\caption{Exactitud (\%) de los algoritmos con meta características con LADT previa selección de variables en Retinopatía (todos fueron con B = 0.1)}
+\label{tab:metaladt}
+\end{table}
+
+
+\section{Software utilizado}
+
+En esta tesis se utilizó el paquete estadístico R v 3.4.2 , Matlab 2016 y Weka v 3.8.2 . Las librerías utilizadas en R son: pROC, DescTools, RWeka, caret, C50, corrplot, gbm, coin, psych, ROCR, OptimalCutpoints, RcmdrMisc, cvAUC.
+
+

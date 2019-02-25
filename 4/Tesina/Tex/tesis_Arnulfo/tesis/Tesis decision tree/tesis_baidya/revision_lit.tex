@@ -1,0 +1,283 @@
+\chapter{Árboles de decisión.}
+
+\section{Conceptos básicos}
+
+El árbol de decisión es un simple pero poderosa y ampliamente usada técnica de aprendizaje máquina. Usada para predecir (regresión) o clasificar; el manejo de la entropía y ganancia de información pueden explicar la relación entre las variables ( y medición de límites), explica fácilmente los datos y es fácil de seguir \cite{rokach2014data}. La manera en que el árbol de decision puede clasificar es parecida a la forma en la que los medicos toman decisiones en la vida real, y los límites dados por el árbol de decision pueden ser usados en la practica diaria.
+
+El árbol de decisión $T$ consiste de un gráfico dirigido con $N$ nodos y hojas ($E$) que satisfacen unas propiedades en particular como son: tener solo una raíz (un nodo sin ramas que entren en él), una única vía de la raíz a cada nodo y no existen vías circulares, entre otras \cite{barros2015automatic};  cada árbol puede ser visto como una disyunción de conjunciones y cada nodo contiene una regla de valores de los atributos que guían a alcanzar un nodo hoja, el cual contiene la información responsable de la predicción.
+
+Existen muchas abordajes para encontrar un árbol de decisión, la ganancia de información es uno de ellos y es basado en la entropía de Shannon ($H(\cdot)$). La entropía es una medida de incertidumbre de los datos y es definida como:
+
+\begin{equation}
+\text{Entropía} = -\sum_{i=1}^{m}p_{i}log_{2}(p_{i})
+\end{equation}
+
+Manejando solo proporciones ($p_i$) de variables, la entropía es fácil de obtener.
+
+La variable seleccionada a particionar es la que tiene la mayor ganancia de información $\Delta \phi$ definida como:
+
+\begin{equation}
+\Delta \phi = \text{Entropía}_{b} - \text{Entropía}_{a}
+\end{equation}
+
+Así que, la ganancia de información $\Delta \phi$  es el residual de la entropía después ($\text{Entropy}_b$) de la partición de la variable. Este abordaje termina cuando el subconjunto de datos es lo mas puro posible (llevando a una perfecta separación entre las clases) y la máxima reducción de entropía es alcanzada. Como puede ser visto, la ganancia de información puede ser sesgada hacía variables con muchos valores. Este problema puede ser resuelto con el ``gain ratio'', que es una normalización de la ganancia de información por la entropía, esto es:
+
+\begin{equation}
+\text{Gain ratio} = \frac{\text{information gain}}{\text{information content}}
+\end{equation}
+
+El contenido de información es definido como $-f_{i}log_2f_{i}$, y $f_i$ también es la proporción del valor en la variable.
+
+El proceso de entrenamiento sigue un proceso de máxima reducción de la entropia \cite{wang2012tracking}, y se resuelve como sigue:
+
+\begin{enumerate}
+	\item Empieza desde la raíz, considera un conjunto grande de candidatos a particionar $(k,\beta)$ que cubren todos los posibles $k$ y provee suficientes subdivisiones para cada $v_{k}$. $\beta$ es un valor límite de partición.
+	\item Para cada candidato $(k,\beta)$, se particiona un conjunto de entrenamiento $D  = \{(\textbf{v},y)\}$ en dos sub conjuntos:
+	\begin{equation}
+			D_{l}(k,\beta) = \{(\textbf{v},y) \mid v_{k} \leq \beta\}
+		\end{equation}
+
+		\begin{equation}		
+					D_{r}(k,\beta) = D \backslash D_{l}(k,\beta)
+		\end{equation}
+	\item Encuentra el candidato $(k,\beta)$ que maximize la reducción de la entropía $G(k,\beta)$:
+	\begin{equation}
+			(k^{*},\beta^{*}) = argmax_{(k,\beta)} \text{Entropy}(k,\beta),
+		\end{equation}
+	\item Usar $(k^{*},\beta^{*})$ como la caracteristica indicador y el límite para el nodo de la partición actual, y repite los pasos anteriores para el sub-árbol izquierdo con $D_{l}(k^{*},\beta^{*})$  y el derecho con $D_{r}(k^{*},\beta^{*})$.
+	\item Si la profundidad alcanza el máximo tamaño  (o entropía) del conjunto de datos particionados $\tilde D$ del nodo actual es suficientemente pequeño, entonces ese nodo es una hoja, y la probabilidad de este nodo es:
+	\begin{equation}
+		P_{T} = \frac{\mid\{\textbf{v},y) \in \tilde D \mid y = 1\}\mid }{\mid \tilde D \mid}
+	\end{equation}
+	$\mid \cdot \mid$ denota  la cardinalidad del conjunto de datos. El nodo hoja es una cantidad $P_T (v)$ que indica la probabilidad de clasificación es 1.
+		
+\end{enumerate}
+\newpage
+
+
+\section{Evolución de los árboles de decisión}
+
+El algoritmo de árboles de decisión es uno de los mas populares en la actualidad. Desde su aparición en 1963 con el algoritmo AID descrito por Mogran y Sonquist , este algoritmo ha tenido multiples mejoras a través del tiempo. Estas mejoras han sido de tal magnitud y cantidad que ha sido necesario dividir su evolución en generaciones. Estas pueden ser vistas en la figura \ref{fig:evol} .\par
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=11.5cm]{evulucion}
+\caption{Evolución del algoritmo de árbol de decisión.}
+\label{fig:evol}
+\end{figure}
+
+
+\subsection{Primera Generación}
+
+Incluye la descripción del algoritmo AID \cite{morgan1963problems}, THAID \cite{messenger1972modal}, y el CHAID \cite{kass1980exploratory}.  Esta generación se inició con árboles de decisión para variables continuas (regresión), ajusta un modelo constante paso a paso por una división recursiva de los datos en dos subgrupos (nodos), con divisiones de la forma ``$X \leq c$'' o `$`X \in A$''. \par
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=7cm]{gen1}
+\caption{Ajuste de primera generación}
+\label{fig:gen1}
+\end{figure}
+
+Para esto, se definió el termino impureza (de cada nodo), \textbf{impureza} $\phi (t) = \sum_{i\in t} (y_i - \hat{y})$, un ejemplo de este ajuste se ve en la figura \ref{fig:gen1}. Aunque existen otros algoritmos que también pueden clasificar (THAID) o que mejoran la velocidad (CHAID).\par
+
+\subsection{Segunda Generación}
+
+En esta generación aparece el algoritmo \textbf{C}lassification \textbf{A}nd \textbf{R}egression \textbf{T}rees (CART) descrito por Breiman et. al. \cite{breiman85stone}.  Este algoritmo CART, usa la busqueda greedy utilizada en AID y THAID con otras adiciones:\par
+
+\begin{enumerate}
+	\item Los árboles generados son podados en lugar de tener reglas de paro.
+	\item Los árboles son seleccionados por validación cruzada.
+	\item Se puede agregar un costo para las clasificaciones erroneas o para clases desbalanciadas.
+	\item Se manejan los valores perdidos por particiones surrogadas.
+	\item Se utilizan scores de importancia de las variables usadas para detectar el enmascaramiento.
+	\item Particiones lineales $\sum_i a_i x_i \leq c$ se obtienen al azar (RPART ), es una implementación de CART en R.
+\end{enumerate}
+
+
+Además Quinlan inicia su prolífica descripción de diferentes árboles de decisión con el algoritmo ID3 \cite{quinlan1986induction}, M5 \cite{quinlan1992learning} y C4.5 \cite{quinlan2014c4}. En la tabla \ref{tab:carac}  se pueden observar las características que distinguen los diferentes algoritmos. En la figura \ref{fig:entrena} se puede ver como se clasifica una nueva observación, mediante las reglas obtenidas de los datos de entrenamiento.
+
+El algoritmo ID3 recibió este nombre por que fue el tercero en procedimientos de identificación de series. Fue realizado con la intención de ser usado para datos nominales (no ordenados). Si el problema involucra variables con valor real, ellos son primero convertidos en intervalos, cada intervalo es tratado de forma no ordenada nominal. Cada split tiene un factor de rama de Bj, donde B, es el numero de atributos discretos de bins de la variable j escogida para la partición. En la practica, rara vez los datos son binarios así que la impureza de la razón de ganancia debe ser usada. Estos árboles tienen sus números de niveles igual a el número de variables ingresadas. El algoritmo continua hasta que todos los nodos son puros o no hay mas variables para particionar. No hay poda en las presentaciones estándar del algoritmo.
+
+\begin{table}
+\centering
+\begin{tabular}{|p{1.8cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+& ID3 & C4.5 & CART\\ \hline
+Criterio de Partición & Ganancia de información & Razón de Ganancia & Towing Criteria \\ \hline
+Atributo & Categórico & Categorico y Numérico & Categórico y Numérico \\\hline
+Valores Perdidos & No maneja & Maneja & Maneja \\ \hline
+Poda & No & Basado en error & Costo de Complejidad \\ \hline
+Outlier & No maneja & No maneja &Maneja \\ \hline
+\end{tabular}
+\caption{Características de los algoritmos de la 2da generación}
+\label{tab:carac}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=7.5cm]{entrenamiento}
+\caption{Clasificación mediante algoritmos de la 2da generación}
+\label{fig:entrena}
+\end{figure}
+\newpage
+
+\subsection{Tercera Generación}
+
+En 1997, la aparición del algoritmo \textbf{Q}uick, \textbf{U}nbiased and\textbf{E}fficient \textbf{S}tatistical \textbf{T}ree(QUEST) descrito por Loh y Shih \cite{loh1997split}, inicia la tercera generación de algoritmos. Este algoritmo es el primero sin tener sesgo de selección.  Se enlista algunas de sus principales características:\par
+
+\begin{enumerate}
+	\item Usa ANOVA y tablas de contingencia con pruebas $\chi^2$ para la selección de variables.
+	\item Mezcla clases en dos superclases para tener selecciones binarias.
+	\item Usa el análisis discriminante cuadratico para encontrar el punto de partición.
+	\item Usa imputaciones de datos mediante el promedio de los nodos.
+	\item Poda con el método CART.
+\end{enumerate}
+
+Estas características son similiares a las encontradas en el algoritmo \textbf{C}lassification \textbf{R}ule with \textbf{U}nbiased \textbf{I}nteraction \textbf{S}election and \textbf{E}stimation, CRUISE (desarrollado por Hyunjoon kim y Wei-Yin Loh \cite{kim2001classification} \cite{kim2003classification}), en el sentido de que utilizan la prueba de $\chi^2$ para la partición de variables y utiliza el análisis descriminante lineal para encontrar los puntos en donde partir. Sin embargo tiene otras que lo diferencían:\par
+
+\begin{itemize}
+	\item Particiona cada nodo en tantos subnodos como el número de clases en la variable respuesta.
+	\item Tiene un sesgo negligible en la selección de variables.
+	\item Tiene múltiples vías de lidiar con valores perdidos.
+	\item Puede detectar interacciones locales entre pares de variables predictoras.
+\end{itemize}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=6cm]{cruise}
+\caption{Ejemplo de el árbol de decisión CRUISE}
+\label{fig:cruise}
+\end{figure}
+
+Un ejemplo de este último algoritmo se muestra en la figura \ref{fig:cruise}.
+
+\subsection{Cuarta Generación}
+
+Este mismo autor Loh, publica el algoritmo GUIDE (cuarta generación) que continua basandose en pruebas de significancia en el paso de dividir un nodo. Utiliza la prueba de $\chi^2$. El pseudocódigo de este algoritmo  se describen a continuación \cite{loh2011classification}:\par
+
+\begin{tcolorbox}[title =  \centering Pseudocódigo del algoritmo GUIDE, title filled]
+\begin{enumerate}
+\item Inicia en el nodo raíz.
+\item Para cada variable ordenada X, convierte a una no ordenada variable X' al agrupar sus valores en el nodo, dentro de un pequeño numero de intervalos. Si X es no ordenada, X' = X.
+\item Realiza una prueba de $\chi^2$ de independencia para cada X`variable vs. Y en los datos del nodo y computa su probabilidad de significancia.
+\item Escoge una variable X* asociada con el X' que tiene la probabilidad de significancia mas pequeña.
+\item Encuentra la partición del conjunto \{X $\in$ S*\} que minimiza la suma de los indices Gini, y usalo para dividir el nodo en dos nodos mas pequeños.
+\item Si el criterio de paro es alcanzado, termina, De otra forma, aplica los pasos 2 - 5 para alcanzar un nodo hijo.
+\item Poda el árbol con el metodo CART.
+\end{enumerate}
+\end{tcolorbox}
+
+Este algoritmo puede dividir combinaciones de dos variables a la vez, y trata a los valores perdidos como una categoría separada. Una comparación entre los últimos algoritmos descritos se pueden ver en la tabla  \ref{tab:comp}.\par
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccc}\hline
+\rowcolor{Gray} Característica & CRUISE & GUIDE & QUEST\\\hline
+Partición no sesgada & $\sqrt[]{}$&$\sqrt[]{}$&$\sqrt[]{}$\\
+Tipo de partición&$u,l$&$u,l$&$u,l$\\
+Ramas/Partición & $\geq 2$ & 2 & 2 \\
+Pruebas Interacción & $\sqrt[]{}$ &$\sqrt[]{}$ & \\
+Poda & $\sqrt[]{}$ & $\sqrt[]{}$ & $\sqrt[]{}$\\
+Costos (Usuario) & $\sqrt[]{}$ & $\sqrt[]{}$ & $\sqrt[]{}$ \\
+Previo (Usuario) & $\sqrt[]{}$ & $\sqrt[]{}$ & $\sqrt[]{}$ \\
+Ranking Variable & & $\sqrt[]{}$ & \\
+Modelo de nodo &$c,d$& $c,k,n$& c \\
+Bagging y Ensembles & &$\sqrt[]{}$& \\
+Valores perdidos & i,s & m & i \\\hline
+\end{tabular}
+\caption{Comparación de Métodos de clasificación con árboles. Una marca indica presencia de la característica}
+\label{tab:comp} 
+\end{table}
+
+\subsection{Quinta Generación}
+
+En la quinta generación se encuentra ya la era del big Data y la Industria 4.0. En ella se incluyen una gran cantidad de tipos de aprendizaje (learning) que tratan de superar los retos del Big Data. Se mencionará brevemente el significado de los diferentes aprendizajes de esta generación (tratando de no alejarse mucho del objetivo de esta tesis).
+
+\subsubsection{Aprendizaje activo (Active Learning)}
+
+Para describir el aprendizaje activo de una forma más comprensible, se debe contrastar con el aprendizaje pasivo (passive learning); que es el aprendizaje estándar, bien estudiado establecido en estadística y aprendizaje maquina). En el aprendizaje pasivo (ocasionalmente referido como aprendizaje supervisado), la meta es obtener un buen predictor de los datos etiquetados.  En el modelo de aprendizaje activo es un poco diferente a esto, ya que inicialmente los datos no tienen una etiqueta, el objetivo en este aprendizaje es el mismo que en el aprendizaje pasivo; sin embargo, en este tipo de aprendizaje esta permitido buscar una etiqueta respuesta para cualquier dato ingresado en los predictores \cite{hsu2010algorithms}.\par
+
+\subsubsection{Aprendizaje de transferencia (Transfer learning)}
+
+El aprendizaje de transferencia es dirige al proceso de adquisición de conocimiento (o habilidades) en el contexto de que una tarea acompañada de una subsecuente aplicación del conocimiento para aprender nuevas tareas eficientemente \cite{won2007transfer}. Se debe considerar que las diferentes tareas descritas en este párrafo pueden diferentes relaciones como se ve en la figura \ref{fig:tareas} .
+
+
+\begin{figure}
+\centering
+\includegraphics[height=7cm]{tareas}
+\caption{Tipos de tareas en Aprendizaje de Transferencia}
+\label{fig:tareas}
+\end{figure}
+
+El algoritmo de transferencia para árboles de decisión, aprende  una nueva tarea u objetivo, de un modelo de decisión parcial, inducido por el ID3, que captura el conocimiento previo, de una tarea previa \cite{quinlan1986induction}. El algoritmo de árboles de decisión de transferencia, consta de dos partes: 1) consise en identificar atributos que no ocurren en el árbol de la tarea fuente y determina el orden en el que los nuevos atributos deben ser considerados; 2) consiste en aplicar transformaciones de la tarea fuente, para colocar los nuevos atributos en los lugares correctos, en conjunto con la etiqueta asociada.
+
+
+
+\subsubsection{Aprendizaje semi-supervisado (Semi-supervised learning)}
+
+Los métodos semi-supervisados no usan solamente los datos etiquetados, sino que también usan los datos no etiquetados; esto con el motivo de combinar la información de los datos no etiquetados con los etiquetados para mejorar el desempeño de la clasificación \cite{tanha2017semi}. En este caso, el algoritmo base de aprendizaje es el árbol de decisión y puede ser modificado  al combinar el algoritmo con por ej. el clasificador ingenuo de Bayes (Naive Bayes Tree Classifier).
+
+% desde aqui %%%%5
+\section{Algoritmo C4.5}
+
+El algoritmo C4.5, el sucesor y refinado ID3, es el mas popular en cuanto a métodos de "clasificación" basados en árboles. En el, las variables con valor real, son tratadas de la misma forma que en CART.  Con particiones multi-vía, el algoritmo usa fundamentos heurísticos para la poda del árbol obtenido. Este algoritmo tiene la provisión para la poda basada en las reglas derivadas del mismo árbol. Esto es mediante la vía desde la raíz al nodo final, si existen reglas redundantes, estas son eliminadas \cite{quinlan1993c4}.\par 
+
+La construcción básica del algoritmo C4.5 es la siguiente:
+
+\begin{itemize}
+	\item Los nodos raíz es el nodo mas arriba del nodo. El es considera todas las muestras y selecciona los atributos que son mas significantes.
+	\item La información de la muestra es pasada a los nodos subsecuentes, llamados ``nodos de rama'' que eventualmente terminan en los nodos hoja que dan las decisiones.
+	\item Las reglas son generadas mediante una ilustración de la vía de la raíz a un hoja
+\end{itemize}
+
+C4.5 usa los valores de probabilidad para tratar a los datos perdidos, en lugar de asignar valores comunes de algún atributo. Aunque este algoritmo es de uso extendido tiene algunas limitantes \cite{mazid2010improved}:
+
+\begin{itemize}
+	\item Ramas vacías: En caso que un nodo tenga 0 valores o valores cercanos a 0, no ayuda a construir reglas, sino que solo hace el árbol mas complejo y grande.
+	\item Ramas sin significado: Las variables discretas pueden ayudar a formar un árbol de decisión pero no ayudan en la tarea de clasificación llevando a tener un árbol mas grande y al sobre ajuste.
+\end{itemize}
+
+
+\newpage
+
+\section{Algoritmo C5.0}
+
+El algoritmo C5.0 es un algoritmo relativamente nuevo basado en su antecesor C4.5 (desarrollado por  Quinlan) introduce nuevas tecnologías que incluyen el boosting y un árbol de decisión sensible a una función de costos. \cite{pang2009c5}
+Este algoritmo es una extensión de C4.5 que a su vez es una extensión del ID3, este algoritmo es uno que puede aplicar en el concepto del big data ya que es mejor que el C4.5 en cuanto a la velocidad, memoria y eficiencia.\cite{brijain2014survey}
+
+Un modelo C5.0 esta basado en la teoría de la información y trabaja separando el conjunto de datos en multiples sub muestras.\cite{golmah2014efficient}
+
+Similar al algoritmo de Adaboost, el boosting en C5.0 es una mejora importante. Esta basado en el cálculo de un peso ("weight", en inglés) el cual se incrementa con la influencia en la muestra. El peso es ajustado en cada iteración, con cada nueva muestra. El hecho de enfocarse a las muestras con peor clasificación dada por el árbol de decisión anterior hace que estas muestras tengan un mayor peso. % revisar las bibliografías.
+Este método de hacer árboles de decisión es muy robusto para manejar los datos faltantes y grandes cantidades de ``inputs'' al modelo.
+
+
+\section{Árbol de decision con vista hacia adelante (Look Ahead Decisión Tree)}
+
+Aunque algoritmos de árboles de decisión  descritos anteriormente son muy populares (como C4.5), este tipo de algoritmos basados en un abordaje ávido (``greedy''), tienen algunos inconvenientes,  por ejemplo las particiones tempranas (o nodos) o anteriores pueden afectar los nodos subsecuentes, llevando a: 1) parada temprana del árbol (por encontrar un óptimo local), 2) puede afectar la solución final \cite{breslow1997simplifying}.\par
+
+Una de las posibles alternativas es la utilización de el paso hacia adelante para escoger mejores particiones, poniendo atención la efectividad futura (esto es suprime el efecto del horizonte). Aunque se piensa que puede mejorar la efectividad del algoritmo, algunos autores muestran la complejidad del árbol resultante y que tal vez pudiera afectar la exactitud \cite{elomaa2005look} \cite{elomaa2003lookahead}\cite{murthy1995lookahead}.
+
+
+
+
+\section{Árbol de Decisión Sensible a Costos (Cost Sensitive Decision Tree)}
+
+La clasificación en el contexto del aprendizaje maquina, maneja el problema de predecir la clase $y_i$ del conjunto de ejemplos $S$, dado sus $k$ variables. El objetivo es construir una función $f(S)$ que prediga las $c_i$ clases de cada ejemplo usando las variables $X_i$. Esto pensando que  los diferentes errores de clasificación tienen el mismo costo. Los métodos que usan diferentes costos de error de clasificación se conocen como clasificadores costo sensibles; los diferentes tipos de algoritmos se presentan en la figura \ref{fig:cs} \cite{bahnsen2015novel} .
+
+\begin{figure}[h]
+\includegraphics[height=6cm]{cs}
+\caption{Algoritmos Sensibles a Costos}
+\label{fig:cs}
+\end{figure}
+
+En el modelo propuesto por Correa Bahnsen , el criterio de partición es usado durante la construcción del árbol de decisión. En lugar de utilizar criterios ya conocidos  como el Gini o entropía para el error de clasificación, el costo definido: $Cost = \sum_{i=1}^{N} Costo_i$ para cada nodo es calculado y la ganancia de usar cada partición evaluada como el decremento en total de los ``ahorro'', definido como:  $Ahorro = \frac{Costo_i - Costo}{Costo_i} $.
+
+
+
+
+
+
+
+
+

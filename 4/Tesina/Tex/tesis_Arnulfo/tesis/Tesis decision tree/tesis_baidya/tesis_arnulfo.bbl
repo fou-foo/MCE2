@@ -1,0 +1,625 @@
+\begin{thebibliography}{84}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem[{Adams et~al.(2009)Adams, Hoppel, Lok, Zhao, Wong, Minkler, Hwang,
+  Newman, y Garvey}]{Adams:2009aa}
+Sean~H Adams, Charles~L Hoppel, Kerry~H Lok, Ling Zhao, Scott~W Wong, Paul~E
+  Minkler, Daniel~H Hwang, John~W Newman, y W~Timothy Garvey.
+\newblock Plasma acylcarnitine profiles suggest incomplete long-chain fatty
+  acid beta-oxidation and altered tricarboxylic acid cycle activity in type 2
+  diabetic african-american women.
+\newblock \emph{J Nutr}, 139(6):1073--81, 2009.
+\newblock \doi{10.3945/jn.108.103754}.
+
+\bibitem[{Alberti y Zimmet(1998)}]{alberti1998definition}
+Kurt George Matthew~Mayer Alberti y PZ~ft Zimmet.
+\newblock Definition, diagnosis and classification of diabetes mellitus and its
+  complications. part 1: diagnosis and classification of diabetes mellitus.
+  provisional report of a who consultation.
+\newblock \emph{Diabetic medicine}, 15(7):539--553, 1998.
+
+\bibitem[{{American Diabetes
+  Association}(2018)}]{American-Diabetes-Association:2018aa}
+{American Diabetes Association}.
+\newblock 2. classification and diagnosis of diabetes: Standards of medical
+  care in diabetes-2018.
+\newblock \emph{Diabetes Care}, 41(Suppl 1):S13--S27, 2018.
+\newblock \doi{10.2337/dc18-S002}.
+
+\bibitem[{Anty et~al.(2010)Anty, Iannelli, Patouraux, Bonnafous, Lavallard,
+  Senni-Buratti, Ben~Amor, Staccini-Myx, Saint-Paul, Berthier
+  et~al.}]{anty2010new}
+Rodolphe Anty, Antonio Iannelli, St{\'e}phanie Patouraux, Stephanie Bonnafous,
+  VJ~Lavallard, Massimo Senni-Buratti, Imed Ben~Amor, A~Staccini-Myx, M-C
+  Saint-Paul, Fr{\'e}d{\'e}ric Berthier, et~al.
+\newblock A new composite model including metabolic syndrome, alanine
+  aminotransferase and cytokeratin-18 for the diagnosis of non-alcoholic
+  steatohepatitis in morbidly obese patients.
+\newblock \emph{Alimentary pharmacology \& therapeutics}, 32(11-12):1315--1322,
+  2010.
+
+\bibitem[{Baffy et~al.(2012)Baffy, Brunt, y Caldwell}]{Baffy:2012aa}
+Gy{\"o}rgy Baffy, Elizabeth~M Brunt, y Stephen~H Caldwell.
+\newblock Hepatocellular carcinoma in non-alcoholic fatty liver disease: an
+  emerging menace.
+\newblock \emph{J Hepatol}, 56(6):1384--91, 2012.
+\newblock \doi{10.1016/j.jhep.2011.10.027}.
+
+\bibitem[{Bahnsen et~al.(2015{\natexlab{a}})Bahnsen, Aouada, y
+  Ottersten}]{bahnsen2015ensemble}
+Alejandro~Correa Bahnsen, Djamila Aouada, y Bjorn Ottersten.
+\newblock Ensemble of example-dependent cost-sensitive decision trees.
+\newblock \emph{arXiv preprint arXiv:1505.04637}, 2015{\natexlab{a}}.
+
+\bibitem[{Bahnsen et~al.(2015{\natexlab{b}})Bahnsen, Aouada, y
+  Ottersten}]{bahnsen2015novel}
+Alejandro~Correa Bahnsen, Djamila Aouada, y Bj{\"o}rn Ottersten.
+\newblock A novel cost-sensitive framework for customer churn predictive
+  modeling.
+\newblock \emph{Decision Analytics}, 2(1):5, 2015{\natexlab{b}}.
+
+\bibitem[{Barros et~al.(2015)Barros, de~Carvalho, y
+  Freitas}]{barros2015automatic}
+Rodrigo~C Barros, Andr{\'e}~CPLF de~Carvalho, y Alex~A Freitas.
+\newblock \emph{Automatic design of decision-tree induction algorithms}.
+\newblock Springer, 2015.
+
+\bibitem[{Basaranoglu et~al.(2015)Basaranoglu, Basaranoglu, y
+  Bugianesi}]{basaranoglu2015carbohydrate}
+Metin Basaranoglu, Gokcen Basaranoglu, y Elisabetta Bugianesi.
+\newblock Carbohydrate intake and nonalcoholic fatty liver disease: fructose as
+  a weapon of mass destruction.
+\newblock \emph{Hepatobiliary surgery and nutrition}, 4(2):109, 2015.
+
+\bibitem[{Beltr{\'a}n-S{\'a}nchez et~al.(2013)Beltr{\'a}n-S{\'a}nchez, Harhay,
+  Harhay, y McElligott}]{beltran2013prevalence}
+Hiram Beltr{\'a}n-S{\'a}nchez, Michael~O Harhay, Meera~M Harhay, y Sean
+  McElligott.
+\newblock Prevalence and trends of metabolic syndrome in the adult us
+  population, 1999--2010.
+\newblock \emph{Journal of the American College of Cardiology}, 62(8):697--703,
+  2013.
+
+\bibitem[{Breiman et~al.(85)Breiman, Friedman, y Olshen}]{breiman85stone}
+L~Breiman, JH~Friedman, y RA~Olshen.
+\newblock stone, cj (1984).
+\newblock \emph{Classification and regression trees}, 85.
+
+\bibitem[{Breslow y Aha(1997)}]{breslow1997simplifying}
+Leonard~A Breslow y David~W Aha.
+\newblock Simplifying decision trees: A survey.
+\newblock \emph{The Knowledge Engineering Review}, 12(1):1--40, 1997.
+
+\bibitem[{Brijain et~al.(2014)Brijain, Patel, Kushik, y
+  Rana}]{brijain2014survey}
+Mr~Brijain, R~Patel, Mr~Kushik, y K~Rana.
+\newblock A survey on decision tree algorithm for classification.
+\newblock 2014.
+
+\bibitem[{Charatcharoenwitthaya y Lindor(2007)}]{charatcharoenwitthaya2007role}
+Phunchai Charatcharoenwitthaya y Keith~D Lindor.
+\newblock Role of radiologic modalities in the management of non-alcoholic
+  steatohepatitis.
+\newblock \emph{Clinics in liver disease}, 11(1):37--54, 2007.
+
+\bibitem[{Chernick y LaBudde(2014)}]{chernick2014introduction}
+Michael~R Chernick y Robert~A LaBudde.
+\newblock \emph{An introduction to bootstrap methods with applications to R}.
+\newblock John Wiley \& Sons, 2014.
+
+\bibitem[{de~Moura~Almeida et~al.(2008)de~Moura~Almeida, Cotrim, Barbosa,
+  de~Athayde, Santos, Bitencourt, de~Freitas, Rios, y Alves}]{de2008fatty}
+Alessandro de~Moura~Almeida, Helma~Pinchemel Cotrim, Daniel Batista~Valente
+  Barbosa, Luciana Gordilho~Matteoni de~Athayde, Adimeia~Souza Santos, Almir
+  Galv{\~a}o~Vieira Bitencourt, Luiz Antonio~Rodrigues de~Freitas, Adriano
+  Rios, y Erivaldo Alves.
+\newblock Fatty liver disease in severe obese patients: diagnostic value of
+  abdominal ultrasound.
+\newblock \emph{World journal of gastroenterology: WJG}, 14(9):1415, 2008.
+
+\bibitem[{Dumskyj et~al.(1996)Dumskyj, Eriksen, Dor{\'e}, y
+  Kohner}]{dumskyj1996autoregulation}
+Martin~J Dumskyj, Jesper~E Eriksen, Caroline~J Dor{\'e}, y Eva~M Kohner.
+\newblock Autoregulation in the human retinal circulation: assessment using
+  isometric exercise, laser doppler velocimetry, and computer-assisted image
+  analysis.
+\newblock \emph{Microvascular research}, 51(3):378--392, 1996.
+
+\bibitem[{Elomaa y Malinen(2003)}]{elomaa2003lookahead}
+Tapio Elomaa y Tuomo Malinen.
+\newblock On lookahead heuristics in decision tree learning.
+\newblock En \emph{International Symposium on Methodologies for Intelligent
+  Systems}, p\'ags. 445--453. Springer, 2003.
+
+\bibitem[{Elomaa* y Malinen(2005)}]{elomaa2005look}
+Tapio Elomaa* y Tuomo Malinen.
+\newblock On look-ahead and pathology in decision tree learning.
+\newblock \emph{Journal of Experimental \& Theoretical Artificial
+  Intelligence}, 17(1-2):19--33, 2005.
+
+\bibitem[{Gao y {DECODE Study Group}(2008)}]{Gao:2008aa}
+W~Gao y {DECODE Study Group}.
+\newblock Does the constellation of risk factors with and without abdominal
+  adiposity associate with different cardiovascular mortality risk?
+\newblock \emph{Int J Obes (Lond)}, 32(5):757--62, 2008.
+\newblock \doi{10.1038/sj.ijo.0803797}.
+
+\bibitem[{Gardner et~al.(2007)Gardner, Shoback, y
+  Greenspan}]{gardner2007greenspan}
+David~G Gardner, Dolores Shoback, y Francis~S Greenspan.
+\newblock \emph{Greenspan's basic \& clinical endocrinology}.
+\newblock McGraw-Hill Medical,, 2007.
+
+\bibitem[{Golmah(2014)}]{golmah2014efficient}
+Vahid Golmah.
+\newblock An efficient hybrid intrusion detection system based on c5. 0 and
+  svm.
+\newblock \emph{International Journal of Database Theory and Application},
+  7(2):59--70, 2014.
+
+\bibitem[{Gonz{\'a}lez~Villalpando et~al.(1994)Gonz{\'a}lez~Villalpando,
+  Gonz{\'a}lez~Villalpando, Arredondo~P{\'e}rez, y
+  Stern}]{Gonzalez-Villalpando:1994aa}
+M~E Gonz{\'a}lez~Villalpando, C~Gonz{\'a}lez~Villalpando,
+  B~Arredondo~P{\'e}rez, y M~P Stern.
+\newblock Diabetic retinopathy in mexico. prevalence and clinical
+  characteristics.
+\newblock \emph{Arch Med Res}, 25(3):355--60, 1994.
+
+\bibitem[{Habibi et~al.(2015)Habibi, Ahmadi, y Alizadeh}]{habibi2015type}
+Shafi Habibi, Maryam Ahmadi, y Somayeh Alizadeh.
+\newblock Type 2 diabetes mellitus screening and risk factors using decision
+  tree: results of data mining.
+\newblock \emph{Global journal of health science}, 7(5):304, 2015.
+
+\bibitem[{Haller(1977)}]{haller1977epidermiology}
+H~Haller.
+\newblock Epidermiology and associated risk factors of hyperlipoproteinemia.
+\newblock \emph{Zeitschrift fur die gesamte innere Medizin und ihre
+  Grenzgebiete}, 32(8):124--128, 1977.
+
+\bibitem[{Hern{\'a}ndez-{\'A}vila et~al.(2016)Hern{\'a}ndez-{\'A}vila,
+  Rivera-Dommarco, Shamah-Levy, Cuevas-Nasu, G{\'o}mez-Acosta, Gaona-Pineda
+  et~al.}]{hernandez2016encuesta}
+M~Hern{\'a}ndez-{\'A}vila, J~Rivera-Dommarco, T~Shamah-Levy, L~Cuevas-Nasu,
+  LM~G{\'o}mez-Acosta, EM~Gaona-Pineda, et~al.
+\newblock Encuesta nacional de salud y nutrici{\'o}n de medio camino 2016.
+\newblock \emph{Cuernavaca, Morelos, M{\'e}xico: Instituto Nacional de Salud
+  P{\'u}blica}, 2016.
+
+\bibitem[{Hische et~al.(2010)Hische, Luis-Dominguez, Pfeiffer, Schwarz, Selbig,
+  y Spranger}]{hische2010decision}
+Manuela Hische, Olga Luis-Dominguez, Andreas~FH Pfeiffer, Peter~E Schwarz,
+  Joachim Selbig, y Joachim Spranger.
+\newblock Decision trees as a simple-to-use and reliable tool to identify
+  individuals with impaired glucose metabolism or type 2 diabetes mellitus.
+\newblock \emph{European journal of endocrinology}, 163(4):565--571, 2010.
+
+\bibitem[{Hsu(2010)}]{hsu2010algorithms}
+Daniel~Joseph Hsu.
+\newblock \emph{Algorithms for active learning}.
+\newblock Tesis Doctoral, UC San Diego, 2010.
+
+\bibitem[{Imajo et~al.(2016)Imajo, Kessoku, Honda, Tomeno, Ogawa, Mawatari,
+  Fujita, Yoneda, Taguri, Hyogo et~al.}]{imajo2016magnetic}
+Kento Imajo, Takaomi Kessoku, Yasushi Honda, Wataru Tomeno, Yuji Ogawa,
+  Hironori Mawatari, Koji Fujita, Masato Yoneda, Masataka Taguri, Hideyuki
+  Hyogo, et~al.
+\newblock Magnetic resonance imaging more accurately classifies steatosis and
+  fibrosis in patients with nonalcoholic fatty liver disease than transient
+  elastography.
+\newblock \emph{Gastroenterology}, 150(3):626--637, 2016.
+
+\bibitem[{Indrayan y Malhotra(2017)}]{indrayan2017medical}
+Abhaya Indrayan y Rajeev~Kumar Malhotra.
+\newblock \emph{Medical biostatistics}.
+\newblock Chapman and Hall/CRC, 2017.
+
+\bibitem[{Jia et~al.(2015)Jia, Di, Wang, Shao, Gao, Wang, Li, y
+  Li}]{jia2015non}
+Guoyu Jia, Fusheng Di, Qipeng Wang, Jinshuang Shao, Lei Gao, Lu~Wang, Qiang Li,
+  y Nali Li.
+\newblock Non-alcoholic fatty liver disease is a risk factor for the
+  development of diabetic nephropathy in patients with type 2 diabetes
+  mellitus.
+\newblock \emph{PloS one}, 10(11):e0142808, 2015.
+
+\bibitem[{Kass(1980)}]{kass1980exploratory}
+Gordon~V Kass.
+\newblock An exploratory technique for investigating large quantities of
+  categorical data.
+\newblock \emph{Applied statistics}, p\'ags. 119--127, 1980.
+
+\bibitem[{Kim y Loh(2001)}]{kim2001classification}
+Hyunjoong Kim y Wei-Yin Loh.
+\newblock Classification trees with unbiased multiway splits.
+\newblock \emph{Journal of the American Statistical Association},
+  96(454):589--604, 2001.
+
+\bibitem[{Kim y Loh(2003)}]{kim2003classification}
+Hyunjoong Kim y Wei-Yin Loh.
+\newblock Classification trees with bivariate linear discriminant node models.
+\newblock \emph{Journal of Computational and Graphical Statistics},
+  12(3):512--530, 2003.
+
+\bibitem[{Lake et~al.(2015)Lake, Novak, Shipkova, Aranibar, Robertson, Reily,
+  Lehman-McKeeman, Vaillancourt, y Cherrington}]{lake2015branched}
+April~D Lake, Petr Novak, Petia Shipkova, Nelly Aranibar, Donald~G Robertson,
+  Michael~D Reily, Lois~D Lehman-McKeeman, Richard~R Vaillancourt, y Nathan~J
+  Cherrington.
+\newblock Branched chain amino acid metabolism profiles in progressive human
+  nonalcoholic fatty liver disease.
+\newblock \emph{Amino acids}, 47(3):603--615, 2015.
+
+\bibitem[{Laties(1967)}]{laties1967central}
+Alan~M Laties.
+\newblock Central retinal artery innervation: absence of adrenergic innervation
+  to the intraocular branches.
+\newblock \emph{Archives of Ophthalmology}, 77(3):405--409, 1967.
+
+\bibitem[{Loh(2011)}]{loh2011classification}
+Wei-Yin Loh.
+\newblock Classification and regression trees.
+\newblock \emph{Wiley Interdisciplinary Reviews: Data Mining and Knowledge
+  Discovery}, 1(1):14--23, 2011.
+
+\bibitem[{Loh y Shih(1997)}]{loh1997split}
+Wei-Yin Loh y Yu-Shan Shih.
+\newblock Split selection methods for classification trees.
+\newblock \emph{Statistica sinica}, p\'ags. 815--840, 1997.
+
+\bibitem[{Lonardo et~al.(2016)Lonardo, Byrne, Caldwell, Cortez-Pinto, y
+  Targher}]{Lonardo:2016aa}
+A~Lonardo, C~D Byrne, S~H Caldwell, H~Cortez-Pinto, y G~Targher.
+\newblock Global epidemiology of nonalcoholic fatty liver disease:
+  Meta-analytic assessment of prevalence, incidence, and outcomes.
+\newblock \emph{Hepatology}, 64(4):1388--9, 2016.
+\newblock \doi{10.1002/hep.28584}.
+
+\bibitem[{Marchesini y Marzocchi(2007)}]{marchesini2007metabolic}
+Giulio Marchesini y Rebecca Marzocchi.
+\newblock Metabolic syndrome and nash.
+\newblock \emph{Clinics in liver disease}, 11(1):105--117, 2007.
+
+\bibitem[{Mathers y Loncar(2006)}]{mathers2006projections}
+Colin~D Mathers y Dejan Loncar.
+\newblock Projections of global mortality and burden of disease from 2002 to
+  2030.
+\newblock \emph{PLoS medicine}, 3(11):e442, 2006.
+
+\bibitem[{Matsuda y DeFronzo(1999)}]{matsuda1999insulin}
+Masafumi Matsuda y Ralph~A DeFronzo.
+\newblock Insulin sensitivity indices obtained from oral glucose tolerance
+  testing: comparison with the euglycemic insulin clamp.
+\newblock \emph{Diabetes care}, 22(9):1462--1470, 1999.
+
+\bibitem[{Mazid et~al.(2010)Mazid, Ali, Tickle et~al.}]{mazid2010improved}
+Mohammed~M Mazid, ABM~Shawkat Ali, Kevin~S Tickle, et~al.
+\newblock Improved c4. 5 algorithm for rule based classification.
+\newblock En \emph{Proceedings of the 9th WSEAS international conference on
+  Artificial intelligence, knowledge engineering and data bases}, p\'ags.
+  296--301. World Scientific and Engineering Academy and Society (WSEAS), 2010.
+
+\bibitem[{Melmed(2016)}]{melmed2016williams}
+Shlomo Melmed.
+\newblock \emph{Williams textbook of endocrinology}.
+\newblock Elsevier Health Sciences, 2016.
+
+\bibitem[{Messenger y Mandell(1972)}]{messenger1972modal}
+Robert Messenger y Lewis Mandell.
+\newblock A modal search technique for predictive nominal scale multivariate
+  analysis.
+\newblock \emph{Journal of the American statistical association},
+  67(340):768--772, 1972.
+
+\bibitem[{Mikolasevic et~al.(2018)Mikolasevic, Filipec-Kanizaj, Mijic,
+  Jakopcic, Milic, Hrstic, Sobocan, Stimac, y
+  Burra}]{mikolasevic2018nonalcoholic}
+Ivana Mikolasevic, Tajana Filipec-Kanizaj, Maja Mijic, Ivan Jakopcic, Sandra
+  Milic, Irena Hrstic, Nikola Sobocan, Davor Stimac, y Patrizia Burra.
+\newblock Nonalcoholic fatty liver disease and liver transplantation-where do
+  we stand?
+\newblock \emph{World journal of gastroenterology}, 24(14):1491, 2018.
+
+\bibitem[{M{\"o}hlig et~al.(2004)M{\"o}hlig, Isken, y Ristow}]{Mohlig:2004aa}
+Matthias M{\"o}hlig, Frank Isken, y Michael Ristow.
+\newblock Impaired mitochondrial activity and insulin-resistant offspring of
+  patients with type 2 diabetes.
+\newblock \emph{N Engl J Med}, 350(23):2419--21; author reply 2419--21, 2004.
+
+\bibitem[{Montesi et~al.(2014)Montesi, Caselli, Centis, Nuccitelli,
+  Moscatiello, Suppini, y Marchesini}]{montesi2014physical}
+Luca Montesi, Chiara Caselli, Elena Centis, Chiara Nuccitelli, Simona
+  Moscatiello, Alessandro Suppini, y Giulio Marchesini.
+\newblock Physical activity support or weight loss counseling for nonalcoholic
+  fatty liver disease?
+\newblock \emph{World Journal of Gastroenterology: WJG}, 20(29):10128, 2014.
+
+\bibitem[{Morgan y Sonquist(1963)}]{morgan1963problems}
+James~N Morgan y John~A Sonquist.
+\newblock Problems in the analysis of survey data, and a proposal.
+\newblock \emph{Journal of the American statistical association},
+  58(302):415--434, 1963.
+
+\bibitem[{Murthy y Salzberg(1995)}]{murthy1995lookahead}
+Sreerama Murthy y Steven Salzberg.
+\newblock Lookahead and pathology in decision tree induction.
+\newblock En \emph{IJCAI}, p\'ags. 1025--1033. Citeseer, 1995.
+
+\bibitem[{Nagaoka et~al.(2002)Nagaoka, Sakamoto, Mori, Sato, y
+  Yoshida}]{nagaoka2002effect}
+Taiji Nagaoka, Takashi Sakamoto, Fumihiko Mori, Eiichi Sato, y Akitoshi
+  Yoshida.
+\newblock The effect of nitric oxide on retinal blood flow during hypoxia in
+  cats.
+\newblock \emph{Investigative ophthalmology \& visual science},
+  43(9):3037--3044, 2002.
+
+\bibitem[{Oh et~al.(2016)Oh, Jun, Saeed, y Nguyen}]{Oh:2016aa}
+Hyunwoo Oh, Dae~Won Jun, Waqar~K Saeed, y Mindie~H Nguyen.
+\newblock Non-alcoholic fatty liver diseases: update on the challenge of
+  diagnosis and treatment.
+\newblock \emph{Clin Mol Hepatol}, 22(3):327--335, 2016.
+\newblock \doi{10.3350/cmh.2016.0049}.
+
+\bibitem[{Ortiz-Rodr{\'\i}guez et~al.(2017)Ortiz-Rodr{\'\i}guez,
+  Y{\'a}{\~n}ez-Velasco, Carnevale, Romero-Hidalgo, Bernal, Aguilar-Salinas,
+  Rojas, Villa, y Tur}]{Ortiz-Rodriguez:2017aa}
+Mar{\'\i}a~Araceli Ortiz-Rodr{\'\i}guez, Luc{\'\i}a Y{\'a}{\~n}ez-Velasco,
+  Alessandra Carnevale, Sandra Romero-Hidalgo, Demetrio Bernal, Carlos
+  Aguilar-Salinas, Rosalba Rojas, Antonio Villa, y Josep~A Tur.
+\newblock Prevalence of metabolic syndrome among elderly mexicans.
+\newblock \emph{Arch Gerontol Geriatr}, 73:288--293, 2017.
+\newblock \doi{10.1016/j.archger.2017.09.001}.
+
+\bibitem[{Pan y Fallon(2014)}]{Pan:2014aa}
+Jen-Jung Pan y Michael~B Fallon.
+\newblock Gender and racial differences in nonalcoholic fatty liver disease.
+\newblock \emph{World J Hepatol}, 6(5):274--83, 2014.
+\newblock \doi{10.4254/wjh.v6.i5.274}.
+
+\bibitem[{Pang y Gong(2009)}]{pang2009c5}
+Su-lin Pang y Ji-zhang Gong.
+\newblock C5. 0 classification algorithm and application on individual credit
+  evaluation of banks.
+\newblock \emph{Systems Engineering-Theory \& Practice}, 29(12):94--104, 2009.
+
+\bibitem[{Pluma et~al.(2009)Pluma, Morales, Arroyo, de~la Torre, Gonz{\'a}lez
+  et~al.}]{pluma2009higado}
+V{\'\i}ctor Huggo~C{\'o}rdova Pluma, Alejandra~Correa Morales, Jos{\'e}
+  Luis~Artigas Arroyo, Mar{\'\i}a del~Carmen de~la Torre, Miriam~Vargas
+  Gonz{\'a}lez, et~al.
+\newblock H{\'\i}gado graso no alcoh{\'o}lico: su diagn{\'o}stico en la
+  actualidad. tercera parte.
+\newblock \emph{Medicina Interna de M{\'e}xico}, 25(3):217--228, 2009.
+
+\bibitem[{Poynard et~al.(2006)Poynard, Ratziu, Charlotte, Messous, Munteanu,
+  Imbert-Bismut, Massard, Bonyhay, Tahiri, Thabut, Cadranel, Le~Bail,
+  de~Ledinghen, {LIDO Study Group}, y {CYTOL study group}}]{Poynard:2006aa}
+Thierry Poynard, Vlad Ratziu, Frederic Charlotte, Djamila Messous, Mona
+  Munteanu, Fran{\c c}oise Imbert-Bismut, Julien Massard, Luninita Bonyhay,
+  Mohamed Tahiri, Dominique Thabut, Jean~Fran{\c c}ois Cadranel, Brigitte
+  Le~Bail, Victor de~Ledinghen, {LIDO Study Group}, y {CYTOL study group}.
+\newblock Diagnostic value of biochemical markers (nashtest) for the prediction
+  of non alcoholo steato hepatitis in patients with non-alcoholic fatty liver
+  disease.
+\newblock \emph{BMC Gastroenterol}, 6:34, 2006.
+\newblock \doi{10.1186/1471-230X-6-34}.
+
+\bibitem[{Poynard et~al.(2005)Poynard, Ratziu, Naveau, Thabut, Charlotte,
+  Messous, Capron, Abella, Massard, Ngo, Munteanu, Mercadier, Manns, y
+  Albrecht}]{Poynard:2005aa}
+Thierry Poynard, Vlad Ratziu, Sylvie Naveau, Dominique Thabut, Frederic
+  Charlotte, Djamila Messous, Dominique Capron, Annie Abella, Julien Massard,
+  Yen Ngo, Mona Munteanu, Anne Mercadier, Michael Manns, y Janice Albrecht.
+\newblock The diagnostic value of biomarkers (steatotest) for the prediction of
+  liver steatosis.
+\newblock \emph{Comp Hepatol}, 4:10, 2005.
+\newblock \doi{10.1186/1476-5926-4-10}.
+
+\bibitem[{Quinlan(1986)}]{quinlan1986induction}
+J.~Ross Quinlan.
+\newblock Induction of decision trees.
+\newblock \emph{Machine learning}, 1(1):81--106, 1986.
+
+\bibitem[{Quinlan(2014)}]{quinlan2014c4}
+J~Ross Quinlan.
+\newblock \emph{C4. 5: programs for machine learning}.
+\newblock Elsevier, 2014.
+
+\bibitem[{Quinlan et~al.(1992)}]{quinlan1992learning}
+John~R Quinlan et~al.
+\newblock Learning with continuous classes.
+\newblock En \emph{5th Australian joint conference on artificial intelligence},
+  tomo~92, p\'ags. 343--348. Singapore, 1992.
+
+\bibitem[{Quinlan(1993)}]{quinlan1993c4}
+JR~Quinlan.
+\newblock C4. 5: Programs for machine learning. morgan kaufmann, san francisco.
+\newblock \emph{C4. 5: Programs for machine learning. Morgan Kaufmann, San
+  Francisco.}, 1993.
+
+\bibitem[{Rinella et~al.(2016)Rinella, Lominadze, Loomba, Charlton,
+  Neuschwander-Tetri, Caldwell, Kowdley, y Harrison}]{rinella2016practice}
+Mary~E Rinella, Zurabi Lominadze, Rohit Loomba, Michael Charlton, Brent~A
+  Neuschwander-Tetri, Stephen~H Caldwell, Kris Kowdley, y Stephen~A Harrison.
+\newblock Practice patterns in nafld and nash: real life differs from published
+  guidelines.
+\newblock \emph{Therapeutic advances in gastroenterology}, 9(1):4--12, 2016.
+
+\bibitem[{Rokach y Maimon(2014)}]{rokach2014data}
+Lior Rokach y Oded Maimon.
+\newblock \emph{Data mining with decision trees: theory and applications}.
+\newblock World scientific, 2014.
+
+\bibitem[{Romero-Aroca et~al.(2018)Romero-Aroca, Valls, Moreno, Sagarra-Alamo,
+  Basora-Gallisa, Saleh, Baget-Bernaldiz, y Puig}]{romero2018clinical}
+Pedro Romero-Aroca, Aida Valls, Antonio Moreno, Ramon Sagarra-Alamo, Josep
+  Basora-Gallisa, Emran Saleh, Marc Baget-Bernaldiz, y Domenec Puig.
+\newblock A clinical decision support system for diabetic retinopathy
+  screening: Creating a clinical support application.
+\newblock \emph{Telemedicine and e-Health}, 2018.
+
+\bibitem[{Romero-Ibarguengoitia et~al.(2017)Romero-Ibarguengoitia,
+  Herrera-Rosas, Dom{\'\i}nguez-Mota, Camas-Benitez, Serratos-Canales,
+  Le{\'o}n-Hern{\'a}ndez, Gonz{\'a}lez-Ch{\'a}vez, L{\'o}pez-Ortiz, Mummidi,
+  Duggirala, y L{\'o}pez-Alvarenga}]{Romero-Ibarguengoitia:2017aa}
+Maria~E Romero-Ibarguengoitia, Arturo Herrera-Rosas, Alfredo~A
+  Dom{\'\i}nguez-Mota, Jinny~T Camas-Benitez, Mar{\'\i}a~F Serratos-Canales,
+  Mireya Le{\'o}n-Hern{\'a}ndez, Antonio Gonz{\'a}lez-Ch{\'a}vez, Eduardo
+  L{\'o}pez-Ortiz, Srinivas Mummidi, Ranvidranth Duggirala, y Juan~C
+  L{\'o}pez-Alvarenga.
+\newblock Nonalcoholic fatty liver disease can be predicted by retinal vascular
+  changes in patients with obesity without hypertension or diabetes.
+\newblock \emph{Eur J Gastroenterol Hepatol}, 29(8):962--967, 2017.
+\newblock \doi{10.1097/MEG.0000000000000900}.
+
+\bibitem[{Romero-Ibarguengoitia et~al.(2018)Romero-Ibarguengoitia,
+  Vadillo-Ortega, Caballero, Ibarra-Gonz{\'a}lez, Herrera-Rosas,
+  Serratos-Canales, Le{\'o}n-Hern{\'a}ndez, Gonz{\'a}lez-Ch{\'a}vez, Mummidi,
+  Duggirala et~al.}]{romero2018family}
+Maria~Elena Romero-Ibarguengoitia, Felipe Vadillo-Ortega, Augusto~Enrique
+  Caballero, Isabel Ibarra-Gonz{\'a}lez, Arturo Herrera-Rosas,
+  Mar{\'\i}a~Fabiola Serratos-Canales, Mireya Le{\'o}n-Hern{\'a}ndez, Antonio
+  Gonz{\'a}lez-Ch{\'a}vez, Srinivas Mummidi, Ravindranath Duggirala, et~al.
+\newblock Family history and obesity in youth, their effect on
+  acylcarnitine/aminoacids metabolomics and non-alcoholic fatty liver disease
+  (nafld). structural equation modeling approach.
+\newblock \emph{PloS one}, 13(2):e0193138, 2018.
+
+\bibitem[{Roufail et~al.(1995)Roufail, Stringer, y Rees}]{roufail1995nitric}
+Edward Roufail, Michelle Stringer, y Sandra Rees.
+\newblock Nitric oxide synthase immunoreactivity and nadph diaphorase staining
+  are co-localised in neurons closely associated with the vasculature in rat
+  and human retina.
+\newblock \emph{Brain research}, 684(1):36--46, 1995.
+
+\bibitem[{Rung et~al.(2009)Rung, Cauchi, Albrechtsen, Shen, Rocheleau,
+  Cavalcanti-Proen{\c{c}}a, Bacot, Balkau, Belisle, Borch-Johnsen
+  et~al.}]{rung2009genetic}
+Johan Rung, St{\'e}phane Cauchi, Anders Albrechtsen, Lishuang Shen, Ghislain
+  Rocheleau, Christine Cavalcanti-Proen{\c{c}}a, Fran{\c{c}}ois Bacot, Beverley
+  Balkau, Alexandre Belisle, Knut Borch-Johnsen, et~al.
+\newblock Genetic variant near irs1 is associated with type 2 diabetes, insulin
+  resistance and hyperinsulinemia.
+\newblock \emph{Nature genetics}, 41(10):1110, 2009.
+
+\bibitem[{Samson y Garber(2014)}]{samson2014metabolic}
+Susan~L Samson y Alan~J Garber.
+\newblock Metabolic syndrome.
+\newblock \emph{Endocrinology and Metabolism Clinics}, 43(1):1--23, 2014.
+
+\bibitem[{Sberna et~al.(2018)Sberna, Bouillet, Rouland, Brindisi, Nguyen,
+  Mouillot, Duvillard, Denimal, Loffroy, Verg{\`e}s, Hillon, y
+  Petit}]{Sberna:2018aa}
+A~L Sberna, B~Bouillet, A~Rouland, M~C Brindisi, A~Nguyen, T~Mouillot,
+  L~Duvillard, D~Denimal, R~Loffroy, B~Verg{\`e}s, P~Hillon, y J~M Petit.
+\newblock European association for the study of the liver (easl), european
+  association for the study of diabetes (easd) and european association for the
+  study of obesity (easo) clinical practice recommendations for the management
+  of non-alcoholic fatty liver disease: evaluation of their application in
+  people with type 2 diabetes.
+\newblock \emph{Diabet Med}, 35(3):368--375, 2018.
+\newblock \doi{10.1111/dme.13565}.
+
+\bibitem[{Shah y Gardner(2017)}]{Shah:2017aa}
+Anjali~R Shah y Thomas~W Gardner.
+\newblock Diabetic retinopathy: research to clinical practice.
+\newblock \emph{Clin Diabetes Endocrinol}, 3:9, 2017.
+\newblock \doi{10.1186/s40842-017-0047-y}.
+
+\bibitem[{Shamah-Levy et~al.(2008)Shamah-Levy, Cuevas-Nasu, Mundo-Rosas,
+  Morales-Ru{\'a}n, Cervantes-Turrubiates, y
+  Villalpando-Hern{\'a}ndez}]{shamah2008health}
+Teresa Shamah-Levy, Luc{\'\i}a Cuevas-Nasu, Ver{\'o}nica Mundo-Rosas, Carmen
+  Morales-Ru{\'a}n, Leticia Cervantes-Turrubiates, y Salvador
+  Villalpando-Hern{\'a}ndez.
+\newblock Health and nutrition status of older adults in mexico: results of a
+  national probabilistic survey.
+\newblock \emph{Salud publica de Mexico}, 50(5):383--389, 2008.
+
+\bibitem[{Singer(1977)}]{singer1977diagnosis}
+P~Singer.
+\newblock Diagnosis of primary hyperlipoproteinemias.
+\newblock \emph{Zeitschrift fur die gesamte innere Medizin und ihre
+  Grenzgebiete}, 32(9):129--33, 1977.
+
+\bibitem[{Skyler et~al.(2017)Skyler, Bakris, Bonifacio, Darsow, Eckel, Groop,
+  Groop, Handelsman, Insel, Mathieu et~al.}]{skyler2017differentiation}
+Jay~S Skyler, George~L Bakris, Ezio Bonifacio, Tamara Darsow, Robert~H Eckel,
+  Leif Groop, Per-Henrik Groop, Yehuda Handelsman, Richard~A Insel, Chantal
+  Mathieu, et~al.
+\newblock Differentiation of diabetes by pathophysiology, natural history, and
+  prognosis.
+\newblock \emph{Diabetes}, 66(2):241--255, 2017.
+
+\bibitem[{Tanha et~al.(2017)Tanha, van Someren, y Afsarmanesh}]{tanha2017semi}
+Jafar Tanha, Maarten van Someren, y Hamideh Afsarmanesh.
+\newblock Semi-supervised self-training for decision tree classifiers.
+\newblock \emph{International Journal of Machine Learning and Cybernetics},
+  8(1):355--370, 2017.
+
+\bibitem[{Tilg et~al.(2017)Tilg, Moschen, y Roden}]{tilg2017nafld}
+Herbert Tilg, Alexander~R Moschen, y Michael Roden.
+\newblock Nafld and diabetes mellitus.
+\newblock \emph{Nature Reviews Gastroenterology and Hepatology}, 14(1):32,
+  2017.
+
+\bibitem[{Vecchione et~al.(2002)Vecchione, Maffei, Colella, Aretini, Poulet,
+  Frati, Gentile, Fratta, Trimarco, Trimarco et~al.}]{vecchione2002leptin}
+Carmine Vecchione, Angelo Maffei, Salvatore Colella, Alessandra Aretini,
+  Roberta Poulet, Giacomo Frati, Maria~Teresa Gentile, Luigi Fratta, Valentina
+  Trimarco, Bruno Trimarco, et~al.
+\newblock Leptin effect on endothelial nitric oxide is mediated through
+  akt--endothelial nitric oxide synthase phosphorylation pathway.
+\newblock \emph{Diabetes}, 51(1):168--173, 2002.
+
+\bibitem[{Villalpando et~al.(2010)Villalpando, de~la Cruz, Rojas, Shamah-Levy,
+  Avila, Gaona, Rebollar, y Hern{\'a}ndez}]{Villalpando:2010aa}
+Salvador Villalpando, Vanessa de~la Cruz, Rosalba Rojas, Teresa Shamah-Levy,
+  Marco~Antonio Avila, Berenice Gaona, Rosario Rebollar, y Lucia Hern{\'a}ndez.
+\newblock Prevalence and distribution of type 2 diabetes mellitus in mexican
+  adult population: a probabilistic survey.
+\newblock \emph{Salud Publica Mex}, 52 Suppl 1:S19--26, 2010.
+
+\bibitem[{Wang et~al.(2012)Wang, Ou, Julius, Boyer, y Kim}]{wang2012tracking}
+Quan Wang, Yan Ou, A~Agung Julius, Kim~L Boyer, y Min~Jun Kim.
+\newblock Tracking tetrahymena pyriformis cells using decision trees.
+\newblock En \emph{Pattern Recognition (ICPR), 2012 21st International
+  Conference on}, p\'ags. 1843--1847. IEEE, 2012.
+
+\bibitem[{Wolfensberger y Hamilton(2001)}]{Wolfensberger:2001aa}
+T~J Wolfensberger y A~M Hamilton.
+\newblock Diabetic retinopathy--an historical review.
+\newblock \emph{Semin Ophthalmol}, 16(1):2--7, 2001.
+
+\bibitem[{won Lee y Giraud-Carrier(2007)}]{won2007transfer}
+Jun won Lee y Christophe Giraud-Carrier.
+\newblock Transfer learning in decision trees.
+\newblock En \emph{Neural Networks, 2007. IJCNN 2007. International Joint
+  Conference on}, p\'ags. 726--731. IEEE, 2007.
+
+\bibitem[{Ye et~al.(1990)Ye, Laties, y Stone}]{ye1990peptidergic}
+XD~Ye, AM~Laties, y RA~Stone.
+\newblock Peptidergic innervation of the retinal vasculature and optic nerve
+  head.
+\newblock \emph{Investigative ophthalmology \& visual science},
+  31(9):1731--1737, 1990.
+
+\bibitem[{Younossi et~al.(2008)Younossi, Jarrar, Nugent, Randhawa, Afendy,
+  Stepanova, Rafiq, Goodman, Chandhoke, y Baranova}]{Younossi:2008aa}
+Zobair~M Younossi, Mohammed Jarrar, Clare Nugent, Manpreet Randhawa, Mariam
+  Afendy, Maria Stepanova, Nila Rafiq, Zachary Goodman, Vikas Chandhoke, y
+  Ancha Baranova.
+\newblock A novel diagnostic biomarker panel for obesity-related nonalcoholic
+  steatohepatitis (nash).
+\newblock \emph{Obes Surg}, 18(11):1430--7, 2008.
+\newblock \doi{10.1007/s11695-008-9506-y}.
+
+\end{thebibliography}

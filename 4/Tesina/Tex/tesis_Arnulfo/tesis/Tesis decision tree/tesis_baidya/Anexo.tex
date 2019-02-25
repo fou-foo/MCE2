@@ -1,0 +1,222 @@
+\chapter{Anexo}
+
+\section{Regresión logística.}
+
+Los métodos de regresión se han convertido en una parte principal del análisis de los datos, en lo que se refiere a la relación entre las variables respuesta y las explicativas. Se puede distinguir la regresión logística de los otros tipos de regresión, porque la variable respuesta es binaria o dicotómica. Donde la variable respuesta debe ser predicha mediante una probabilidad, y no mediante la predicción de un valor determinado continuo .  
+
+Se puede usar la cantidad $\pi(x) = E(Y|x)$ para representar la media condicional de Y dado x cuando la regresión logística es usada. La ecuación especifica a este modelo es:
+
+\begin{equation}
+\pi(x) = \frac{e^{\beta_0 + \beta_1 x}}{1+ e^{\beta_0 + \beta_1 x}}
+\end{equation}
+
+$\pi(x)$ se puede transformar en la transformación logit:
+
+\begin{equation}
+g(x) = ln[ \frac{\pi(x)}{1 - \pi(x)}]
+= \beta_0 + \beta_1 x
+\end{equation}
+
+La importancia de esta transformación es que g(x) tiene propiedades deseables de un modelo de regresión lineal. El logit, g(x), es lineal en sus parámetros, puede ser continuo y su rango de $- \infty$ a $+\infty$ dependiendo del rango de x.
+
+La cantidad de variables incluidas en el modelo deben ser k-1 variables, siendo K la cantidad de observaciones a predecir.  Por lo que se debe tener cuidado al momento de incluir las variables y no saturar el modelo. 
+
+La selección paso a paso es ampliamente usado en otros tipos de regresiones como en la lineal. Este procedimiento se basa en la selección estadística de las variables "mas importantes" y esta importancia es medida mediante la significancia estadística de los coeficientes de las variables. En la regresión logística se utiliza el mayor cambio de log verosimilitud en relación con un modelo que no contiene la variable.
+
+La selección de variables hacia adelante  (\textbf{Forward},en inglés), es uno de los tres métodos disponibles para la selección automática de variables (los otros son, hacia atras (\textbf{backward}) y exhaustivo (\textbf{exhaustive}).  Estos métodos pueden ser criticados por reunir variables que clínicamente pudieran ser retiradas del modelo y se sugiere siempre agregar variables por expertise del investigador. Sin embargo, en el presente trabajo se utiliza este método ya que en la actualidad no se cuenta con una manera clínica de selección de variables.
+
+A continuación se describe el algoritmo de selección hacia adelante.
+
+\begin{enumerate}
+	\item Paso (0): Inicia con el ajuste del "modelo solo con intercepto" y la evaluación de su log-verosimilitud. Esto es seguido de el ajuste de cada posible variable mediante regresiones logísticas univariadas. Se agregan solo las variables con menor "p valor".
+	\item Paso (1):  Se comienza con el ajuste de la regresión logística, conteniendo ya la primera variable. Se ajusta el siguiente modelo agregando la variable con menor "p valor", y se procede a realizar el paso 2, de otra forma se detiene.
+	\item Paso (2): Se ajusta el modelo conteniendo las dos primeras variables. Dado que la primera variable agregada puede no ser ya significativa (en presencia de la segunda variable), se realiza una eliminación hacia atrás. Esto basado en el cambio en el p valor con o sin la primera variable.
+	\item Paso (3): El paso (3) es idéntico al paso (2). El programa ajusta el modelo que incluye la variable seleccionada durante el paso previo. Este paso continua hasta el paso (s).
+	\item Paso (S): Este paso, ocurre cuando:
+		\begin{enumerate}
+			\item Todas las variables an entrado al modelo ó
+			\item Todas las variables en el modelo tienen p valor, para remover las que tengan menor p valor.
+		\end{enumerate}
+
+\end{enumerate}
+
+\section{Bootstrap}
+
+El ``bootstrap'' es una de las técnicas que ahora es parte de un abanico de pruebas estadísticas no parametricas que comunmente son llamados métodos de remuestreo. Fue definido por Efron en el año 1979  como un procedimiento de remuestreo. El objetivo del bootstrap es estimar un parámetro de los dato (media, mediana o desviación estándar). También se pueden construir intervalos de confianza \cite{chernick2014introduction}.
+
+El elemento básico para el boostraping es la distribución empirica. Esta distribución empirica es solo la distribución discreta que da igual peso a cada punto (ósea probabilidad 1/n). El principio del bootstrap menciona que F es la distribución de la población, y T(F) es la función que define el parámetro a obtener. Nosotros deseamos estimar un parámetro cualquiera de una muestra de $n$ observaciones independientes e igualmente distribuidas. Entonces $F_n$ juega el papel de F y $F_n *$ la distribución bootstrap, tiene el papel $F_n *$ en el proceso de remuestreo.
+
+De esta forma nosotros calculamos la media del parámetro con el que se evalúa el modelo (ej. sensibilidad, especificidad, etc.).
+
+
+\newpage
+\section{Pseudocódigo ID3}
+
+En el siguiente espacio se describirá el pseudocódigo de ID3
+
+\begin{algorithm}
+\SetKwInOut{Create}{Create}
+\SetKwBlock{Otherwise}{Otherwise}{end}
+ID3 (\textbf{Ejemplos}, \textbf{Atributo}, \textbf{Atributos})
+\Create{Un nodo raíz para el árbol; asigna todos los \textit{Ejemplos} a la raíz}
+\If{ Todos los \textbf{Ejemplos} son positivos}{\Return un solo nodo raíz, con etiqueta $=+$}
+\If{ Todos los \textbf{Ejemplos} son negativos}{\Return un solo nodo raíz, con etiqueta $=-$}
+\If{ Los \textbf{Atributos} están vacios}{\Return un solo nodo raíz, con la etiqueta =  el valor mas común de \textbf{Atributo} en \textbf{Ejemplos}}
+\Otherwise{A $\leftarrow$ el atributo de \textbf{Atributos} que mejor clasifica en \textbf{Ejemplos}\\
+El atributo decisión para la raíz $\leftarrow$ A\\
+\ForEach{Posible valor $v_i$ de A}{Agregar una nueva rama debajo de la raíz, correspondiente a la prueba $A = v_i$\\Haz que $\text{Ejemplos}_vi$ sea el subgrupo de \textbf{Ejemplos} que tienen el valor $vi$ para $A$\\
+\If (Esta vacío){$\text{Ejemplos}_{vi}$}{Debajo de esta nueva rama se agrega un nodo hoja con etiqueta = el valor mas común de \textbf{Atributo} en \textbf{Ejemplos}\\ \Else{Debajo esta nueva rama agregar el sub árbol\\
+ID3(\textbf{Ejemplos}, \textbf{Atributo}, \textbf{Atributos}\{A\})}} }
+\Return raíz}
+% viene den el archivo id3 pseudocode
+\end{algorithm}
+\newpage
+
+\section{Pseudocódigo C4.5}
+Se presenta el pseudocódigo del algoritmo C4.5.
+
+
+\begin{algorithm}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFor{ForEach}{foreach}{do}{end}
+\SetKwRepeat{Repeat}{repeat}{until}
+\Input{ atributos valuados en el conjunto de datos D}
+Árbol = \{\}\\
+\If{ D es ``puro'' u otro criterio de paro se cumple}{termina}
+\ForAll{Atributos $\in$D}{Computar el criterio de información teórico si particionamos en a}
+$a_{\text{mejor}}$ = El mejor atributo acorde a los criterios computados antes.\\
+$D_{v}$ = Inducción de los sub-datos de $D$ basados en $a_{\text{best}}$\\
+\ForAll{$D_{v}$}  {$\text{Árbol}_{v} = C4.5(D_v)$ Adjunta el $\text{árbol}_{v}$ a la rama correspondiente del árbol}
+\Return{Árbol}
+\caption{Pseudocódigo de algoritmo C4.5}
+\end{algorithm}
+
+\section{Pseudocódigo del boosting C5.0}
+
+Para describir el desarrollo de este algoritmo, asumiremos que el conjunto de muestras $S$ consiste de $n$ muestras y un sistema de aprendizaje que construye diferentes árboles de decisión. El boosting construye  árboles de decisión de las muestras, esto es, construye $T$ árboles de decisión, y $C^t$ es el árbol de decisión arrojado por el sistema de aprendizaje en el intento $t$ y $C^*$ es el árbol final que es formada al agregar los $T$ árboles de decisión. $w_{i}^{t}$ es el peso de la i-ésima muestra en la prueba $t$ ($i = 1,2,\dots, N; t= 1,2, \dots,T$). $P_{i}^t$ es el factor normalizado de $w_{i}^t$ y $\beta_t$  es el factor que ajusta el peso. También se puede definir una función indicadora:
+
+\begin{equation}
+\theta^t (i) =
+\begin{cases}
+1 \text{, la i-ésima muestra es mal clasificada}\\
+0 \text{, la i-ésima muestra es bien clasificada}
+\end{cases}
+\end{equation}
+
+Los principales pasos para el boosting es el siguiente:
+
+\begin{enumerate}
+	\item Inicializar las variables; ajusta un valor al numero de $T$ (usualmente es 10). Ajusta $t = 1,w_{i}^1 = \frac{1}{n}$.
+	\item Calcula $P_{i}^t = w_{i}^t / \sum^{n}_{i=0} (w_{i}^{t}$, donde $\sum^{n}_{i=0}(P_{i}^{y}) = 1$.
+	\item Sea $P_{i}^t$ el peso de cada muestra y construye $C^t$ bajo esta distribución.
+	\item Calcula la taza de error de $C^t$ como $\epsilon^t = \sum_{i=0}^n (P_{i}^t \theta_{i}^t)$.
+	\item Si $\epsilon^t <$ 0.5, los experimentos se terminan, sea $T = t +1$; de otra forma si $\epsilon^t =0$, los experimentos se terminan, sea $T = t$; de otra forma si $0 <\epsilon^t < 0.5$, ve al paso 6.
+	\item Calcula $\beta^t = \epsilon^t/(1-\epsilon^t)$.
+	\item Ajusta el peso acorde a la tasa de error, que es
+	\[
+	w_{i}^t{t+1} =
+	\begin{cases}
+	w_{i}^t \beta^t ,\text{ la muestra es clasificada equivocadamente.}\\
+	w_{i}^t,\text{ la muestra es clasificada correctamente}.
+	\end{cases}
+	\]
+	\item Si $t = T$, los experimentos son terminados. De otra forma, sea $t = t +1$ y ve al paso 2 para empezar con el nuevo experimento.
+\end{enumerate}
+
+Finalmente, se obtiene el boosted tree $C^*$ sumando los votos de los árboles de decision ($C^1,C^2,\dots,C^T$), donde el voto para $C^t$ vale $log(1/\beta^t)$ unidades.  Esto es $C^* = \sum_{t=1}^T (1/\beta^t)C^t$. Esto significa cuando clasifica una muestra de prueba usando un modelo de árbol de decision, primero, se clasifica esta muestra por $C^t(1\leq t\leq T)$, y podemos tener los $T$ resultados. Entonces se cuentan al final los votos de cada clase acorde al peso de $C^t (1\leq t \leq T)$ y selecciona la clase que tiene el mas alto voto como resultado final. \cite{brijain2014survey}.\par
+
+La poda del árbol producido por el algoritmo C5.0 es hecha desde el punto de vista de la probabilidad en la tasa de mala clasificación; esto es, del intervalo de confianza. Cuando el control de la poda del árbol es llevada por este intervalo de confianza (CF):  mientras mas grande el valor, menos ramas son podadas, mientras mas bajo sea el valor mas ramas son podadas. Así como en el algoritmo C4.5, el valor por default de CF es de 0.25, y asumimos que la tasa de error en la clasificación esta acorde a una distribución binomial.\par
+
+\section{Pseudocódigo de la integración del Look Ahead al algoritmo C4.5 (J48 de Weka).}
+
+\subsection{Pseudocódigo}
+\begin{algorithm}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFor{ForEach}{foreach}{do}{end}
+\SetKwRepeat{Repeat}{repeat}{until}
+
+
+\Input{$S_l$, un conjunto de atributos asignados al Nodo l, en el árbol T; SM (Medición de partición)}
+\Output{MejorSM ($S_l$ (la mejor partición de atributo para el nodo l)}
+Árbol = \{\}\\
+\ForEach{atributos $a_i \in S_l$}{SM($a_i$) $\leftarrow$ Calcular la medida de partición (SM,l,i)
+\\ MejorSM ($S_l$) $\leftarrow$ arg max [SM($a_i$)]
+\\SM$_{Crit} \leftarrow$ Encontrar un valor critico (MejorSM ($S_l$))
+\\ Iniciar un grupo de atributos potencialmente particionables $E_l \leftarrow $ \O
+}
+\ForEach{atributo $a_i \in S_l$}{\If{SM ($a_i$) >$SM_{Crit}$}{$E_l \leftarrow a_i$} }
+Crea t, el arreglo para guardar la evaluación de subárboles
+
+\ForEach{$a_e \in E_l$}{$t_e \leftarrow$ ConstruyeÁrbolJ48 ($a_e$)
+Exactitud ($t_e$) $\leftarrow$ EvaluaÁrbol ($t_e$,ConjuntoValidación$_l$)}
+Encuentra el ``Mejor'' subárbol\\
+\textbf{MejorÁrbol $leftarrow$ arg max Exactitud ($t_e$)}\\
+\textbf{MejorSM($S_l$) $\leftarrow$ MejorÁrbol}\\
+Regresa MejorSM ($S_l$) 
+
+\caption{Pseudocódigo de Look Ahead agregado a J48}
+\end{algorithm}
+
+\section{Pseudocódigo Árbol de Decisión Sensible a Costos}
+
+En esta sección se presenta el pseudocódigo del árbol de decisión sensible a costos:
+
+
+\begin{algorithm}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwInOut{Metodo}{Método}
+\SetKwFor{ForEach}{foreach}{do}{end}
+\SetKwRepeat{Repeat}{repeat}{until}
+
+\Input{Datos de entrenamientos S; el conjuto de atributos C, parámetro $\delta$}
+\Metodo{ACSDT}
+\Output{A árbol de decisión}
+Crea un nodo árbol;\\
+\If{S es puro o C esta vacío}{regresa árbol tiene un nodo hoja;}
+maxQuality = 0; El máximo valor de la función heurística\\
+\tcc{Selecciona el atributo con el mayor valor de función heurística}
+\For{i = 0; i<|C|; i++}{Computa el máximo valor (denotado como maxValue) y el
+minimo valor (denotado como minValue) del atributo $a_i$;
+$cp= \frac{1}{2}(maxValue+minValue)$, $paso=\frac{1}{4}$(maxValue-minValue);\\
+Quality($a_i$) = ASCP(cp,paso);\\
+\If{Quality($a_i$ > maxQuality}{A=$a_i$;maxQuality=Quality(A);}\Else{
+\tcc{Remueve atributo}
+\If{|C|>$\delta$ y Quality($a_i$) < $\frac{1}{\delta}$*maxQuality}{C=C-\{$a_i$}:}}
+\If{maxQuality=0}{regresa árbol;}
+árbol=árbol $\leftarrow$ A; tc(A) =0;
+\tcc{Particiona S en dos conjuntos de datos: S$_1$, S$_2$.}
+Coloca el objeto con VA$_{x_{i}} \leq$
+\caption{Pseudocódigo de Árbol de decisión Sensible a Costos}
+\end{algorithm}
+
+
+\section{Árbol de Decisión Sensible a Costos y con Mirada Adelante Generalizado}
+
+El pseudocódigo del algoritmo propuesto se presenta a continuación.
+
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFor{ForEach}{foreach}{do}{end}
+\SetKwRepeat{Repeat}{repeat}{until}
+\textcolor{red}{Árbol de Decisión Sensible a Costos y con Mirada Adelante Generalizado  (GCSLADT)(D,d)}\\
+\% D: conjunto de datos, d: tamaño de profundidad\\
+\Input{ atributos valuados en el conjunto de datos D}
+\Output{Un GCSLADT}
+\If{ D es ``puro'' u otro criterio de paro se cumple}{termina}
+\ForAll{Atributos $\in$D}{Computar el criterio de \textcolor{red}{\textbf{información teórico}} si particionamos en a}
+$a_{\text{mejor}}$ = El mejor subconjunto de atributos de tamaño d, acorde a los criterios de \textcolor{red}{\textbf{información teórico}} computados antes
+
+%$a_{\text{mejor}}$ = El mejor atributo acorde a los criterios computados antes.\\
+Árbol = Crea una rama de decisión que prueba $a_{mejor}$ en la raíz\\
+$D_{I}$ = Inducción de los sub-datos de $D$ basados en $a_{\text{mejor}}$\\
+\ForAll{$D_{I}$}  {$\text{Árbol}_{v} = (GCSLADT)(D_I,d)$\\
+ Adjunta el $\text{árbol}_{v}$ a la rama correspondiente del árbol}
+\Return{Árbol}
+\end{algorithm}
+
+
+

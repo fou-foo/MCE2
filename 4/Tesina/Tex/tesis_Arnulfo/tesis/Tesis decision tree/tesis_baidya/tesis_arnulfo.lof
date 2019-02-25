@@ -1,0 +1,42 @@
+\select@language {spanish}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Estad\IeC {\'\i }os de la enfermedad hep\'atica cr\'onica\relax }}{11}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Patog\'enesis de la acumulaci\'on de grasa dentro de las c\'elulas del h\IeC {\'\i }gado\relax }}{12}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Comparaci\'on de la prevalencia de sobrepeso y obesidad entre 1999 y 2006 en mujeres de 12 a 19 a\~nos de edad de acuerdo con los criterios propuestos por el IOTF. M\'exico\relax }}{15}
+\contentsline {figure}{\numberline {1.4}{\ignorespaces Captaci\'on de glucosa dependiente de insulina.\relax }}{16}
+\contentsline {figure}{\numberline {1.5}{\ignorespaces Se\~nalizaci\'on post receptor de insulina\relax }}{17}
+\contentsline {figure}{\numberline {1.6}{\ignorespaces Internalizaci\'on de \'acidos grasos de cadena larga a la matriz mitocondrial\relax }}{18}
+\contentsline {figure}{\numberline {1.7}{\ignorespaces Ejemplo de la Beta oxidaci\'on de un acido graso libre.\relax }}{18}
+\contentsline {figure}{\numberline {1.8}{\ignorespaces Acil carnitinas urinarias en sujetos controles\relax }}{20}
+\contentsline {figure}{\numberline {1.9}{\ignorespaces Concentraciones urinarias de acilcarnitinas en personas con DM2.\relax }}{20}
+\contentsline {figure}{\numberline {1.10}{\ignorespaces Distribuci\'on de pacientes en la validaci\'on de SteatoTest}}{23}
+\contentsline {figure}{\numberline {1.11}{\ignorespaces Curva ROC de NASHTest para el diagnostico de NASH por el pat\'ologo en los grupos de entrenamiento y validaci\'on\relax }}{25}
+\contentsline {figure}{\numberline {1.12}{\ignorespaces Niveles del neoepitope CK-18 est\'an significativamente incrementados en el suero de pacientes con NASH\relax }}{26}
+\contentsline {figure}{\numberline {1.13}{\ignorespaces Curvas ROC del modelo en datos de entrenamiento y validaci\'on\relax }}{27}
+\contentsline {figure}{\numberline {1.14}{\ignorespaces Proceso general de la construcci\'on del modelo y su evaluaci\'on\relax }}{29}
+\contentsline {figure}{\numberline {1.16}{\ignorespaces Modelo obtenido para la predicci\'on de diabetes\relax }}{31}
+\contentsline {figure}{\numberline {1.17}{\ignorespaces Diagrama de flujo para la creaci\'on de la aplicaci\'on\relax }}{32}
+\contentsline {figure}{\numberline {1.18}{\ignorespaces \'Arbol de decisi\'on creado por el experto\relax }}{33}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Evoluci\'on del algoritmo de \'arbol de decisi\'on.\relax }}{40}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Ajuste de primera generaci\'on\relax }}{41}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Clasificaci\'on mediante algoritmos de la 2da generaci\'on\relax }}{43}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Ejemplo de el \'arbol de decisi\'on CRUISE\relax }}{44}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Tipos de tareas en Aprendizaje de Transferencia\relax }}{47}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Algoritmos Sensibles a Costos\relax }}{50}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Grupos de pacientes de donde se obtuvieron los datos para la predicci\'on de Diabetes\relax }}{59}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Modelo obtenido del algoritmo C4.5\relax }}{62}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces AUC del modelo obtenido por C4.5\relax }}{63}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Modelo obtenido mediante C4.5 y FS/LR\relax }}{64}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Desempe\~no de los algoritmos mediante bootstrap\relax }}{65}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces \'Arbol obtenido el algoritmo C4.5\relax }}{68}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Modelo propuesto por el algoritmo C5.0\relax }}{68}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Comparaci\'on de los resultados de los algoritmos C4.5 y C5.0 por AUC\relax }}{69}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Validaci\'on cruzada de AUC de algoritmo C5.0\relax }}{72}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces AUC de modelos dados con reducci\'on de dimensiones con FS/LR\relax }}{73}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Desempe\~no de los algoritmos mediante bootstrap\relax }}{74}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Modelo obtenido por C4.5 para la clasificaci\'on de retinopat\IeC {\'\i }a diab\'etica\relax }}{77}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Modelo obtenido por C5.0 para la clasificaci\'on de retinopat\IeC {\'\i }a diab\'etica\relax }}{78}
+\addvspace {10\p@ }
+\addvspace {10\p@ }

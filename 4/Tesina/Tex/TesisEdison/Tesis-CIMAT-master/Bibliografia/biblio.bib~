@@ -1,0 +1,84 @@
+############ MARCO TEORICO - ANTECENDETES ##########################
+@ARTICLE{Vero,
+author = {Veronica M., Adan V., Emily C. and others},
+title = {Admixture in Mexico City: implications for admixture mapping of \Type 2 diabetes genetic risk factors},
+journal = {Hum Genet},
+volume = {120},
+year = {2006}
+
+}
+
+@ARTICLE{Julie,
+author={Julie D.},
+title = {La genética del cáncer de seno en la familia puertorriqueña},
+journal = {Revista Puertorriqueña de Medicina y Salud Pública},
+year = {}
+}
+
+
+
+############# MARCO TEORICO - DEFINICION DEL PROBLEMA ##################
+
+@ARTICLE{INEGI,
+author = {INEGI},
+title = {Estadisticas a proposito del...dia mundial contra el cancer(4 de febrero)},
+journal = {Cubos dinamicos},
+year = {2016}
+}
+
+@ARTICLE{Weinberg,
+author = {Weinberg RA.},
+title = {Finding the Anti-Oncogene},
+journal = {Scientific American},
+volume = {259},
+year = {1988}
+
+}
+
+@ARTICLE{INSP,
+author = {Instituto Nacional de Salud Publica},
+title = {Cancer de colon y recto},
+journal = {https:// www.insp.mx/infografias/cancer-colon-recto.html},
+year = {Ultima actualizacion en Septiembre del 2015}
+}
+
+@ARTICLE{Dario,
+author = {Dario B., Martin A., Miguel Angel C. and others},
+title = {Epidemiology of colorectal cancer in patients under 50 years old in the Hospital Juárez of México},
+journal = {Endoscopia},
+volume = {24},
+year = {2016}
+
+}
+
+
+@ARTICLE{Beatriz,
+author = {Beatriz P., Domingo R., Norberto D.},
+title = {Analisis de datos de expresion genetica},
+journal = {Jornadas de Automatica},
+year = {2006}
+
+}
+
+@BOOK{Paulino,
+author = {Paulino M., Antonio F.},
+year = 2009,
+title = {Genetica y Genomica en Acuicultura},
+edition = 2,
+publisher = {Fundacion Observartorio Español de Acuicultura},
+adress = {España, Madrid}
+}
+
+@PHDTHESIS{Domingo,
+author = {Domingo Rodriguez},
+title = {Análisis de datos de Expresión Genética mediante técnicas de Biclustering},
+school = {Universidad de Sevilla},
+year={2006}
+
+
+
+
+
+
+
+

@@ -1,0 +1,88 @@
+\section{Algoritmo Utilizado:  Árbol de Decisión Sensible a Costos y con Mirada Adelante Generalizado}
+
+Después de la revisión de literatura médica y de los diferentes algoritmos existentes de árboles de decisión, se tienen en mente diferentes problemas a la hora de realizar el análisis de este tipo de datos. Y estos incluyen:
+
+\begin{enumerate}
+\item Datos desbalanceados. Los grupos de las diferentes etiquetas no son iguales.
+\item Posible error al seleccionar de variables. Siendo los datos de muy alta dimensionalidad, se puede presentar la ocasión de que la selección de determinada variable pueda hacer crecer un árbol con una tendencia a la mala clasificación de pacientes.
+\end{enumerate}
+
+Por estos problemas se decide proponer un algoritmo que incluya la solución (al menos parcial) de estos problemas: el Algoritmo Cost Sensitive Look Ahead Decision Tree. 
+
+En este algoritmo se utiliza el criterio de información basado en la reducción de la entropía, siempre tomando en cuenta primeramente a la variable que maximiza esta reducción $G(k,l)$.
+
+\begin{itemize}
+\item $(k^*,\tau^*) = \text{argmax}_{k,\tau} G(k,\tau) $
+
+\item Donde $G(k,\tau) =  E_{antes} - E_{despues}$.
+\item $E$ denota la entropía, que es una medida de incertidumbre en los datos.
+
+\item $E_{antes}$ y $E_{despues}$, denotan la entropía antes y después de la partición.\par
+
+\item $E_{antes} = E(D) =  \sum^m_{i=1} f(w_i,D) p(c_i,D) log_2 (p(c_i,D))$
+
+\item $E_{despues} = \frac{|D_l (k,\tau)|}{|D|} E(D_l(k,\tau)) + \frac{|D_r(k,\tau)|}{|D|} E(D_r(k,l)) $
+
+\item Donde D denota conjunto de entrenamiento, $C = \{c_1,c_2,\cdots,c_m\}$, denota el indice nivel de clase,
+\item $D = \{(\textbf{v},y)\}$, $\textbf{v} = \{v_1, v_2,\cdots, v_M\} $ 
+\item $\text{ es matriz de características,}$ $y\text{ pertenece al nivel }\\\text{de clase de cada muestra}$.
+
+\item Tuple $(k,\tau)$ divide el conjunto de entrenamiento $D = \{(\textbf{v},y)\}$ en dos subconjuntos : 
+\begin{itemize}
+\item $D_l(k,\tau) = \{(\textbf{v},y) | v_k \leq \tau$\\
+\item $D_r(k,\tau) = D\textbackslash D_l (k,\tau) $
+\end{itemize}
+\item $E(D_l(k,\tau)) =  \sum^m_{i=1} f(w_i,D_l) p(c_i,D_l) log_2 (p(c_i,D_l))$\\
+\item $E(D_r(k,\tau)) =  \sum^m_{i=1} f(w_i,D_r) p(c_i,D_r) log_2 (p(c_i,D_r))$
+\end{itemize}
+\newpage
+
+A esta forma de particionar los datos, se le puede sumar la posibilidad de agregar un peso a eventos de errores de clasificación. Esto es hacer costo sensible al algoritmo, se puede ver en la siguiente tabla de contingencia que los errores que deben ser pesados (y disminuidos) son los falsos positivos y falsos negativos.
+\vspace{2cm}
+\begin{table}[h]
+\centering
+\begin{tabular}{c|c|c}
+& Actual Positivo & Actual Negativo \\
+Predicho positivo & $C_{TP_{i}}$ & $C_{FP_{i}}$\\
+Predicho Negativ & $C_{FN_{i}}$ & $C_{TN_{i}}$
+\end{tabular}
+\caption{Matriz Costos de clasificación\cite{bahnsen2015ensemble}}
+\end{table}
+\vspace{2cm}
+
+
+\begin{tcolorbox}[title = Árbol de decisión sensible a costos, title filled]
+$f(w_i,D) = \frac{\sum^m_{i=1,c\neq i}|D(c_i)|}{|D|}$\\~\\ $|D(c_i)| =$ \# de observaciones  en D pertenecientes a clase $c_i$.
+$f(w_i,D) = 1 \forall i $ para árboles de decisión no sensibles a costo 
+\end{tcolorbox}
+\newpage
+
+
+\section{Forma de evaluar la efectividad de los árboles de decisión}
+
+Se decide agregar esta sección de "Forma de evaluación de la efectividad de los árboles de decisión" para tener una mayor conocimiento en las definiciones de los términos utilizados.  La mayoría de los términos son utilizados en la literatura médica y su entendimiento por los mismos profesionales es claro; sin embargo no necesariamente lo es para los profesionales de las otras ramas.  Sin mas se describen los términos
+
+Uno de los términos mas importantes es el de la exactitud (\textbf{accuracy}, en inglés). Este define el porcentaje sujetos que son correctamente clasificados. Se incluyen los adecuadamente clasificados como ej. positivo o negativo.
+
+Otro de los términos utilizados en las pruebas medicas es la sensibilidad (\textbf{sensitivity}, en inglés) que es la habilidad de una prueba de dar un resultado positivo en casos verdaderos de enfermedad. La especificidad (\textbf{specificity}, en inglés) es la habilidad de dar un resultado negativo en caso de que la enfermedad este ausente. Ambas son probabilidades y son expresadas en porcentaje. Para calcular ambas características de las pruebas se determinan los casos verdaderos y falsos positivos; esto es: cuantos de los sujetos son clasificados correcta e incorrectamente.  Podemos observar la formula de ambas a continuación:
+
+\begin{equation}
+\text{Sensibilidad } = \frac{TP}{TP + FN}
+\end{equation}
+
+\begin{equation}
+\text{Especificidad } = \frac{TN}{TN + FP}
+\end{equation}
+
+Otros términos que se agregaron a la evaluación del modelo son las probabilidades post test. Estas probabilidades son por así decirlo, la inversa de la sensibilidad y la especificidad. Y se refieren a la probabilidad de que un paciente tenga una enfermedad ya que tiene la prueba positiva (\textbf{valor predictivo positivo}) o de que no la tenga si tiene una prueba negativa (\textbf{valor predictivo negativo}). Las formulas de estas probabilidades se muestran a continuación\cite{indrayan2017medical}:
+
+\begin{equation}
+\text{Valor predictivo positivo } = \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}
+\text{Valor predictivo negativo } = \frac{TN}{TN + FN} 
+\end{equation}
+
+Se hace mención también que en la sección de anexo, se tendrá la oportunidad de revisar un poco sobre el tema de regresión logística y la selección hacia adelante de variables (Forward selection), así también se revisará un poco sobre la técnica de bootstrap. 
+

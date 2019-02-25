@@ -1,0 +1,312 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Capítulo 3: NOMBRE                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%(require 'iso-transl)
+
+\chapter{Elementos probabil\'isticos y metodolog\'ia}
+En este capítulo, se describe la introducción al desarollo de la tesis, los m\'etodos de computaci\'on para el procesamiento de los datos y su an\'alisis. De manera similar, los elementos probabil\'isticos para el an\'alisis de datos. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                          Descripción de la planta                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Modelo probabil\'istico}
+
+Las bases de datos t\'ipicas para la estimaci\'on de la ancestr\'ia consiste en genotipos en un gran n\'umero \texttt{J} de SNPs de un gran n\'umero \texttt{I} de individuos no relacionados. Como en cualquier parte del mundo, estos individuos provienen de una poblaci\'on mixta con contribuciones de poblaciones ancestrales postuladas por \texttt{K}. La poblaci\'on \texttt{k} contribuye con una fracci\'on $q_{ik}$ de un gemona $i's$ individual. Por lo tanto, el alelo 1 en el SNP \texttt{j} tiene la frecuencia $f_{kj}$ en la poblaci\'on \texttt{k}.\\
+
+Puede ser que el alelo 1 sea el alelo menor y el alelo 2 sea el alelo principal o viceversa, no importa ya que esto deriva al mismo resultado. Lo que realmente importa es que tanto el la fracci\'on de contribuci\'on $q_{ik}$ y la frecuencia $f_{kj}$ son desconocidas. Por lo tanto, es necesario estimar a $q_{ik}$ para saber la ascendencia en un estudio de asociaci\'on , pero tambi\'en enfoc\'andonos en la estimaci\'on de $f_{kj}$. Esto nos permite estimar el grado de divergencia entra las poblaciones ancestrales estimadas utilizando la estad\'istica $F_{ST}$. \\
+
+El modelo estad\'istico de likelihood que adopta ADMIXTURE viene de STRUCTURE, donde los individuos est\'an formados por la uni\'on aleatoria de gametos, lo que produce las proporciones binomiales\\
+
+\begin{equation}
+  \begin{array}{l}
+  Pr(\textup{1/1 para cada i en el SNP j}) = [\sum_{k} q_{ik}f_{kj}]^{2}\\
+  Pr(\textup{1/2 para cada i en el SNP j}) = 2[\sum_{k}q_{ik}f_{kj}][\sum_{k}q_{ik}(1-f_{kj})]\\
+  Pr(\textup{2/2 para cada i en el SNP j}) = [\sum_{k}q_{ik}(1-f_{kj})]^{2}.
+  \end{array}
+  \end{equation}\\
+
+Este modelo realiza una suposici\'on adicional de equilibrio de ligamento (linkage equilibrium) entre los marcadores. Adem\'as de que los conjuntos grandes o densos de marcadores deben ser podados con el proposito de mitigar el desequilibrio de ligamento (LD) de fondo.\\
+
+Por otro lado, el registro de los datos se realiza por recuentos. Por lo tanto, $g_{ij}$ representa el n\'umero observado de copias de alelo 1 en el marcador \texttt{j} de la persona \texttt{i}. En consecuencia, $g_{ij}$ puede ser igual a 0,1 o 2 de acuerdo al genotipo 2/2,1/2 o 1/1 de la persona \texttt{i} en el marcador \texttt{j}. Si consideramos que los individuos son independientes, que para todos los casos as\'i se consideran, la funci\'on loglikehood de la muestra entera es\\
+
+\begin{equation}
+  L(Q,F) = \sum_{i}\sum_{j}{g_{ij}ln[\sum_{k}q_{ik}f_{kj}] + (2-g_{ij})ln[\sum_{k}q_{ik}(1-f_{kj})]}.
+\end{equation}
+
+Se observa que los par\'ametros $Q={q_{ik}}$ y $F={f_{kj}}$ con dimensiones $IXK$ y $KXJ$ respectivamente, dando un total de $K(I + J)$ par\'ametros. En un ejemplo real, si consideramos que $I=1000$, $J=10,000$ y $K=3$, se tendr\'ian que estimar alrededor de 33,000 par\'ametros. Este n\'umero hace que el m\'etodo de Newton no sea factible. El espacio requerido para la matriz hesiana es demasiado grande, y su matriz inversa de esta es computacionalmente costosa.
+
+\section{Algoritmo de relajaci\'on de bloques} \label{sec:BR}
+
+El algoritmo de relajaci\'on de bloques es diferente a los m\'etodos de descenso de coordenadas, los cuales tienen la gran ventaja de que conducen a problemas de optimizaci\'on unidimensional, siendo muchos m\'as sencillos que los multidimensionales. En la mayor\'ia de los casos reales tenemos problemas multidimensionales como en el \'area de la g\'enetica. A continuaci\'on se dar\'a una definici\'on breve del algoritmo de relajaci\'on de bloques(BR) \cite{deLeeuw}.\\
+
+El m\'etodo de relajaci\'on de bloques se define matematicamente como m\'etodos de punto fijo. De manera general se da una descripci\'on de los m\'etodos de punto fijo. Se llama un punto fijo a un punto que satisface la siguiente ecuaci\'on.\\
+
+\begin{equation}
+  x=g(x)
+\end{equation}
+
+El teorema del punto fijo define a \texttt{D} como un conjunto, y busca condiciones en \texttt{D} y \texttt{g} que garantizen la existencia de \texttt{x}; condiciones que garantizan unicidad (no obligatoriamente). Para ello se puede utilizar el m\'etodo de iteracci\'on de punto fijo que se muestra en la tabla \ref{table:br}. \\
+
+
+\begin{table} [H]
+     \centering
+  \begin{tabular}{|l|}
+ 
+    \hline \hline
+    \textbf{Algoritmo} Fixed Point Iteration \\
+    \hline \hline
+    
+   
+    \textbf{1.} Dada una ecuaci\'on f(x) = 0 \\
+    
+    \textbf{2.} Convertimos la ecuaci\'on f(x)=0 a la forma x = g(x)\\
+    
+    \textbf{3.} Damos un valor inicial aleatorio para $x_{0}$\\
+    
+    
+    \textbf{4.} Do  \\
+
+     \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textbf{$x_{i+1} = g(x_{i})$}\\
+ 
+    \textbf{5.} while(no se cumpla ninguno de los dos criterios de convergencia \texttt{C1} o \texttt{C2})\\
+      
+    \hline
+    
+  \end{tabular}
+  \caption{Descripci\'on algoritmo Fixed Point Iteration}
+  \label{table:br}
+\end{table}
+
+
+\begin{itemize}
+\item \texttt{C1}: Se corrigi\'o apriori el n\'umero total de iteracciones N
+\item \texttt{C2}: Al probar la condici\'on $|x_{i+1}-g(x_{i})|$ (donde \textbf{i} es el n\'umero de iteracciones) con un limite de tolerancia $\epsilon$, donde se fija el apriori. 
+\end{itemize}
+
+
+Entendiendo el concepto del m\'etodo punto fijo, se consider\'o la siguiente condici\'on general para el algoritmo de relajaci\'on de bloques. Se minimizo la funci\'on \textbf{f} de valor real en el conjunto de productos $X = X_{1} \otimes X_{2} \otimes ... \otimes X_{p}$, donde $X_{s} \subseteq \mathsf{R}^{n_{s}
+}$  .\\
+
+Para minimizar esta funci\'on se utiliza el siguiente m\'etodo iterativo (Tabla \ref{table:MI}, que tiene su base en el algoritmo iterativo anterior \ref{table:br}.\\
+
+\begin{table} [H]
+  \centering
+  \begin{tabular} {|l|}
+    \hline
+    Comenzar: \ \ \ \ \ \ \ \ \ \ \ \ \ \  Empezar con $x^{(0)} \in X$ \\
+    \hline
+    Paso k.1:  \ \ \ \ \ \ \ \ \ \ \ \ \ \ $x_{1}^{k+1} \in \underset{x_{1} \in X_{1}}{\operatorname{argmin}} f(x_{1},x_{2}^{k},...,x_{p}^{k}).$ \\
+    
+    Paso k.2:  \ \ \ \ \ \ \ \ \ \ \ \ \ \  $x_{2}^{k+1} \in \underset{x_{2} \in X_{2}}{\operatorname{argmin}} f(x_{1}^{k+1},x_{2},x_{3}^{k}...,x_{p}^{k}).$ \\
+    
+    \ \ \ \ \ ...  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ... \\
+    
+    Paso k.p:  \ \ \ \ \ \ \ \ \ \ \ \ \ \   $x_{p}^{k+1} \in \underset{x_{p} \in X_{p}}{\operatorname{argmin}} f(x_{1}^{k+1},...,x_{p-1}^{k+1},x_{p}).$ \\
+    \hline
+    Motor: k $\leftarrow$ k + 1 e ir hacia k.1 \\
+    \hline
+    
+  \end{tabular}
+  \caption{M\'etodo iterativo}
+  \label{table:MI}
+\end{table}
+
+En este m\'etodo iterativo se puede observar que existen m\'inimos en la subetapas, pero no necesitan ser \'unicos (aunque se espera que esta condici\'on exista). El argumento de m\'inimo son mapas punto a punto, aunque en muchos casos se asignan en singletons (conjunto con exactamente un elemento). En los problemas reales se har\'an c\'alculos con selecci\'on del argmin.\\
+
+
+\section{Acelaraci\'on de convergencia}\label{sec:cn}
+
+Como es bien conocido, los algoritmos EM no son en su defecto de altas tasas de convergencia. De manera similar, en el esquema de relajaci\'on de bloques, aunque es m\'as r\'apido que los algoritmos EM, a\'un tiene poca potencia de convergencia, por tanto es necesario utilizar un acelador de convergencia. A continuaci\'on se describe un m\'etodo g\'enerico que se us\'o junto con el software ADMIXTURE \cite{}.\\
+
+Se supone que un algoritmo est\'a definido por un mapa de iteraci\'on $x^{n+1} = M(x^{n})$. Dado que el punto \'optimo es un punto fijo del mapa de iteraci\'on, uno puede intentar encontrar el punto \'optimo aplicando el m\'etodo de Newton a la ecuaci\'on $x-M(x)=0$. Debido a que la diferencial $dM(x)$ muestra resistencia al computar, entonces los m\'etodos cuasi-Newton buscan aproximarlo mediante condiciones secantes que involucran repeticiones previas. Para mantener la complejidad computacional bajo control, se limita el n\'umero de condiciones de la secante durante la aceleraci\'on, as\'i evitando un sobreajuste de operaciones. Adem\'as este m\'etodo tiene las ventajas de evitar el almacenamiento y la inversión de matrices grandes y preservar las restricciones lineales de igualdad. Para mantener la complejidad computacional bajo control, se limit\'o el número de condiciones de la secante durante la aceleración. La propiedad de ascenso del algoritmo EM y la relajación del bloque son útiles para monitorear la aceleración. Cualquier paso acelerado que lleve cuesta abajo es rechazado a favor de un paso ordinario. Los pasos acelerados no dependen necesariamente de las restricciones, por lo que las actualizaciones de los parámetros están cayendo fuera de sus regiones factibles \cite{Zhou2011}.
+
+\section{Algoritmo EM} \label{sec:EM}
+
+A trav\'es del programa de ADMIXTURE se us\'o el algoritmo EM de FRAPPE que b\'asicamente actualiza los par\'ametros a trav\'es de lo siguiente: \\
+
+\begin{equation}
+  f_{kj}^{n+1} =  \frac{\sum_{i}g_{ij}a_{ijk}^{n}}{\sum_{i}g_{ij}a_{ijk}^{n} + \sum_{i}(2-g_{ij})b_{ijk}^{n}},
+\end{equation}
+
+\begin{equation}
+  q_{ik}^{n+1} = \frac{1}{2J} \sum_{j}[g_{ij}a_{ijk}^{n} + (2-g_{ij})b_{ijk}^{n}],
+\end{equation}
+
+por simplicidad y conveniencia lo definimos de la siguiente forma,\\
+
+\begin{center}
+$a_{ijk}^{n} = \frac{q_{ik}^{n}f_{kj}^{n}}{\sum_{m}q_{im}^{n}f_{mj}^{n}}$,$b_{ijk}^{n} = \frac{q_{ik}^{n}(1-f_{kj}^{n})}{\sum_{m}q_{im}^{n}(1-f_{mj}^{n})}$\\
+\end{center}
+  
+\noindent como es conocido, los algoritmos EM son de lenta convergencia y el que utiliza el programa FRAPPE no es la excepci\'on, por eso se usa la aceleraci\'on de convergencia. Aunque es necesario realizar y conocer el estado o diagnosticar la convergencia, una manera simple es declarar la convergencia una vez que los loglikelihoods susecivos cumplan lo siguiente
+
+\begin{equation}
+  L(Q^{n+1},F^{n+1})-L(Q^{n},F^{n}) < \epsilon,
+\end{equation}
+
+\noindent donde el software ADMIXTURE usa en principio un valor epsilon igual a $10^{-4}$, mientras que para FRAPPE el valor de $\epsilon$ es 1. Esto es diferente dado que ADMIXTURE ha tenido mejores estimaciones con un epsilon pequeño o muy menor a 1. Por tanto, se determin\'o que el valor de $\epsilon$ es $10^{-4}$. 
+
+
+\section{Tratamiento computacional de los datos}
+
+Como se mencion\'o en el apartado \ref{sub:geno}, las bases de datos en este estudio est\'an en formato \textit{.ped} y \textit{.map}. En un primer acercamiento se visualiz\'o la dimensi\'on de los datos. El archivo .map tiene \texttt{1,006,658} registros (SNPs), y cuatro columnas. Mientras que el archivo .ped consta de \texttt{1712} \texttt{ (881 casos con CCR y 831 casos controles sanos, de los cuales la proporci\'on de g\'enero es 1012 hombres y 700 mujeres)} registros, que pasar\'on el control de calidad, con \texttt{6,893,628,847} columnas. El peso de los archivos son de \texttt{25 Mb} y \texttt{6.9 Gb} respectivamente.\\
+
+Los archivos contienen la informaci\'on de los genotipos de los individuos genotipados en el proyecto CHIBCHA. Los datos fueron expuestos a sucesivos controles de calidad en base a diversos criterios t\'ecnicos y en base a par\'ametros poblacionales de la poblaci\'on mexicana.\\
+
+El procesamiento de los datos y su an\'alisis se realiz\'o mediante el apoyo del servidor perteneciente al \textbf{CIMAT unidad Monterrey}. La capacidad del servidor es de \texttt{32 Gb} en memoria RAM y \texttt{8} n\'ucleos. Se utiliz\'o la configuraci\'on de c\'omputo en threads (4 threads) para realizar un menor tiempo de an\'alisis.
+
+
+\section{Validaci\'on cruzada y la estimaci\'on del par\'ametro K}
+
+El software ADMIXTURE permite elegir el n\'umero de poblaciones ancestrales, \textbf{K}. Este n\'umero es realmente importante y en muchos casos no sabemos de cu\'antas poblaciones ancestrales han descendido nuestras muestras.\\
+
+Por tanto, para estimar el n\'umero de poblaciones (\textbf{K}) que representar\'a a la muestra es necesario tomar en consideraci\'on las siguientes suposiciones:
+
+\begin{itemize}
+\item Suponemos que hay \textbf{K} poblaciones ancestrales $A_{1},...,A_{K}$ que se han estado mezclando por \textbf{g} generaciones.
+\item Las poblaciones ancestrales son desconocidas y pueden implicar frecuencias de alelos diferentes en cada repetici\'on
+\end{itemize}
+
+Tomando en cuenta las anteriores suposiciones y entendiendo que existen K poblaciones en nuestra muestra, se consider\'o utilizar el m\'etodo de validaci\'on cruzada que nos permite evaluar la capacidad predictiva de los posibles modelos para ayudar a determinar el n\'umero adecuado de componentes que se deben conservar en el modelo, en nuestro caso los componentes se reduce a obtener el valor K. Adem\'as, el m\'etodo de validaci\'on cruzada es la mejor opci\'on si no se sabe cu\'al es el n\'umero \'optimo de componentes (n\'umero de poblaciones ancestrales).\\
+
+Esta estimaci\'on para identificar el ``mejor'' valor para K (n\'umero de poblaciones) se puede realizar de diferentes formas, por ejemplo, uno de los programas con mayor referencia en estos tipos de estudio \textit{STRUCTURE} (\url{http://pritch.bsd.uchicago.edu/structure.html}) usa un modelo de evidencia para K definido como:
+
+\begin{center}
+  $Pr(G|K) = \int f(G|Q,P,K)\pi(Q,P|K)dQdP$
+\end{center}
+
+\noindent aproximando esta integral por el m\'etodo Monte Carlo combinado con una distribuci\'on apriori no informativa a trav\'es del Teorema de Bayes para obtener las probabilidades posteriores Pr(k|G). \\
+
+Por otro lado, ADMIXTURE utiliza el procedimiento de \textit{Cross-validation} para identificar el valor de \textbf{K}. Este procedimiento divide los genotipos observados en v=5 (por defecto) folds de aproximadamente el mismo tamaño. El procedimiento enmascara (es decir, convierte a ``MISSING'') todos los genotipos, para cada fold a su vez. Es decir, para cada fold, el conjunto enmascarado \ltilde{G} resultante es usado para calcular las estimaciones $\tilde{\theta}$ = ($\tilde{Q}$,$\tilde{P}$). Cada genotipo enmascarado \textit{$g_{ij}$} se predice por
+
+\begin{center}$\hat{\mu}_{ij} = E[g_{ij}|\tilde{Q},\tilde{P}] = 2\Sigma_{k}\tilde{q}_{ij}\tild\tilde{P}_{kj}$, \end{center}
+
+\noindent y el error de predicci\'on es estimado por el promedio de los cuadrados de la desvianza residual para el modelo binomial, a trav\'es de todas las entradas enmascaradas sobre todos los folds \cite{Yushi,Admixture}.\\
+
+\begin{equation}
+  d(n_{ij},\tilde{\mu}_{ij}) = n_{ij}log(n_{ij}/\tile{\mu}_{ij}) + (2-n_{ij})log[(2-n_{ij})/(2-\tilde{\mu}_{ij})]
+\end{equation}
+
+Por tanto, dado la situaci\'on \'etnica de M\'exico y el conocimiento de la historia del mismo, se decidi\'o realizar cinco ejecuciones y obtener el error de validaci\'on para estas posibles poblaciones ancestrales en nuestra muestra. Adem\'as, dado la dimensi\'on de los datos y la complejidad de la misma no se realizaron otras inferencias de n\'umero de poblaciones que no tuvieran mayor relevancia para esta primera b\'usqueda.\\
+
+Cada ejecuci\'on fue inicializada con una random seed de valor \texttt{43}, por lo que nos ayuda a que cada inferencia para cada rango no se tome distintos bloques de poblaciones. El valor delta para la convergencia fue de \texttt{0.0005}, este valor ya viene predeterminado por el mismo programa aunque da la oportunidad de poder cambiarlo. En nuestro caso no fue necesario ya que se ha probado que este valor es muy bueno para inferir el n\'umero de poblaciones. El n\'umero de iteraciones para la convergencia y el tiempo de corrida se muestra en la tabla \ref{tabla:K}\\
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|1|1|1|}
+  
+\hline \hline
+\# de poblaciones & \# de iteracciones & Tiempo de ejecuci\'on (min)\\
+\hline
+2 & 33 & 311\\
+\hline
+3 & 59 & 645\\
+\hline
+4 & 73 & 922 \\
+\hline
+5 & 94 & 1322\\
+\hline
+& TOTAL & 3200 (53 hrs.)\\
+
+\hline \hline
+
+\end{tabular}
+\caption{Ejecuci\'on para la b\'usqueda del mejor K}
+\label{tabla:K}
+\end{table}
+
+
+Al obtener el valor del n\'umero de poblaciones (\textbf{K}=3), se procedi\'o a realizar la estimaci\'on de ancestr\'ia con las bases de datos \texttt{.ped} y \texttt{.map} aunado con las bases de datos del proyecto \texttt{1000Genomes} en formato PLINK.
+
+\section{Fst de Wright}
+
+La distribuci\'on emp\'irica  \textbf{$F_{ST}$} es uno de los tres estad\'isticos F, tambi\'en conocidos como \'indices de fijaci\'on, que se us\'o para describir el nivel esperado de heterocigocidad en las tres poblaciones estudiadas. El concepto de heterocigocidad se define al heredar dos formas diferentes de un gen en particular, una de cada progenitor \cite{Hetero}. \\
+
+De manera similar, \cite{Wright} define al estad\'istico $F_{ST}$ como la correlaci\'on de alelos (variantes de un gen) extra\'idas al azar de la misma poblaci\'on en relaci\'on con la poblaci\'on total, donde la poblaci\'on total puede verse como la combinaci\'on de dos muestras de poblaciones.\\
+
+Aunque el estad\'istico F tambi\'en puede ser definido como una medida de la correlaci\'on entre genes muestrados a diferentes niveles de una poblaci\'on subvidida jer\'arquicamente, los autores \cite{Gaurav} han tomado en consideraci\'on que la definici\'on m\'as apegada en g\'enetica de poblaciones es la que menciona \cite{Weir} ``como la correlaci\'on entre los alelos extra\'idos aleatoriamente de una sola poblaci\'on en relaci\'on con la poblaci\'on ancestral com\'un m\'as reciente'',
+
+\begin{align}
+  E[p_{i}^{s} | p_{anc} ^{s}] = p_{anc}^{s} \\
+  Var(p_{i}^{s} | p_{anc}^{s}) = F_{ST}^{i} p_{anc}^{s}(1-p_{anc}^{s})
+\end{align}
+
+donde $p_{i}^{s}$ es la frecuencia al\'elica del alelo derivado de la poblaci\'on $i$, en el SNP $s$, mientras que $p_{anc}^{s}$ es la frecuencia al\'elica del alelo derivado de la poblaci\'on ancestral en el SNP $s$, y $F_{ST}^{i}$ es la poblaci\'on especifica $F_{ST}$ para la poblaci\'on $i$. Por ejemplo, para un par de poblaciones, la distribuci\'on $F_{ST}$ es,
+
+\begin{equation}
+  F_{ST} = \frac{F_{ST}^{1} + F_{ST}^{2}}{2}
+\end{equation}
+
+\section{Estimaci\'on de la relaci\'on con el c\'ancer colorrectal}
+
+En el caso de la estimaci\'on de ancestr\'ia se defini\'o en primera instancia el tipo de an\'alisis a usar. En nuestro caso, al no conocer las poblaciones apriori, una forma eficiente de estimar la ascendencia individual es proyectar nuestras muestras a la problaci\'on aprendida (frecuencias al\'elicas) aprendidas de los paneles de referencia. Este tipo de analisis de le denomina \texttt{"Projection Analysis"}, el cual toma como referencia una base de datos de proyectos de genomas ya establecidos como 1000Genomes, HapMap en combinaci\'on con la muestra del estudio para estimar la ancestralidad usando el m\'etodo no supervisado de ADMIXTURE. \\
+
+Anteriormente, el equipo de trabajo de Uruguay, en el mismo contexto, obtuvo 75 SNPs que mostrar\'on asociaci\'on con la predisposici\'on de producir c\'ancer colorrectal y que pasaron una prueba multesting, de los cuales 12 SNPs (\ref{table:1}) tuvier\'on un valor significante en la prueba Bonferroni y se tomar\'on en cuenta como los m\'as adecuados para el estudio, ya que muestran mayor asociaci\'on con la enfermedad.  \\
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|l|l|l|}
+    \hline
+    \hline
+    SNP&Probabilidad de asociaci\'on&Bonferroni&FDR \\
+    \hline
+
+    rs7311395&8.164E-11&0.00009224&0.00009224 \\
+    rs118184226&5.696E-10&0.0006435&0.0003218\\
+    rs55885037&1.844E-09&0.002083&0.0005488\\
+    rs2598121&1.943E-09&0.002195&0.0005488\\
+    rs7197593&2.573E-09&0.002907&0.0005708\\
+    rs115600951&0.000000003&0.003425&0.0005708\\
+    rs74382455&6.845E-09&0.007734&0.001105\\
+    rs111445080&1.035E-08&0.01169&0.001343\\
+    Affx-18048474&1.07E-08&0.01208&0.001343\\
+    rs117982396&0.000000018&0.02032&0.002032\\
+    rs74455361&2.381E-08&0.0269&0.002445\\
+    Affx-17135896&2.66E-08&0.03006&0.002505\\
+    \hline
+  \end{tabular}
+  \caption{Representaci\'on SNPs con mayor asoaciaci\'on}
+  \label{table:1}
+\end{table}
+  
+
+Conociendo los SNPs,se procedi\'o a realizar la extracci\'on de estos SNPs en el proyecto 1000Genomes. Pero antes se decidi\'o realizar un rango de $\pm$ 100  por posici\'on genetica, por ejemplo, para el SNP \texttt{rs11798239} con posici\'on gen\'etica \texttt{10:30303271}, donde el 10 representa el cromosoma en el que est\'a y el 30303271 es el locus. Se tomar\'on los SNPs en el rango de 30303271 $\pm$ 100; esto con el prop\'osito de conocer los SNPs m\'as cercanos al SNP relacionado. \\
+
+Considerando lo anterior, se realiz\'o la b\'usqueda de rangos en la base de datos de 1000Genomes (\url{http://www.internationalgenome.org/data}). El conocer los loci de los SNPs facilit\'o su b\'usqueda. De los 12 SNPs, se observar\'on solo 3 SNPs en su referencia completa. Es decir, solo podiamos proyectar cuatro SNPs (rs74382455, rs2598121, rs7311395, rs7197593) con la base de datos 1000Genomes. Las poblaciones que se relacionaron fueron las siguientes \ref{table:pob}.\\
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|l|}
+    \hline
+    Poblaci\'on& Descripci\'on Poblaci\'on\\
+    \hline
+    YRI&Yoruba en Ibadan, Nigeria\\
+    IBS&Iberian Population en España\\
+    MXL&Mexican Ancestry de los Angeles, USA\\
+    \hline
+    
+  \end{tabular}
+  \caption{Tipo de poblaciones en nuestro estudio}
+  \label{table:pob}
+\end{table}
+
+De manera similar, se obtuvo las medidas de correlaciones ($F_{ST}$) de los genes muestrados de las poblaciones de las cinco ejecuciones.\\
+
+El preprocesado de los archivos de 1000Genomes constaba en convertirlos a formato PLINK (.ped y .map), eliminar los SNPs repetidos, y recodificarlos. Esto se realiz\'o con la ayuda de la paqueter\'ia \texttt{vcftools, \url{http://vcftools.sourceforge.net/}}.\\
+
+Al contar con estas bases de datos o archivos de referencia, se realiz\'o un join para juntar todos los archivos en uno solo. Despu\'es se compararon el n\'umero de SNPs con la base de datos CHIBCHA .Ped para eliminar los SNPs sobrantes.Al final de los \texttt{1,006,658} SNPs registrados, se preservaron \textbf{1203 SNPs}. Esto nos permiti\'o evaluar el trabajo de c\'omputo de mejor manera y evitar un sobreajuste en nuestras estimaciones.\\
+
+Al correr el primer an\'alisis de estimaci\'on de ancestr\'ia se observ\'o que era necesario realizar uno donde solo se tomar\'an en cuenta los \textbf{casos} con c\'ancer, ya que es la poblaci\'on de mayor relevancia en nuestro estudio. Adem\'as de dividir la poblaci\'on en hombres y mujeres.\\
+
+El preprocesado de datos, la descarga de las bases de datos de referencia (1000Genomes) y la corrida del programa ADMIXTURE se realiz\'o por medio de la terminal de Linux. \\
+
+
+
+
+
+
+

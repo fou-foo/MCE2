@@ -1,0 +1,61 @@
+\chapter{Contribuciones, conclusión y trabajo futuro}
+
+\section{Contribuciones al análisis de datos}
+
+El análisis de los datos utilizados en este trabajo, se caracterizan por ser de alta dimencionalidad y de gran dificultad de análisis. Los algoritmos base (por ejemplo C4.5 y C5.0) con los que se dió solución al problema de clasificación pueden ser mejorados con la previa selección de variables con una regresión logística o con otras técnicas como el dar un paso hacia adelante en su algoritmo (Look Ahead) o con la propiedad de ser sensibles a costo. Las contribuciones se resumen puntualmente de la forma siguiente:
+
+\subsection{GCSLADT supera otras variantes de árbol de decisión y criterio de síndrome metabólico para NAFLD}.
+
+Dependiendo del problema a resolver se pueden utilizar las capacidades de este algoritmo para resolverlas, una de ellas la sensibilidad a costos cuando los datos son desbalanceados, en nuestro trabajo se presentaron dos casos así: el conjunto de pacientes con hígado graso no alcohólico y el sub grupo anidado de pacientes con retinopatía. De estos los datos con mayor desbalance fue la de NAFLD y  el algoritmo presentó una exactitud que rondaba el 92\%. \par
+
+En el caso del uso del paso hacia adelante (Look Ahead), se demuestra que se debe tener en consideración que la cantidad de pasos hacia adelante. Ya que el dar muchos pasos hacia adelante pudieran alterar la clasificación final del algoritmo (efecto del horizonte). También que este efecto pudiera ser alterado por el criterio de parada (beta) en la partición del árbol.\par
+
+\subsection{Active, Online, reinforcement e incremental learning pueden ser incorporados en la estructura del algoritmo GCSLADT.}
+
+Algoritmos como Active, Online, Reinforcement e Incremental Learning pueden ser incorporados al algoritmo base de GCSLADT. Con la intención de incrementar el desempeño del algoritmo inicial. Se hace hincapié a considerar el tipo de problema albergado en los datos así como el tamaño de los mismos para la decisión de usar tal o cual aprendizaje.
+
+\subsection{Incorporación de meta características ayuda a dar mayor exactitud de árbol de decisión para clasificar complicaciones del síndrome metabólico.}
+
+Las meta características que se utilizaron en este trabajo incluyeron las opraciones algebraicas de de suma, resta y multiplicación.  Mostraron la capacidad de incrementar la exactitud en la predicción de las complicaciones del síndrome metabólico.  Esta exactitud es incrementada todavía mas al agregar un ``peso'' a las desiciones equivocadas (Sensible a costo) del algoritmo, sobre todo para datos desbalanceados (ej. Hígado graso no alcohólico).
+
+
+\subsection{Las técnicas de elegir características (NCA,FA, Forward selection) reduce la complejidad computacional del árbol de decisión por disminuir la dimensión sin reducir la exactitud.}
+
+La selección de variables es un paso muy importante con la alta dimensionalidad de los datos. Además algoritmos como look ahead que mejoran la exactitud de los algoritmos tradicionales, tienen un limite de dimensiones (100 variables en caso de Look Ahead) haciendo muy necesario este paso.
+
+Por otro lado,  el escoger las variables mas importantes sin perdida de desempeño del algoritmo disminuye el costo computacional de la clasificación.
+
+\section{Contribuciones a la literatura médica}
+
+En la literatura medica, existen multiples intentos (los cuales fueron revisados en esta tesis) de clasificar adecuadamente pacientes sanos y con hígado graso no alcohólico; además en este mismo trabajo se realizó un árbol de decisión hecho por el experto, con los criterios de clasificación de síndrome metabólico, demostrando la necesidad de un algoritmo inteligente.
+En el uso de algoritmos como C4.5 y C5.0 se pudo demostrar que se puede mejorar la clasificación de pacientes con hígado graso no alcohólico mediante la combinación de variables químicas, clínicas y metabolómicas.\par
+
+Se demostró como las alteraciones en las acilcarnitinas (principalmente de cadena larga, como C16\_OH), están relacionadas con la presencia de hígado graso. El incremento en los niveles de las acilcarnitinas es asociado a esta enfermedad hepática y resistencia a la insulina. Esto ultimo dado a que la carnitina C16\_1OH (y también otras como la C14\_1, C18\_1OH) son unas de las principales variables que pueden clasificar a los pacientes con diabetes mellitus tipo 2.\par
+
+En este mismo sentido, en este trabajo se documenta por primera vez la utilidad de las acilcarnitinas (como únicas variables) para clasificar al paciente con diabetes. Por otro lado, también se logra confirmar la relación entre el trastorno metabólico expresado en estas variables metabolómicas y la presencia de retinopatía. Aunque pareciera aventurado confirmar en este momento, pero parece ser que hay bases suficientes para sostener la teoría de la retinopatía del paciente obeso.\par
+
+Por otro lado, el tipo de análisis llevado a cabo originar nuevas hipótesis. El poder fundamentar que la clasificación de retinopatía por acilcarnitinas es posible, nos sugiere la realización de estudios diseñados para evaluar causalidad.
+
+\section{Conclusiones}
+
+Las conclusiones de este trabajo son resumidas a continuación:
+
+\begin{itemize}
+\item Desarrollamos Árbol de Decisión Sensible a Costos y con Mirada Adelante Generalizado (Generalized Cost Sensitive Look Ahead Decision Tree , GCSLADT) para automatizar el diagnostico de las complicaciones del síndrome metabólico.
+\item Demostramos el poder de meta características para clasificar las complicaciones del síndrome metabólico.
+\item Utilizamos decision tree para clasificar las complicaciones del síndrome metabólico por su interpretabilidad por los médicos.
+\item Comparamos el rendimiento de árbol de decisión con diferentes scores diagnósticos publicados en la literatura.
+\item El perfil bioquímico es suficiente para clasificar NAFLD con árbol de decisión automáticamente.
+\end{itemize}
+
+
+\section{Trabajo futuro}
+
+Actualmente existe mucho trabajo futuro por realizar, de entre ellos se remarcan los siguientes:
+El algoritmo de árboles de decisión utiliza el criterio de reducción de entropía para la partición de los datos.
+\begin{itemize}
+\item  Generalized Cost Sensitive Look Ahead Decision Tree (GCSLADT) funciona mejor para clasificar NAFLD, presencia de diabetes y Retinopatía, se probara en otras enfermedades.
+\item Queremos  investigar el agregar diferentes tipos de aprendizaje (Any time, High speed, ensamble) a la estructura de GCSLADT. 
+\end{itemize}
+
+

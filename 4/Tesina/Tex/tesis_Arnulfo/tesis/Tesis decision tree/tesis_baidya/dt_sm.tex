@@ -1,0 +1,25 @@
+\section{Antecedentes de árboles de decisión en Síndrome Metabólico}
+
+Dentro de la planificación y del análisis de los datos, se realizo una primera exploración de los datos en donde, se decidió evaluar la efectividad de un árbol de decisión creado por el experto (esto es, un  endocrinólogo), y que fue validado por otro endocrinologo. La forma de realización de este árbol fue  orientado puramente en características clínicas y no se tomaron en cuenta, las características bioquímicas. \par
+La razón de este desarrollo fue identificar: 1) que las variables clínicas no son suficientes para la adecuada clasificación de los pacientes con síndrome metabólico, y 2) aún el experto necesita de una herramienta que mejore la capacidad predictiva en la vida diaria
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=5cm]{sm_dt}
+\caption{Árbol de decisión creado por el experto}
+\label{fig:sm_dt}
+\end{figure}
+
+En la figura \ref{fig:sm_dt} se logra ver que solo se cuentan con variables encontradas en la exploración física y que también pone en consideración el género de la persona. Todas las variables con características usadas por el Criterio de ATP III (Adult Treatment Panel III) para la clasificación de síndrome metabólico.\par
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|}\hline
+Sensibilidad & Especificidad & VPP & VPN & Exactitud\\\hline
+23\% & 78\% & 70\% & 31\% & 40.1\% \\\hline
+\end{tabular}
+\caption{Desempeño del árbol de decisión por el ATP III}
+\label{tab:atp}
+\end{table}
+
+Como se observa en la tabla \ref{tab:atp}, este árbol de decisión, no cuenta con suficiente exactitud para ser usado en todos los casos, aunque la especificidad del modelo es alta. El valor predictivo positivo tal vez nos permita considerarlo en ocasiones individuales.

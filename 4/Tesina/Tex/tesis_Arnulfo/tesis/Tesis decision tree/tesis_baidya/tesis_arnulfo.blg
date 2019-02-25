@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: tesis_arnulfo.aux
+The style file: ezspanish.bst
+A level-1 auxiliary file: titlepage.aux
+Database file #1: nafld.bib
+Warning--empty journal in brijain2014survey
+You've used 84 entries,
+            2833 wiz_defined-function locations,
+            1127 strings with 25084 characters,
+and the built_in function-call counts, 60996 in all, are:
+= -- 4359
+> -- 3318
+< -- 46
++ -- 1238
+- -- 1131
+* -- 4707
+:= -- 9118
+add.period$ -- 272
+call.type$ -- 84
+change.case$ -- 791
+chr.to.int$ -- 83
+cite$ -- 85
+duplicate$ -- 4572
+empty$ -- 4398
+format.name$ -- 1408
+if$ -- 11867
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 1103
+newline$ -- 443
+num.names$ -- 336
+pop$ -- 2267
+preamble$ -- 1
+purify$ -- 703
+quote$ -- 0
+skip$ -- 1435
+stack$ -- 0
+substring$ -- 2505
+swap$ -- 2486
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 735
+warning$ -- 1
+while$ -- 371
+width$ -- 0
+write$ -- 1121
+(There was 1 warning)

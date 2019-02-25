@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{amsbsy}
+\usepackage{graphicx}
+\usepackage[boxed]{algorithm2e}
+\usepackage{array}
+\usepackage{forest,adjustbox}
+\usepackage{tikz}% para realzar el decision tree en latex
+\usepackage{float}
+\usepackage{enumitem}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
+
+\begin{document}
+
+
+
+\begin{forest}
+for tree ={grow=south, l=5em, s sep = 7em}
+[Circunferencia Abdominal
+	[Triglicéridos, edge label = {node[midway,fill=white,font=\scriptsize]{$< 102.5$}} [Colesterol, edge label = {node[midway,fill=white,font=\scriptsize]{$< 251.5$}} [Normal,, edge label = {node[midway,fill=white,font=\scriptsize]{$< 250$}}] [NAFLD, edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 250$}}] ] [NAFLD, , edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 251.5$}} ]  ]
+	[HDL-C,edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 102.5$}}  [NAFLD,, edge label = {node[midway,fill=white,font=\scriptsize]{$< 42$}}][Normal, edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 42$}}] ]
+]
+\end{forest}
+
+
+
+
+
+
+
+
+\end{document}

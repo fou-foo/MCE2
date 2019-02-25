@@ -1,0 +1,19 @@
+
+% Thesis Abstract -----------------------------------------------------
+
+
+%(require 'iso-transl)
+%\begin{abstractslong}    %uncommenting this line, gives a different abstract heading
+\begin{abstracts}        %this creates the heading for the abstract page
+
+En la actualidad se han generado bases de datos gen\'omicas para el estudio de la relaci\'on de las variantes gen\'eticas humanas y enfermedades; esto implica tratar con bases de datos de alta dimensionalidad provocando problemas a la hora de realizar an\'alisis computacionales y estad\'isticos que nos permitan entender la poblaci\'on bajo estudio. En este trabajo de titulación se realiza una revisi\'on de literatura, aplicaci\'on de m\'etodos computacionales y modelos estad\'isticos que nos ayuden a obtener resultados \'optimos en todos los sentidos, tanto como en el \'area de la computación y la medicina.
+
+Se obtuvier\'on gr\'aficas de color que nos muestran el porcentaje de ancestralidad de las poblaciones mexicana (MXL), africana (YRI) y española (IBS), donde se obtuvo que dos de los cuatro SNP's tienen mayor porcentaje de ancestralidad europea (española) lo cual puede dar indicio de una relaci\'on entre esta poblaci\'on geogr\'afica y el c\'ancer colorrectal.
+
+Con los resultados y la metodolog\'ia llevada a cabo se gener\'o en M\'exico un antecedente computacional que permita recrear estos an\'alisis g\'eneticos poblaciones en otro tipos de enfermedades y observar el comportamiento y el impacto poblacional en enfermedades cr\'onicas.  
+
+\end{abstracts}
+%\end{abstractlongs}
+
+
+% ----------------------------------------------------------------------

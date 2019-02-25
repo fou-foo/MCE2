@@ -1,0 +1,102 @@
+\select@language {spanish}
+\contentsline {chapter}{\numberline {1}Introducci\'on}{9}
+\contentsline {section}{\numberline {1.1}Antecedentes del S\IeC {\'\i }ndrome Metab\'olico}{9}
+\contentsline {subsection}{\numberline {1.1.1}Definici\'on}{9}
+\contentsline {subsection}{\numberline {1.1.2}Epidemiolog\IeC {\'\i }a}{9}
+\contentsline {section}{\numberline {1.2}Complicaciones}{10}
+\contentsline {subsection}{\numberline {1.2.1}H\IeC {\'\i }gado graso no alcoh\'olico}{10}
+\contentsline {subsubsection}{S\IeC {\'\i }ntomas de NAFLD}{11}
+\contentsline {subsubsection}{Etapas cl\IeC {\'\i }nicas de NAFLD}{11}
+\contentsline {subsubsection}{Diagn\'ostico de NAFLD}{11}
+\contentsline {subsubsection}{Su relaci\'on con el s\IeC {\'\i }ndrome metab\'olico}{12}
+\contentsline {subsubsection}{Insulinoresistencia (IR) y diabetes mellitus tipo 2 como factores de riesgo asociados a NAFLD}{12}
+\contentsline {subsubsection}{H\IeC {\'\i }gado graso no alcoh\'olico y Acilcarnitinas}{13}
+\contentsline {subsection}{\numberline {1.2.2}Diabetes mellitus tipo 2}{13}
+\contentsline {subsubsection}{La diabetes mellitus tipo2 y las acilcarnitinas}{14}
+\contentsline {subsubsection}{Fisiopatolog\IeC {\'\i }a de la Diabetes Mellitus tipo 2}{15}
+\contentsline {subsubsection}{Teor\IeC {\'\i }as de la resistencia a la insulina}{16}
+\contentsline {subsubsection}{Triglic\'eridos intramusculares.}{17}
+\contentsline {subsubsection}{Fisiolog\IeC {\'\i }a normal de las acil carnitinas}{17}
+\contentsline {subsubsection}{Evidencia de las alteraciones del metabolismo de las acilcarnitinas como etiolog\IeC {\'\i }a de resistencia a la insulina.}{19}
+\contentsline {subsection}{\numberline {1.2.3}Retinopat\IeC {\'\i }a}{20}
+\contentsline {subsubsection}{Revisi\'on de fondo de ojo y el lecho vascular sist\'emico}{21}
+\contentsline {section}{\numberline {1.3}Estudios Estad\IeC {\'\i }sticos previos}{22}
+\contentsline {subsection}{\numberline {1.3.1}H\IeC {\'\i }gado graso no alcoh\'olico.}{22}
+\contentsline {subsubsection}{SteatoTest}{22}
+\contentsline {subsubsection}{NASH Test.}{23}
+\contentsline {subsubsection}{NASH Diagnostics}{24}
+\contentsline {subsubsection}{Modelo NICE}{26}
+\contentsline {subsection}{\numberline {1.3.2}Diabetes mellitus}{28}
+\contentsline {subsubsection}{ELSA-Brasil}{28}
+\contentsline {subsubsection}{Identificaci\'on de individuos con prediabetes y diabetes mediante \'arboles de decisi\'on}{30}
+\contentsline {subsubsection}{Predicci\'on de diabetes mediante \'arboles de decisi\'on}{31}
+\contentsline {subsection}{\numberline {1.3.3}Retinopat\IeC {\'\i }a}{32}
+\contentsline {subsubsection}{Aplicaci\'on de apoyo cl\IeC {\'\i }nico, para el diagnostico de retinopat\IeC {\'\i }a diab\'etica.}{32}
+\contentsline {section}{\numberline {1.4}Antecedentes de \'arboles de decisi\'on en S\IeC {\'\i }ndrome Metab\'olico}{33}
+\contentsline {section}{\numberline {1.5}Justificaci\'on y objetivos del trabajo}{34}
+\contentsline {section}{\numberline {1.6}Contribuci\'on del trabajo}{35}
+\contentsline {chapter}{\numberline {2}\'Arboles de decisi\'on.}{37}
+\contentsline {section}{\numberline {2.1}Conceptos b\'asicos}{37}
+\contentsline {section}{\numberline {2.2}Evoluci\'on de los \'arboles de decisi\'on}{40}
+\contentsline {subsection}{\numberline {2.2.1}Primera Generaci\'on}{40}
+\contentsline {subsection}{\numberline {2.2.2}Segunda Generaci\'on}{41}
+\contentsline {subsection}{\numberline {2.2.3}Tercera Generaci\'on}{43}
+\contentsline {subsection}{\numberline {2.2.4}Cuarta Generaci\'on}{44}
+\contentsline {subsection}{\numberline {2.2.5}Quinta Generaci\'on}{45}
+\contentsline {subsubsection}{Aprendizaje activo (Active Learning)}{45}
+\contentsline {subsubsection}{Aprendizaje de transferencia (Transfer learning)}{46}
+\contentsline {subsubsection}{Aprendizaje semi-supervisado (Semi-supervised learning)}{47}
+\contentsline {section}{\numberline {2.3}Algoritmo C4.5}{47}
+\contentsline {section}{\numberline {2.4}Algoritmo C5.0}{49}
+\contentsline {section}{\numberline {2.5}\'Arbol de decision con vista hacia adelante (Look Ahead Decisi\'on Tree)}{49}
+\contentsline {section}{\numberline {2.6}\'Arbol de Decisi\'on Sensible a Costos (Cost Sensitive Decision Tree)}{50}
+\contentsline {section}{\numberline {2.7}Algoritmo Utilizado: \'Arbol de Decisi\'on Sensible a Costos y con Mirada Adelante Generalizado}{50}
+\contentsline {section}{\numberline {2.8}Forma de evaluar la efectividad de los \'arboles de decisi\'on}{53}
+\contentsline {chapter}{\numberline {3}Aplicaci\'on de los \'arboles de decisi\'on en el s\IeC {\'\i }ndrome metab\'olico}{55}
+\contentsline {section}{\numberline {3.1}Origen de los datos}{55}
+\contentsline {subsection}{\numberline {3.1.1}H\IeC {\'\i }gado graso no alcoh\'olico y retinopat\IeC {\'\i }a.}{55}
+\contentsline {subsubsection}{Escala de medici\'on de las variables.}{57}
+\contentsline {subsection}{\numberline {3.1.2}Diabetes mellitus}{59}
+\contentsline {subsubsection}{Metodolog\IeC {\'\i }a}{59}
+\contentsline {subsubsection}{Obtenci\'on de muestras de sangre}{60}
+\contentsline {section}{\numberline {3.2}H\IeC {\'\i }gado graso no alcoh\'olico (NAFLD)}{62}
+\contentsline {subsection}{\numberline {3.2.1}Algoritmo C4.5 y C5.0}{62}
+\contentsline {subsection}{\numberline {3.2.2}Reducci\'on de dimensiones realizado mediante regresi\'on log\IeC {\'\i }stica}{64}
+\contentsline {subsection}{\numberline {3.2.3}Evaluaci\'on del desempe\~no mediante bootstrap}{65}
+\contentsline {subsection}{\numberline {3.2.4}Aplicaci\'on de \'arbol de decisi\'on costo sensible}{65}
+\contentsline {subsection}{\numberline {3.2.5}Look Ahead Decision Tree.}{66}
+\contentsline {subsection}{\numberline {3.2.6}Meta caracter\IeC {\'\i }sticas}{66}
+\contentsline {section}{\numberline {3.3}Diabetes mellitus}{67}
+\contentsline {subsection}{\numberline {3.3.1}Algoritmo C4.5 y C5.0}{67}
+\contentsline {subsection}{\numberline {3.3.2}Selecci\'on de variables previamente realizado mediante regresi\'on log\IeC {\'\i }stica}{72}
+\contentsline {subsection}{\numberline {3.3.3}Evaluaci\'on del desempe\~no mediante bootstrap}{73}
+\contentsline {subsection}{\numberline {3.3.4}\'Arbol de decisi\'on costo sensible}{74}
+\contentsline {section}{\numberline {3.4}Look Ahead Decision Tree.}{75}
+\contentsline {subsection}{\numberline {3.4.1}Meta caracter\IeC {\'\i }sticas}{75}
+\contentsline {section}{\numberline {3.5}Retinopat\IeC {\'\i }a}{76}
+\contentsline {subsection}{\numberline {3.5.1}Algoritmo C4.5 y C5.0}{77}
+\contentsline {subsection}{\numberline {3.5.2}Selecci\'on de variables previamente realizado mediante regresi\'on log\IeC {\'\i }stica}{79}
+\contentsline {subsection}{\numberline {3.5.3}\'Arbol de decisi\'on costo sensible}{80}
+\contentsline {section}{\numberline {3.6}Look Ahead Decision Tree.}{81}
+\contentsline {subsection}{\numberline {3.6.1}Meta caracter\IeC {\'\i }sticas}{81}
+\contentsline {section}{\numberline {3.7}Software utilizado}{82}
+\contentsline {chapter}{\numberline {4}Contribuciones, conclusi\'on y trabajo futuro}{83}
+\contentsline {section}{\numberline {4.1}Contribuciones al an\'alisis de datos}{83}
+\contentsline {subsection}{\numberline {4.1.1}GCSLADT supera otras variantes de \'arbol de decisi\'on y criterio de s\IeC {\'\i }ndrome metab\'olico para NAFLD}{83}
+\contentsline {subsection}{\numberline {4.1.2}Active, Online, reinforcement e incremental learning pueden ser incorporados en la estructura del algoritmo GCSLADT.}{84}
+\contentsline {subsection}{\numberline {4.1.3}Incorporaci\'on de meta caracter\IeC {\'\i }sticas ayuda a dar mayor exactitud de \'arbol de decisi\'on para clasificar complicaciones del s\IeC {\'\i }ndrome metab\'olico.}{84}
+\contentsline {subsection}{\numberline {4.1.4}Las t\'ecnicas de elegir caracter\IeC {\'\i }sticas (NCA,FA, Forward selection) reduce la complejidad computacional del \'arbol de decisi\'on por disminuir la dimensi\'on sin reducir la exactitud.}{84}
+\contentsline {section}{\numberline {4.2}Contribuciones a la literatura m\'edica}{85}
+\contentsline {section}{\numberline {4.3}Conclusiones}{85}
+\contentsline {section}{\numberline {4.4}Trabajo futuro}{86}
+\contentsline {chapter}{Bibliograf\'{\i }a}{87}
+\contentsline {chapter}{Anexo}{97}
+\contentsline {section}{Regresi\'on log\IeC {\'\i }stica.}{97}
+\contentsline {section}{Bootstrap}{98}
+\contentsline {section}{Pseudoc\'odigo ID3}{100}
+\contentsline {section}{Pseudoc\'odigo C4.5}{101}
+\contentsline {section}{Pseudoc\'odigo del boosting C5.0}{101}
+\contentsline {section}{Pseudoc\'odigo de la integraci\'on del Look Ahead al algoritmo C4.5 (J48 de Weka).}{104}
+\contentsline {subsection}{Pseudoc\'odigo}{104}
+\contentsline {section}{Pseudoc\'odigo \'Arbol de Decisi\'on Sensible a Costos}{104}
+\contentsline {section}{\'Arbol de Decisi\'on Sensible a Costos y con Mirada Adelante Generalizado}{105}

@@ -1,0 +1,275 @@
+\section{Estudios Estadísticos previos}
+
+Han existido múltiples intentos de realizar un diagnostico certero del hígado graso no alcohólico mediante pruebas bioquímicas. En el presente trabajo se hace mención de cuatro estudios previos basados en algoritmos de aprendizaje maquina \cite{Oh:2016aa}. Se separará la información de la literatura en sub secciones correspondientes a las diferentes complicaciones del síndrome metabólico.\par
+
+
+\subsection{Hígado graso no alcohólico.}
+
+\subsubsection{SteatoTest}
+
+En el 2005 el grupo de trabajo de Thierry Poynard et. al. (2005) publicaron un estudio donde validan una herramienta para la predicción de hígado graso \cite{Poynard:2005aa}.  En su publicación remarcan la importancia y riesgo de realizar una biopsia de hígado graso durante la evaluación de la enfermedad hepática crónica.\par
+
+Para el análisis de este estudio se incluyeron 2,272 sujetos, siendo 884 sujetos incluidos para la validación del biomarcador.  El SteatoTest surge de un modelo de regresión logística y las 12 variables predictoras contenidas en el modelo son: Transaminasa Glutámico Piruvica (TGP), $\alpha_2$-microglobulina (A2M), apolipoproteína A-1 (ApoA1), haptoglobina, bilirrubina total, Gama glutamil transpeptidasa, colesterol, triglicéridos, glucosa, edad, género e índice de masa corporal.  La división de los pacientes se pueden ver en la figura \ref{fig:steatotest}  .\par
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=13cm]{steatotest}
+\caption[Distribución de pacientes en la validación de SteatoTest]{pie}
+\label{fig:steatotest}
+\end{figure}
+
+En la tabla \ref{tab:auc_steto}, se puede observar como el SteatoTest tiene una mayor área bajo la curva ROC, en comparación con biomarcadores clásicamente relacionados a la presencia de esteatohepatitis.  Los autores concluyen que el SteatoTest es un estimador simple y no invasivo que estima la esteatosis hepática y puede reducir la necesidad de biopsia hepática, particularmente en pacientes con factores de riesgo metabólico.\par
+
+
+\begin{table}
+\begin{tabular}{cccccc}\hline
+\begin{minipage}[t]{0.15\textwidth}\centering \textbf{Panel} \\ \textbf{Diagnóstico}\end{minipage} & \begin{minipage}[t]{0.15\textwidth} \centering \textbf{Grupo de} \\\textbf{entrenamiento} \end{minipage} & \textbf{Grupo 1} & \textbf{Grupo 2} & \textbf{Grupo 3} & \begin{minipage}[t]{0.15\textwidth} \centering \textbf{  Todos} \\ \textbf{los grupos}\end{minipage}  \\
+&&&&&\\
+ & N= 310 & N = 171 & N = 201 & N = 62 & N = 884\\
+SteatoTest & 0.79 (0.03)* & 0.80 (0.04)\textsterling & 0.86 (0.03)\$ & 0.72 (0.05)** & 0.8 (0.02)\textsterling\textsterling\\
+GGT & 0.66 (0.03) & 0.67 (0.05) & 0.74 (0.05) & 0.50 (0.09) & 0.66 (0.02)\\
+ALT & 0.58 (0.03) & 0.62 (0.05) & 0.79 (0.04) & 0.66 (0.07) & 0.61 (0.02)\\
+
+\multicolumn{6}{l}{
+\begin{minipage}[t]{1\textwidth}
+\vspace{0.1cm}
+\footnotesize{* Mayor que GGT (p<0.0001 y ALT (p<0.0001); \textsterling Mayor que GGT (p=0.007) y ALT (p<0.0001);
+\\ \footnotesize{\$ Mayores que GGT(p= 0.02); ** Mayor de GGT (p= 0.002); \textsterling \textsterling Mayor que GGT (p <0.0001) y ALT (p<0.0001)} }
+\end{minipage}
+}
+\end{tabular}
+\caption{Áreas bajo la curva ROC de SteatoTest, GGT, ALT para el diagnostico de esteatosis mayor al 5\% en grupos de entrenamiento y validación.}
+\label{tab:auc_steto}
+\end{table}
+
+\subsubsection{NASH Test.}
+
+En el 2006 Thierry Poynard et. al. publicaron el valor diagnóstico de marcadores bioquímicos (Nash Test) con la intención de predecir la presencia de esteatohepatitis no alcohólica  en pacientes con hígado graso no alcohólico \cite{Poynard:2006aa}.  Este grupo de trabajo ha desarrollado multiples herramientas de marcadores bioquímicos para la detección de fibrosis hepática (FibroTest) y de hígado graso (SteatoTest, ya presentado anteriormente).\par
+
+La población estudiada para la validación del Nash Test consiste en la misma para el FibroTest, con criterios de inclusiones son iguales para ambos grupos de validación, la única diferencia en el presente estudio fue la exclusión de pacientes sin esteatosis histológica. Además se excluyeron los sujetos que tenían un consumo de alcohol mayor a 50 grs por día para el hombre o 30 grs para las mujeres durante el año anterior al estudio; ademas de tener panel viral negativo y VIH negativo. Enfermedades genéticas como al enfermedad de Wilson o deficiencia de alfa 1 antitripsina. El modelo utilizado para el análisis fue un modelo de regresión logística con pesos específicos (no mostrados).\par
+
+Los parámetros clínicos que mas discriminan son el peso y el género, AST, GGT y glucosa para los parámetros biológicos. En la figura \ref{fig:nashtest}  se puede observar la curva ROC para el NashTest, donde no hay diferencia entre las curvas ROC entre los datos de entrenamiento y de validación p = 0.34. Los autores concluyen que deben ser seleccionados los pacientes a los que se les indica realizar esta prueba.
+
+\begin{figure}[h]
+\includegraphics[width=12cm]{nashtest}
+\caption{Curva ROC de NASHTest para el diagnostico de NASH por el patólogo en los grupos de entrenamiento y validación}
+\begin{minipage}[t]{1\textwidth} \centering \footnotesize{La linea roja corresponde al grupo de entrenamiento y la línea azul la de validación} \end{minipage}
+\label{fig:nashtest}
+\end{figure}
+
+\subsubsection{NASH Diagnostics}
+
+Younossi et. al. describieron en el 2008 un panel para diagnosticar la esteatohepatitis no alcohólica asociada a obesidad \cite{Younossi:2008aa}.  El estudio incluyó 101 pacientes con biopsias hepáticas quienes fueron evaluados mediante pruebas ELISA, para diferentes moléculas. De estos, 69 fueron incluidos en los datos de entrenamiento y 32 en los datos de validación. Los datos clínicos fueron obtenidos al mismo tiempo de la biopsia hepática. Las muestras fueron recolectadas en ayuno, los biomarcadores incluídos fueron la adiponectina, resistina, insulina, glucosa, TNF-alfa, IL-6, IL-8, citoqueratina, CK-18 y M30.\par
+\newpage
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{nashdiag}
+\caption{Niveles del neoepitope CK-18 están significativamente incrementados en el suero de pacientes con NASH}
+\label{fig:nashdiag}
+\end{figure}
+
+
+En la figura \ref{fig:nashdiag}, se observa la distribución del epitope Ck-18, en este estudio se decidió utilizar un modelo lineal múltiple para predecir NASH, tabla (\ref{tab:modelonash}). \\~\\
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccccc}\hline
+Modelo & \begin{minipage}[t]{0.14\textwidth} \centering Variable\\ Independiente \end{minipage} & Betas y SE & \begin{minipage}[t]{0.14\textwidth}\centering p values variables \\independientes\end{minipage} & \begin{minipage}[t]{0.14\textwidth}\centering p todo \\ el modelo \end{minipage}\\\hline
+\begin{minipage}[t]{0.14\textwidth}\centering Predicción de NASH \end{minipage} & (Intercepto) & 0.4909 $\pm$ 0.1351 & <0.0006 & p<1.232e\textsuperscript{-6}\\
+& M30, IU/L & 0.0011 $\pm$ 0.0003 & <0.0001 &\\
+& M65-M30, IU/L &  0.0003 $\pm$ 0.0001 & <0.0548 & \\
+&Adiponectin, $\mu$g/ml & -0.0153 $\pm$0.0069 & <0.0316 & \\
+&Resistin, ng/ml & -0.0418 $\pm$ 0.0125 & <0.0014\\
+\hline
+\multicolumn{5}{l}{ \footnotesize{SE = error estándar del estimado}}
+\end{tabular}
+\caption{Modelo de regresión lineal multiple para la predicción de NASH}
+\label{tab:modelonash}
+\end{table}
+
+El modelo lineal a mi parecer no es el modelo mas adecuado ya que aunque se ordenaron los posibles valores de la variable NASH, seria mejor utilizar un modelo multinomial o regresión logística, ya que los datos con categóricos ordenados. El desempeño del modelo en los datos de validación fue caracterizado por un AUC de 0.732 (95\% IC, 0.55 - 0.87). Con un limite del modelo de 0.325, fue asociado con una sensibilidad de 71.4\%, especificidad de 72.7\%, valor predictivo positivo de 83.3\%, y un valor predictivo negativo de 57.1\%.  Los autores concluyen que esta herramienta de unir a cuatro estudios basados en ELISA es adecuado para formar un biomarcador diagnóstico simple para NASH.
+
+\subsubsection{Modelo NICE}
+
+El \textbf{N}on -\textbf{i}nvasive \textbf{c}omposite \textbf{m}odel (Nice model) fue descrito por Anty et. al.  en el 2010 \cite{anty2010new}, esto con el objetivo de desarrollar un sistema de medición para el diagnóstico definitivo de NASH usando datos clínicos y biológicos relacionados a el síndrome metabólico y el daño hepático incluyendo el fragmento CK 18 generado por la caspasa 3.\par
+
+Se incluyeron 464 obesos morbidos, referidos para cirugía bariátrica, los paciente fueron enrolados entre el 2003 y 20009. Los pacientes fueron arbitrariamente divididos en dos grupos 1) datos de entrenamiento de 310 pacientes (43 hombres, 267 mujeres), y 2) grupo de validación consistente de 154 pacientes. Se excluyeron pacientes con marcadores de hepatitis B y C , y la presencia de consumo de alcohol mayor a 24 grs/día. El modelo utilizado fue una regresión logística.\par
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}\hline
+& P-value & OR & 95\% IC\\\hline
+ALT & 0.002 & 1.04 & 1.01 - 1.07\\\hline
+GGT & 0.6 & 0.99 & 0.98 - 1.01  \\\hline
+HOMA - IR & 0.6 & 0.98 & 0.92 - 1.05 \\\hline
+CK18 & 0.044 & 1.003 & 1.00006 - 1.005\\\hline
+Genero & 0.7 &0.82 & 0.21 - 3.19 \\\hline
+IDF MS & 0.005 & 7.3 & 1.8 - 29.4 \\\hline
+\multicolumn{4}{l}{ \footnotesize{
+\begin{minipage}[t]{0.6\textwidth}
+ALT = alanino amino transferasa, GGT, gama glutamil transpeptidasa, HOMA-IR, homeostasis model assessment of insulin resistance,IDF MS, síndrome metabólico según la federación internacional de diabetes\end{minipage}}}
+\end{tabular}
+\caption{Análisis multivariado de los datos de entrenamiento}
+\label{tab:log_nice}
+\end{table}
+
+Como se aprecia en la tabla \ref{tab:log_nice}, se mantienen dentro del modelo tres variables que aparentemente no aportan significancia (GGT, HOMA-IR, Genero) al modelo.  En el figura \ref{fig:roc_nice} , se puede observar la eficacia según el área bajo la curva ROC, que aunque no se realizó una prueba para determinar diferencia entre ellas, no tienden a ser diferentes la curva de los datos de entrenamiento y los de validación.\par
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=8cm]{roc_nice}
+\caption{Curvas ROC del modelo en datos de entrenamiento y validación}
+\label{fig:roc_nice}
+\end{figure}
+
+Los autores concluyen que el Nice model puede ser usado con el síndrome metabólico para predecir la presencia de NAFLD en pacientes con obesidad morbida.\par
+
+
+\subsection{Diabetes mellitus}
+
+\subsubsection{ELSA-Brasil}
+
+Rodrigues-Olivera et. al.  publicaron en Sao Paulo Medical Journal en 2017, un estudio transversal con el objetivo de clasificar los pacientes con diabetes mellitus en base a antecedentes familiares, edad, hábitos de buena salud, consumo de otras substancias. Las variables tomadas en cuenta se describen en la tabla \ref{tab:elsa}.\par
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}\hline
+Consumo de sal & Índice Cintura - cadera & Ingreso & Uso de bicicleta& Género \\\hline
+Actividad física & Consumo de alcohol & Consumo Frutas & Consumo vegetales & Diabetes mellitus \\\hline
+Educación & Tabaquismo & Edad & IMC & Terapia antihipertensiva \\\hline
+Uso de hipolipemiantes & Falla cardiaca &  Infarto al miocardio & Revascula- rización & Stroke\\\hline
+Calidad de Sueño & Estado Civil & Dolor al caminar & Consumo de café & Ant. Hipertensión \\\hline
+Ant. Diabetes & Colesterol elevado &  &&\\\hline
+\end{tabular}
+\caption{Características de ELSA-brazil}
+\label{tab:elsa}
+\end{table}
+
+\newpage
+
+En este estudio se utilizaron también multiples algoritmos para llevar acabo la clasificación, y son: regresión logística, perceptron multicapa/backpropagation, näive Bayes classfier, k vecino mas cercano y random forest.  Al inicio se evaluaron 15,105 sujetos, que después de los la exclusión por falta de datos se incluyeron 12,447 sujetos para el estudio de los cuales el 30\% de ellos fueron separados para incluirlos en el grupo de prueba. En la figura \ref{fig:elsa}  se muestra el proceso de la construcción del modelo.\par
+
+\begin{figure}
+\centering
+\includegraphics[height=8cm]{elsa}
+\caption{Proceso general de la construcción del modelo y su evaluación}
+\label{fig:elsa}
+\end{figure}
+
+En la tabla \ref{tab:elsa_gen}  se puede observar como los alcanzaron una área bajo la curva (AUC) bastante pobre y no fueron mejores en sensibilidad y especificidad.\par
+
+\begin{table}
+\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+\multicolumn{3}{|c|}{ Estimación del error} &&&\multicolumn{2}{|c|}{ Generalización}\\\hline
+Algoritmo& AUC & BA & AUC & BA & Sensibilidad & Especificidad \\\hline
+LR & 75.44\% & 69.30\% & 74.41\% & 67.62\% & 67.99\% & 67.24\%\\\hline
+ANN & 75.45\% & 69.36\% & 74.17\% & 67.78\% & 66.25\% & 69.30\%\\\hline
+NB & 74.85\% & 68.95\% & 74.06\% & 68.52\% & 74.94\% & 62.1\% \\\hline
+KNN & 74.98\% & 68.52\% & 73.35\% & 67.76\% & 70.97\% & 64.55\% \\\hline
+RF& 72.81\% & 67.06\% & 72.35\% & 67.5\% & 67.74 \% & 67.24\% \\\hline
+\end{tabular}
+\caption{Generalización de los resultados de prueba}
+\label{tab:elsa_gen}
+\end{table}
+
+Los autores concluyen que todos los algoritmos tienen la misma efectividad para clasificar a los pacientes con diabetes mellitus; sin embargo, este estudio tiene la debilidad que es no contar con muchas variables biológicas que aporten información a los modelos.\par
+
+
+\subsubsection{Identificación de individuos con prediabetes y diabetes mediante árboles de decisión}
+
+Una identificación más fácil o temprana de paciente con prediabetes y/o diabetes es una tarea que es perseguida por muchos investigadores, Hische et. al \cite{hische2010decision} describió en el 2010 un modelo predictivo basado en árboles de decisión. El algoritmo utilizado por los autores es el descrito por Quinlan, C4.5 Las variables utilizadas para la creación de este modelo incluyeron entre otras, edad, género, medidas relacionadas al peso (IMC, índice cintura-cadera, HOMA-IR, glucosa e insulina. \par
+
+En este estudio se utilizaron dos cohortes, una del ``cross-sectional \textbf{M}etabolic \textbf{S}yndome \textbf{B}erlin \textbf{P}otsdam \textbf{S}tudy (Mesy-Bepo) en la cual se incluyeron 1737 individuos sin diabetes (todos mayores de 18 años) y de la cohorte Dresden, donde se incluyeron 1998 sujetos con historia familiar de diabetes mellitus, obesidad o dislipidemia.
+
+\begin{figure}
+\centering
+\begin{subfigure}[t]{0.4\textwidth}
+\includegraphics[height=5cm]{mesy}
+\caption{Árbol de decisión basado en (A) clínica y (B) Laboratorio en la cohorte Mesy-Bepo}
+\end{subfigure}
+\begin{subfigure}[t]{0.4\textwidth}
+\includegraphics[height=5cm]{dresden}
+\caption{Árbol de decisión basado en (A) clínica y (B) Laboratorio en la cohorte Dresden}
+\end{subfigure}
+\end{figure}
+
+El desempeño de los modelos se observa en la tabla \ref{tab:potsdam}  .
+
+\begin{table}
+\begin{tabular}{cccccc}\hline
+& Datos & Sensibilidad (\%) & Especificidad (\%) & VPP (\%) & VPN (\%)\\\hline
+Mesy-Bepo & Cínica & 89.3 & 37.4 & 48& 84.4 \\
+ & Lab & 89.7 & 54.6 & 56.2 & 89.1 \\
+Dresden& Clínica & 90.3 & 32.1 & 44.2 & 84.8 \\
+&  lab & 95 & 27.8 & 43.9 & 90.4 \\\hline
+\end{tabular}
+\caption{Tabla de desempeño de los estudios Mesy-Bepo y Dresden}
+\label{tab:potsdam}
+\end{table}
+
+\subsubsection{Predicción de diabetes mediante árboles de decisión}
+
+Cada vez existe mas literatura médica en donde se utiliza el aprendizaje maquina para el análisis de los datos. uno de estos artículos recientes es el de Habibi et. al. (2015) quienes trabajaron con el objetivo de producir un modelo predictivo usando características asociadas a diabetes mellitus tipo 2 \cite{habibi2015type}. Los datos fueron obtenidos retrospectivamente del centro de control en diabetes mellitus del Este de Azerbajian. se Incluyeron 22,398 sujetos que tenían la categorías de persona con diabetes, prediabetes y sano, dentro de los cuales 924 (4.1\%) tenían diabetes, 3,062 (13.7\%) eran prediabéticos, y 18,412 (82.2\%) eran sanos. Utilizaron el algoritmo de C4.5 descrito por Quinlan, en Weka (J48).\par
+
+Las características utilizadas para la clasificación incluyeron, edad, género, presión sistólica, diastólica, historia familiar de diabetes, e índice de masa corporal. No se incluyeron variables como glucosa y triglicéridos. La efectividad del modelos se puede ver en la tabla \ref{tab:ref_dt}  .\par
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+& ROC & F-Measure & Recall & Precision & Accuracy & FP rate\\\hline
+results & 0.875 & 0.705 & 0.694 & 0.717 & 0.976 & 0.012\\\hline
+\end{tabular}
+\caption{Resultados de la evaluación del modelo}
+\label{tab:ref_dt}
+\end{table}
+
+El modelo obtenido se muestra en la figura \ref{fig:dt_ref1} .
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=5cm]{dt_ref1}
+\caption{Modelo obtenido para la predicción de diabetes}
+\label{fig:dt_ref1}
+\end{figure}
+
+Los autores concluyen que  aportaron a la literatura médica un algoritmo que pudiera ser de utilidad para el escrutinio de diabetes mellitus que no utiliza ninguna variable de laboratorio, aunque esto puede disminuir la efectividad del modelo.
+
+\subsection{Retinopatía}
+
+En este capítulo se hablara poco sobre los modelos ya creados para clasificar la retinopatía, ya que la mayoría de estos modelos son para evaluación de las imágenes obtenidas de la revisión del fondo de ojo y no de las características clínicas y/o metabolómicas. En la revisión de la literatura se hablará un poco mas sobre esta relación encontrada por Romero-Ibarguengoitia et. al (2018).
+
+\subsubsection{Aplicación de apoyo clínico, para el diagnostico de retinopatía diabética.}
+
+
+Esta aplicación fue desarrollada por Romero-Aroca et.al, y publicada en Telemedicine and e-Health en el 2017 \cite{romero2018clinical}.  Esta aplicación se desarrolló de una muestra de 2,323 pacientes divididos en 1,212 pacientes de entrenamiento y 1,111 de prueba. La aplicación se baso en el algoritmo de ``fuzzy random forest''. En la figura \ref{fig:fuzzy}  se puede observar los pasos realizados para la realización del modelo.
+
+\begin{figure}[h]
+\centering
+\includegraphics[height=5cm]{fuzzy}
+\caption{Diagrama de flujo para la creación de la aplicación}
+\label{fig:fuzzy}
+\end{figure}
+
+En la tabla \ref{tab:fuzzy}  se muestra la comparativa de diferentes algoritmos de predicción con el Fuzzy Random Forest, se documenta ser mas balanceado el último. Las variables mas importantes para clasificación de la retinopatía diabética es la: edad, género, tratamiento con insulina, hipertensión arterial, A1c\%, IMC , microalbuminuria.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{cccccc}\hline
+ & ID3 & KNN & LR & RF & Fuzzy RF\\\hline
+Sensibilidad & 60\% & 25.2\% & 51.4 \% & 80\% & 80.6\%\\\hline
+Especificidad & 66.7\% & 77.5\% & 94.4\% & 80.1\% & 85.9\%\\\hline
+\end{tabular}
+\caption{Comparación de sensibilidad y especificidad, usando diferentes métodos}
+\label{tab:fuzzy}
+
+\end{table}
+
+El autor concluye que esta aplicación puede ayudar al escrutinio de retinopatía diabética, aunque es necesario mayores estudios.
+
+
+
+
+

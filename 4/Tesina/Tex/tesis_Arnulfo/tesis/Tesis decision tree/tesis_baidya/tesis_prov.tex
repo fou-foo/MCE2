@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{amsbsy}
+\usepackage{graphicx}
+\usepackage[boxed]{algorithm2e}
+\usepackage{array}
+\usepackage{forest,adjustbox}
+\usepackage{tikz}% para realzar el decision tree en latex
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\floatstyle{boxed} 
+\restylefloat{figure}
+\renewcommand{\baselinestretch}{1.5}
+\title{Aplicación de árboles de decisión para solucionar problemas médicos.}
+
+\begin{document}
+\maketitle
+
+%\input{introduccion}
+\input{Estructura}
+\input{Introduccion}
+\input{C45}
+% escribir como funciona el decision tree
+\input{ID3}
+\input{Boosting}
+\input{Random}
+\input{Bigdata}
+
+%\section{Bibliography}
+%\bibliographystyle{plain}
+
+%\bibliography{nafld.bib}
+
+
+\end{document}

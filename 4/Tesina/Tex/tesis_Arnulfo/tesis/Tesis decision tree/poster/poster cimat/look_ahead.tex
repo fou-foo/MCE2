@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{amsbsy}
+\usepackage{graphicx}
+\usepackage[boxed]{algorithm2e}
+\usepackage{array}
+\usepackage{forest,adjustbox}
+\usepackage{tikz}% para realzar el decision tree en latex
+\usepackage{float}
+\usepackage{enumitem}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
+
+\begin{document}
+
+
+
+\begin{forest}
+for tree ={grow=south, l=5em, s sep = 7em}
+[ALT $>$ 20
+	[1]
+	[0]
+]
+%[Circunferencia Abdominal
+%	[Triglicéridos, edge label = {node[midway,fill=white,font=\scriptsize]{$< 102.5$}} ]
+%	[HDL-C,edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 102.5$}} ]
+%]
+\end{forest}
+\vspace{0.2cm}
+\begin{forest}
+for tree ={grow=south, l=5em, s sep = 7em}
+[ALT $>$ 20 e IMC $>$30
+	[1]
+	[0]
+]
+%[Circunferencia Abdominal
+%	[Triglicéridos, edge label = {node[midway,fill=white,font=\scriptsize]{$< 102.5$}} ]
+%	[HDL-C,edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 102.5$}} ]
+%]
+\end{forest}
+\vspace{0.5cm}
+\begin{forest}
+for tree ={grow=south, l=5em, s sep = 7em}
+[ALT $>$ 20 IMC $>$30 y HDL $<$ 40
+	[1]
+	[0]
+]
+%[Circunferencia Abdominal
+%	[Triglicéridos, edge label = {node[midway,fill=white,font=\scriptsize]{$< 102.5$}} ]
+%	[HDL-C,edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 102.5$}} ]
+%]
+\end{forest}
+
+
+
+
+
+
+\end{document}

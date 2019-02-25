@@ -1,0 +1,114 @@
+
+% this file is called up by thesis.tex
+% content in this file will be fed into the main document
+%----------------------- introduction file header -----------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Capítulo 1: Introducción- DEFINIR OBJETIVOS DE LA TESIS              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%(require 'iso-transl)
+
+
+
+\chapter{Introducci\'on y objetivo del trabajo}
+
+%: ----------------------- HELP: latex document organisation
+% the commands below help you to subdivide and organise your thesis
+%    \chapter{}       = level 1, top level
+%    \section{}       = level 2
+%    \subsection{}    = level 3
+%    \subsubsection{} = level 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                           Presentación                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Esta tesina se centra en el tema de la ancestría genética en población mexicana y su relaci\'o con el cáncer colorrectal. Como este tema en concreto no está analizado en la literatura especializada, el principal objetivo de este trabajo es dar una visión de la problemática y presentar el análisis computacional desarrollado. \\
+
+La problem\'atica computacional implicada en estos tipos de estudios est\'a relacionada con el gran tamaño del conjunto de datos (volumen) y a su complejidad (alta dimensi\'on), la cuales dificultan su captura, gestión, procesamiento o análisis mediante técnologías y herramientas computacionales. Por lo tanto, en forma específica, esta tesina tiene como objetivo final definir la relación de ancestría de los genes con la suceptibilidad del desarrollo de cáncer colorrectal a través de métodos computacionales y estadísticos de alto rendimiento. En este trabajo vamos a analizar la ancestría poblacional del grupo a estudiar, obteniendo el porcentaje de genes pertenecientes a una región en especifico y comparar las regiones de genes susceptibles al cáncer colorrectal con las regiones de genes del grupo estudiado, para determinar si hay un vínculo entre la ancestría de estos genes con el desarrollo del cáncer.\\
+
+
+Para conseguir estos objetivos se presenta una descripción breve de lo que es el análisis de ancestría genética y sus dependencia o problem\'atica en relación al desarrollo de cáncer. Posteriormente, para definir el porcentaje de ancestría de genes de la población a estudiar, se establecer\'an los marcadores informativos de ancestría (AIMs) que indican a que región geográfica pertenece cada gen. Por último, enfocaremos el estudio de los métodos para el análisis computacional y estadístico que apoye a lograr el objetivo final. \\
+
+Así, la finalidad de este tesina es el de lograr generar antecendentes en el estudio de ancestría genética y su relación con el desarrollo de enfermedades cancerígenas y el análisis óptimo de los datos provenientes de estos estudios.\\
+
+% estadistica cancer y la mortandad
+
+En la actualidad, en el mundo se estima alrededor de 38 millones de muertes anuales, de las cuáles el 63\% de estas difunciones son a causa de enfermedades no transmisibles (ENT) que generalmente son crónicas y de larga duración ya que progresan lentamente. Los cuatro tipos de mayor importancia son las enfermedades cardiovasculares, las enfermedades crónicas, la diabetes y el \textbf{cáncer} \cite{INEGI}.\\
+
+% hablar cosbre el cancer colo rectal
+
+El cáncer de colon y recto es el cuarto cáncer m\'as frecuente en México y a nivel mundial. De los 38 millones de muerte por las ENT, casi un millón de estas muertes son causadas por este cáncer \cite{INSP}. Además representa el 2.68\% de todos los tumores malignos \cite{Dario}. \\
+
+% los impactos ambientales y los geneticos en el cancer
+
+Por otro lado, las enfermedades crónico-degenarativas como el cáncer, pueden tener relación de desarrollo con los agentes ambientales \cite{Weinberg} y con variantes gen\'eticas. \\
+
+Por tanto, en la conceptualizaci\'on del problema, existen cuatro puntos a considerar: \\
+
+\begin{enumerate}[(1)]
+\item Las variantes gen\'eticas est\'an implicadas en la susceptibilidad al c\'ancer.
+\item Las variantes gen\'eticas en una poblaci\'on dependen de los flujos gen\'eticos que han ocurrido durante las migraciones y los procesos de selecci\'on natural a las que se han sometido las poblaciones actuales.
+\item En el caso de M\'exico, se dio un proceso historico de mezcla de por lo menos tres poblaciones humanas ancestrales: nativo americano, española y africana.
+\item El proceso de mestizaje se caracteriza por la coexistencia de variantes gen\'omicas ancestrales que puedan tener un afecto en la susceptibilidad al c\'ancer colorrectal.
+\end{enumerate}
+
+%plantear la pregunta medica de ancestralidad
+En este contexto, se presenta la primera pregunta a contestar: \textit{¿Hay relación de la ancestr\'ia de genes con la suceptibilidad al c\'ancer colorrectal?}.\\
+
+%hablar sobre la complejidad de los datos de genetica
+
+En la misma línea del análisis génetico poblacional y su relación con el cáncer colorrectal, se plantea la problem\'atica de la complejidad de la información. Los datos del genoma humano presentan secuencias de variantes g\'eneticas tipo SNP en  alrededor de \textit{5-8 millones por genoma}, implicando gran cantidad de reserva en memoria de cualquier computador \cite{Beatriz}. Este proceso se basa en un esfuerzo de alta magnitud al la hora de procesar o evaluar la evolución, escabilidad y dimensionalidad de las redes transcripcionales de genes \cite{Paulino}.\\
+
+Los problemas comunes en los estudios de génetica, con respecto al rendimiento de los métodos computacionales y técnicas estadísticas, citando a \cite{Domingo}, son:\\
+
+\begin{itemize}
+\item \textbf{El tiempo de procesamiento}, el cual suele ser elevado al tener que analizar grandes cantidades de datos.
+\item \textbf{Las variables utilizadas}, son de difícil determinación e influyen considerablemente en el resultado final.
+\item \textbf{La medida de asociación}, que es utilizada para el agrupamiento y condiciones, la cual suele ser de gran magnitud. 
+\item \textbf{La evaluación} final de los datos y sus interpretación.
+\end{itemize}\\
+
+%planter la pregunta del problema en cuestion computacional
+
+Por tanto, la segunda pregunta para esta investigación es \textit{¿Hay capacidad de herramientas computacionales para el procesamiento de los datos complejos y el análisis óptimo de los mismos?}.\\
+
+En el marco de la investigación de la génetica de población, realizar este estudio dará una panaroma m\'as amplio en el tratamiento del cáncer colorrectal, de manera similar, sera un antecedente en estudios de ancestralidad en México para diferentes enfemerdades complejas, además de lograr resultados con aplicación real en este tipo de cáncer.\\
+
+Por otro lado, la necesidad de comprender grandes y complejos conjuntos de datos, principalmente en el área de la gen\'etica, desarrollará una habilidad de extraer conocimiento útil y actuar en consecuencia a este conocimiento extraído, para mejorar los procesos computacionales y estadísticos al momento de evaluar y procesar la información.\\
+
+El cómputo estadístico es un campo que permitirá, aunado con especialistas en el área a donde se enfoque, a la construcción de nuevos procesos de analisís de datos de alta complejidad en función a los objetivos propuestos.\\
+
+Así pues, este trabajo de investigaci\'on tiene como objetivo principal determinar la asociación entre el c\'ancer colorrectal y la ancestr\'ia de genes por medio de herramientas estad\'isticas computacionales y evaluaciones m\'edicas.\\
+
+Por tanto, los objetivos especifícos se dividen en dos \'areas:\\
+
+\begin{itemize}
+\item \textbf{Génomica}:
+  \begin{itemize}
+  \item Encontrar el procentaje de ancestr\'ia de las regiones geogr\'aficas en los individuos del grupo con la enfermedad.
+  \item Revisar las regiones cromos\'omicas asociadas con el desarrollo del cáncer colo rectal e identificarlas en los genes de los individuos caso control.
+  \item Identificar la ancestr\'ia de los genes que tuvieron mayor implicación con las regiones cromos\'omicas asociadas a la enfermedad.
+  \end{itemize}
+\item \textbf{Cómputo estadístico:}
+  \begin{itemize}
+  \item Comparar softwares computacionales para la lectura y procesamiento de la base de datos génomicos
+  \item Desarrollar mapas de color para la visualización de la ancestr\'ia de lo genes de cada individuo
+  \end{itemize}
+\end{itemize}%% Organizacion
+
+El contenido de esta investigación se encuentra dividido en los siguientes cap\'itulos:\\
+
+\textbf{Trabajos previos.} Se introducen algunos trabajos que se han generado en el \'area de gen\'omica problacional con respecto a la relaci\'on de ancestria individual y enfermedades cr\'onicas. Adem\'as se describen los procedimientos metodol\'ogicos y los resultados que estos han encontrado en sus investigaciones. \\
+
+\textbf{Conceptos t\'ecnicos y software ADMIXTURE y tratamiento computacional de los datos.} Se describen las bases teóricas del software computacional a utilizar. De manera similar, se definen algunos conceptos en el \'area de gen\'omica poblacional con respecto a la estimaci\'on de la ancestr\'ia y el tratamiento de los datos.\\ 
+
+\textbf{Elementos probab\'ilisticos y metodolog\'ia.} Se describe los m\'etodos computacionales y estad\'isticos que tienen como base el software ADMIXTURE que se usan para la estimaci\'on para el valor \textbf{K} y la ancestr\'ia individual de la poblaci\'on estudiada. \\
+
+\textbf{Resultados.} Se presenta los resultados del análisis, cuáles han sido el porcentaje de ancestría de genes en la población estudiada y además presentar la relación existente o no con el desarrollo del cáncer colorrectal.\\
+
+\textbf{Conclusiones y futuros trabajos.} Se visualizará el proceso de la discusión de los resultados y se realizan las conclusiones y recomendaciones del proyecto de investigación e investigaci\'on futura.\\
+
+
+
+
+

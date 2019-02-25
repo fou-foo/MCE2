@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{amsbsy}
+\usepackage{graphicx}
+\usepackage[boxed]{algorithm2e}
+\usepackage{array}
+\usepackage{forest,adjustbox}
+\usepackage{tikz}% para realzar el decision tree en latex
+\usepackage{float}
+\usepackage{enumitem}
+\floatstyle{boxed} 
+\restylefloat{figure}
+\begin{document}
+
+\centering
+\begin{forest}
+for tree ={grow=south, l=6em, s sep = 3em}
+[IMC
+	[SM, edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 30 $}}   [NAFLD,edge label = {node[midway,fill=white,font=\scriptsize]{$\geq 3 $}}]   [\% Grasa Corporal, edge label = {node[midway,fill=white,font=\scriptsize]{$< 3 $}} [Normal, edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 22 $M $\leq 32$H  \hspace{15mm}   }}] [NAFLD, edge label = {node[midway,fill=white,font=\scriptsize]{$> 22 $M  o $>32$H}}]  ]  ]
+	[SM, edge label = {node[midway,fill=white,font=\scriptsize]{$> 30 $}}   [\% Grasa Corporal , edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 3 $}} [Normal,  edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 22 $M  o $\leq32$H}}] [NAFLD, edge label = {node[midway,fill=white,font=\scriptsize]{$> 22 $M  o $>32$H}}]] [NAFLD,edge label = {node[midway,fill=white,font=\scriptsize]{$> 3 $}} ]  ]
+]
+\end{forest}
+
+
+
+
+%[Salival $\text{Beta}_2$ microglobulin,  edge label = {node[midway,fill=white,font=\scriptsize]{$>60$}}[\text{10,000 hz},  edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 0.7051$}} [No inflammation, edge label = {node[midway,fill=white,font=\scriptsize]{$\leq 70$}}][Inflammation, edge label = {node[midway,fill=white,font=\scriptsize]{$>70$}}]][Inflammation,  edge label = {node[midway,fill=white,font=\scriptsize]{$> 0.7051$}}]]]
+
+
+
+
+
+
+
+
+\end{document}

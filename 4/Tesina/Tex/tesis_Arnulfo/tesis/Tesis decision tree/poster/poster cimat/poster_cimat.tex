@@ -1,0 +1,343 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% baposter Landscape Poster
+% LaTeX Template
+% Version 1.0 (11/06/13)
+%
+% baposter Class Created by:
+% Brian Amberg (baposter@brian-amberg.de)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[landscape,a0paper,fontscale=0.285]{baposter} % Adjust the font scale/size here
+
+\usepackage{graphicx} % Required for including images
+\graphicspath{{figures/}} % Directory in which figures are stored
+\usepackage{tcolorbox}
+\usepackage{amsmath} % For typesetting math
+\usepackage{amssymb} % Adds new symbols to be used in math mode
+\usepackage{tabularx,colortbl}
+\usepackage{color, colortbl}
+\usepackage{booktabs} % Top and bottom rules for tables
+\usepackage{enumitem} % Used to reduce itemize/enumerate spacing
+\usepackage{palatino} % Use the Palatino font
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+\usepackage[boxed]{algorithm2e}	
+\usepackage{multicol} % Required for multiple columns
+\setlength{\columnsep}{1.5em} % Slightly increase the space between columns
+\setlength{\columnseprule}{0mm} % No horizontal rule between columns
+
+\usepackage{tikz} % Required for flow chart
+\usetikzlibrary{shapes,arrows} % Tikz libraries required for the flow chart in the template
+
+\newcommand{\compresslist}{ % Define a command to reduce spacing within itemize/enumerate environments, this is used right after \begin{itemize} or \begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+}
+
+\definecolor{lightblue}{rgb}{0.145,0.6666,1} % Defines the color used for content box headers
+
+\begin{document}
+
+\begin{poster}
+{
+headerborder=closed, % Adds a border around the header of content boxes
+colspacing=1em, % Column spacing
+bgColorOne=white, % Background color for the gradient on the left side of the poster
+bgColorTwo=white, % Background color for the gradient on the right side of the poster
+borderColor=lightblue, % Border color
+headerColorOne=black, % Background color for the header in the content boxes (left side)
+headerColorTwo=lightblue, % Background color for the header in the content boxes (right side)
+headerFontColor=white, % Text color for the header text in the content boxes
+boxColorOne=white, % Background color of the content boxes
+textborder=roundedleft, % Format of the border around content boxes, can be: none, bars, coils, triangles, rectangle, rounded, roundedsmall, roundedright or faded
+eyecatcher=true, % Set to false for ignoring the left logo in the title and move the title left
+headerheight=0.1\textheight, % Height of the header
+headershape=roundedright, % Specify the rounded corner in the content box headers, can be: rectangle, small-rounded, roundedright, roundedleft or rounded
+headerfont=\Large\bf\textsc, % Large, bold and sans serif font in the headers of content boxes
+%textfont={\setlength{\parindent}{1.5em}}, % Uncomment for paragraph indentation
+linewidth=2pt % Width of the border lines around content boxes
+}
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION 
+%----------------------------------------------------------------------------------------
+%
+{\includegraphics[height=7em]{cimat}} % First university/lab logo on the left
+{\bf\textsc{Mejora del árbol de decisión para el diagnostico de complicaciones del síndrome metabólico.}\vspace{0.1em}} % Poster title
+{\textsc{ Arnulfo González,Dr. Baidya Saha, Dr. Rodrigo Macías  \hspace{12pt} CIMAT A.C.}} % Author names and institution
+{\includegraphics[height=7em]{NIH}} % Second university/lab logo on the right
+
+%--------------------------------------------------------------------------------------------
+% Inicio de fila 1
+%----------------------------------------------------------------------------------------
+
+\headerbox{Introducción}{name=intro,column=0,row=0}{
+%\small{
+\begin{itemize}\compresslist
+\item Actualmente el Síndrome Metabólico (SM) es una entidad bien reconocida y de alta prevalencia a nivel mundial. %\cite{alberti1998definition}. 
+\item Se encuentra relacionado a enfermedades crónicas como la diabetes, hígado graso no alcohólico y la presencia retinopatía.% \cite{haller1977epidermiology}.
+\item Su diagnostico es caro y/o invasivo.% \cite{Poynard:2005aa.
+\item El detectar trastornos metabólicos previos a las complicaciones del SM ayudará al tratamiento oportuno.
+\item Escogimos el algoritmo de árbol de decisión por ser similar a la toma de decisiones por un medico al momento de diagnosticar una enfermedad.
+\end{itemize}
+
+\vspace{0.3em} % When there are two boxes, some whitespace may need to be added if the one on the right has more content
+}
+
+
+
+\headerbox{Objetivos}{name=objetivo,column=1,row=0}{
+\small{
+\begin{enumerate}\compresslist
+\item Clasificar las complicaciones del síndrome metabólico mediante el uso del árbol de decisión con variables bioquímicas y metabolómicas.
+\item Uso de árbol de decisión para clasificación por su facilidad de interpretación.
+\item Mejorar el algoritmo de decisión par automatizar el diagnostico de las complicaciones del síndrome metabólico.
+\item Seleccionar las características mas importantes mediante el método de paso hacia delante, Neighborhood components analysis, y análisis de factores, reduciendo así las dimensiones.
+\item Generar meta características para incrementar la eficiencia del árbol de decisión para clasificar las complicaciones del SM.
+\end{enumerate}
+}
+}
+
+
+\headerbox{Material y Métodos}{name=material ,column=2,row=0,aligned=objetivo}{
+\footnotesize{
+\begin{tabular}{|c|c|c|c|}\hline
+\rowcolor{green}Base de datos & Fuente & E/C & Variables\\\hline
+Diabetes & UANL & 40/40 & 57 \\\hline
+NAFLD & UNAM / NIH & 31/106 &82  \\\hline
+Retinopatía & UNAM / NIH &39/19 & 82 \\\hline
+\end{tabular}
+\vspace{-0.1cm}
+Los datos fueron analizados mediante R y Matlab. }
+
+\tiny{
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKwFor{ForEach}{foreach}{do}{end}
+\SetKwRepeat{Repeat}{repeat}{until}
+\textcolor{red}{Generalized Cost Sensitive Look Ahead Decision Tree  (GCSLADT)(D,d)}\\
+\% D: conjunto de datos, d: tamaño de profundidad\\
+\Input{ atributos valuados en el conjunto de datos D}
+\Output{Un GCSLADT}
+\If{ D es ``puro'' u otro criterio de paro se cumple}{termina}
+\ForAll{Atributos $\in$D}{Computar el criterio de \textcolor{red}{\textbf{información teórico}} si particionamos en a}
+$a_{\text{mejor}}$ = El mejor subconjunto de atributos de tamaño d, acorde a los criterios de \textcolor{red}{\textbf{información teórico}} computados antes
+
+%$a_{\text{mejor}}$ = El mejor atributo acorde a los criterios computados antes.\\
+Árbol = Crea una rama de decisión que prueba $a_{mejor}$ en la raíz\\
+$D_{I}$ = Inducción de los sub-datos de $D$ basados en $a_{\text{mejor}}$\\
+\ForAll{$D_{I}$}  {$\text{Árbol}_{v} = (GCSLADT)(D_I,d)$\\
+ Adjunta el $\text{árbol}_{v}$ a la rama correspondiente del árbol}
+\Return{Árbol}
+\end{algorithm}}
+
+}
+\headerbox{Criterio de Información}{name=criterio_info,column=3,row=0,aligned=intro}{
+\footnotesize{
+\textcolor{red}{\textbf{Información teórico:}} Encontrar un atributo con un valor de limite que maximiza la reducción de entropía para realizar la partición de datos.\par
+$(k^*,\tau^*) = \text{argmax}_{k,\tau} G(k,\tau) $
+
+Donde $G(k,\tau) =  E_{antes} - E_{después}$.
+$E$ denota la entropía, que es una medida de incertidumbre en los datos.\
+
+$E_{antes}$ y $E_{despues}$, la entropía antes y después de la partición.\par
+$E_{antes} = E(D) =  \sum^m_{i=1} f(w_i,D) p(c_i,D) log_2 (p(c_i,D))$
+
+$E_{despues} = \frac{|D_l (k,\tau)|}{|D|} E(D_l(k,\tau)) + \frac{|D_r(k,\tau)|}{|D|} E(D_r(k,l)) $
+}
+\vspace{-0.15cm}
+\begin{multicols}{2}
+\tiny{
+\begin{tcolorbox}[title = Árbol de decisión sensible a costos, title filled]
+$f(w_i,D) = \frac{\sum^m_{i=1,c\neq i}|D(c_i)|}{|D|}$\\~\\ $|D(c_i)| =$ \# de observaciones  en D pertenecientes a clase $c_i$.
+$f(w_i,D) = 1 \forall i $ para árboles de decisión no sensibles a costo 
+\end{tcolorbox}
+}
+\columnbreak
+\includegraphics[width=3.5cm]{dt_computo}
+\end{multicols}
+}
+
+%----------------------------------------------------------------------
+%Inicio de fila 2
+%
+%-----------------------------------------------------------------------------
+\headerbox{Meta-features}{name=meta, column=0, below=intro}{ % This block's bottom aligns with the bottom of the conclusion block
+\setlength{\columnsep}{-70pt}
+\tiny{
+Las meta-características resultan de aplicar, una operación algebraicas o booleanas entre las variables de la base de datos.
+\begin{multicols}{1}
+\begin{minipage}[t]{.4\textwidth}
+\includegraphics[width=2cm,height=1cm]{dt_metafeatures}
+\end{minipage}
+\columnbreak
+
+\begin{minipage}[t]{1\textwidth}
+\begin{tabular}{|c|c|c|}\hline
+ &Bioquímico  & \begin{minipage}[t]{0.15\textwidth} Bioquímico \\+ Metadata \end{minipage}\\\hline
+Exactitud &83\%&88.3\%\\\hline
+\# Hojas & 7 & 13\\\hline
+T de árbol & 7&13\\\hline
+\end{tabular}
+\end{minipage}
+\end{multicols}
+}}
+
+\headerbox{Look Ahead Decision Tree}{name=look,column=1,aligned=meta,below=objetivo,aligned=meta}{ % This block's bottom aligns with the bottom of the conclusion block
+\small{En este algoritmo se toma en cuenta los nodos adelante del nodo actual para tomar la decisión de clasificación.}
+\begin{minipage}[t]{1\textwidth}
+\centering
+\includegraphics[width=5cm]{look}\\
+\includegraphics[width=4.5cm]{look2}
+\end{minipage}
+}
+
+
+\headerbox{\small{Cost Sensitive Decision tree}}{name=cost_sensitive,column=2,row=0,below=material,aligned=look}{
+\centering
+\includegraphics[width=5cm]{cost_sensitive}
+\small{
+\begin{tabular}{|c|c|p{1cm}|}\hline
+\tiny{E(NAFLD)/ A(Normal) }& \tiny{E(Normal)/ A(NAFLD) } &\tiny{Exactitud}\\\hline
+\tiny{0.25} & \tiny{0.75} & \tiny{91.42}\\\hline
+\tiny{0.75}& \tiny{0.25} & \tiny{91.42} \\\hline
+\tiny{0.33 }& \tiny{0.67} & \tiny{92.22}\\\hline
+\tiny{0.67} & \tiny{0.33} & \tiny{91.72} \\\hline
+\tiny{0.5} & \tiny{0.5} & \tiny{91.24} \\\hline
+\end{tabular}}
+
+}
+
+\headerbox{\small{Características y Resultados}}{name=resultado1,column=3,row=0,below=criterio_info}{
+%\begin{multicols}{1}
+\centering
+\includegraphics[height=3cm, width=4cm]{features}
+
+
+\tiny{
+\begin{tabular}{|c|c|c|}
+\hline
+C4.5 / NAFLD & Exactitud & ROC\\ \hline
+FS/LR & 90\% & 93\%\\\hline
+Bioquímico + Metadata & 88.3\% & 81\% \\\hline
+DT / Análisis de factores & 87.5\% & 89.5\% \\\hline
+Metadata/ FS & 86\% & 90\% \\\hline
+\end{tabular}}\\~\\
+
+%\columnbreak
+
+}
+
+\headerbox{\small{\centering Selección de características}}{name=seleccion,column=0,row=0,below=meta}{
+\tiny{
+\begin{tabular}{|c|p{1.6cm}|c|p{1.3cm}|}\hline
+ Método de Selección & Forward selection + logistic regression  & NCA + DT & Factor analysis + DT\\\hline
+Exactitud &   90\%    & 81\%   & 87.5\%   \\\hline
+\# Hojas &    7     &   7   &  7  \\\hline
+T de árbol &    13    &   13   & 13      \\\hline
+
+\end{tabular}}
+
+}
+%??????-----???????????????-------??????-----???????????????-------
+%Comienzo de fila 3
+%
+%??????-----???????????????-------??????-----???????????????-------
+\headerbox{Resultados}{name=resultado2,column=0,row=0,below=seleccion,aligned=selecction}{
+
+\centering
+\small{
+\begin{tabular}{|c|c|c|}
+\hline
+C4.5 &  Exactitud & AUC \\\hline
+Diabetes &  91.2\% & 90\%  \\\hline
+NAFLD  &  97.6\%  & 95.9\%  \\\hline
+Retinopatía & 91.6\% &  94.6\% \\\hline
+\end{tabular}}
+\vspace{1cm}
+\begin{multicols}{1}
+\includegraphics[width=3cm]{auc_c45_nafld}
+\columnbreak
+\includegraphics[height=2.2cm]{b_diabetes}
+
+\end{multicols}
+\vspace{1cm}
+}
+
+
+
+\headerbox{\small{ATP III  Síndrome metabólico + FAT + BMI}}{name=conclusiones,column=1,aligned=resultado2,above=bottom}{ % This block is 
+\centering
+\includegraphics[height=3.5cm]{intro_sm2}
+
+\footnotesize{
+\vspace{.5cm}
+\begin{tabular}{|p{1.42cm}|c|c|c|c|c|}\hline
+& Sens & Esp & VPP & VPN & Exactitud \\\hline
+Bioquímico & 75\% & 89\% & 64.5\% & 91.5\% & 83\% \\\hline
+Bioquímico + Metadata & 80\% & 90\% & 64\% & 95\% & 88.3\%\\\hline
+FS / LR & 82\% & 92\% & 74\% & 95\% & 90\%\\\hline 
+ATPIII SM & 23\% & 78\% & 70\% & 31\% & 40.14\%\\\hline
+\end{tabular}}
+\vspace{-0.5cm}
+}
+
+\headerbox{Conclusion}{name=conclusiones2,column=2,aligned=resultado2,above=bottom}{ % This block is as tall as the references block
+\footnotesize{
+\begin{itemize}
+\item GCSLADT supera otras variantes de árbol de decisión para el diagnóstico de complicaciones del síndrome metabólico.
+\item La incorporación de meta características ayuda a dar mayor exactitud del árbol de decisión para clasificar las complicaciones del síndrome metabólico.
+\item La función de costos clase sensible también incrementa la exactitud del árbol de decisión para clasificar el NAFLD porque los datos no son balanceados.
+\item  GCSLADT puede demostró tener una mejor exactitud que el utilizar un árbol de decisión creado por el experto para clasificar NAFLD.
+\item El algoritmo de árbol de decisión pudo clasificar adecuadamente al paciente con diabetes, NAFLD y retinopatía con las acilcarnitinas de cadena larga.
+\end{itemize}}
+
+
+
+}
+%----------------------------------------------------------------------------------------
+%	CONTACT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\headerbox{Referencias}{name=referencias,column=3,aligned=resultado2,above=bottom}{ % This block is as tall as the references block
+
+\renewcommand{\section}[2]{\vskip 0.05em} % Get rid of the default "References" section title
+\nocite{*} % Insert publications even if they are not cited in the poster
+\footnotesize{ % Reduce the font size in this block
+\bibliographystyle{unsrt}
+\bibliography{poster} % Use sample.bib as the bibliography file
+}
+}
+
+
+
+
+
+%Los datos fueron obtenidos de estudios clínicos realizados previamente en: 
+%\begin{itemize}\compresslist
+%\item La base de datos de los pacientes con diabetes se obtuvo en el Hospital Universitario ``José E. González''.
+%\item La base de datos de los pacientes con NAFLD y retinopatía se obtuvieron en Hospital General de México. Parte de los recursos otorgados para el presente trabajo fueron dados por el Instituto de Salud de Estados Unidos (NIH)
+%\end{itemize}
+
+%Los datos con los que se trabajaron incluyeron:
+%\begin{itemize}\compresslist
+%	\item Base de datos pacientes con diabetes,  2 grupos de 40 sujetos, 10 variables clínicas, 7 variables bioquímicas y 40 variables metabolómicas.
+%	\item Base de datos pacientes con NAFLD y Retinopatía, 7 variables clínicas, 22 variables bioquímicas, 10 variables inflamatorias, 12 aminoácidos y 31 variables metabolómicas.
+%\end{itemize}
+%}
+
+
+\end{poster}
+
+\end{document}

@@ -1,0 +1,18 @@
+\chapter{Conclusiones y futuros trabajos}
+
+En la actualidad, el c\'omputo y las herramientas estad\'isticas forman gran parte para entender el comportamiento del mundo y de la vida. Los resultados que hemos encontrado, en colaboraci\'on con el Laboratorio Nacional de Medicina en Sistemas y el equipo de trabajo de Uruguay, han descrito un antecedente en la b\'usqueda de respuestas antes enfermedades como el c\'ancer que son un gran problema en el sector de salud nacional.\\
+
+Los SNPs mencionados est\'an divididos en las tres poblaciones, pero muestran mayor actividad en la poblaci\'on europea, b\'asicamente en la española. Esto puede implicar que los genes asociados al c\'ancer colorrectal tiene un relaci\'on con la ascedencia europea,  dado el mestizaje en M\'exico, aunque como se mencion\'o en el apartado de resultados, falta observar el comportamiento de los otros SNPs que no se mapearon y dar un resultado m\'as completo. Por otro lado, siendo que en los cuadros \ref{fig:caf} y \ref{fig:cam} se ve una diferencia en porcentaje de genes para cada poblaci\'on, es notable mencionar que hay mujeres con ascedencia americana nativa al 100\% y de manera similar con ascedencia africana pero no existe ning\'un individuo con ascedencia europea; esto puede implicar que tal vez exista una relaci\'on mayor de la enfermedad con estas poblaciones, pero este no es el caso.\\
+
+Estos an\'alisis tienen como objetivo dar una explicaci\'on m\'as contudente, aunque es necesario recalcar la complejidad computacional que esta presenta, ya que las bases de datos son de alta dimensionalidad y su an\'alisis generan problemas complejos. Por otro lado, es interesante notar que de los doce SNPs con mayor asociaci\'on al c\'ancer solo se pudo observar cuatro, esto puede resolverse en la forma de generar mayores estudios en la parte g\'enetica poblacional aqu\'i en M\'exico y tener antecedentes que nos ayuden a entender el por que de las enfermedades. \\
+
+\section{Futuros trabajos}
+
+Aunque se ha generado un gran avance en la estimaci\'on de la ancestr\'ia en un conjunto de datos de genes con poblaciones desconocida, es necesario recalcar que este tipo de an\'alisis no indica con precisi\'on la cercania de la relaci\'on de la ancestria con el c\'ancer ya que se tiene un rango en la posici\'on g\'enetica provocando no conocer puntualmente la posici\'on del gen. Por lo tanto, en un trabajo futuro se recomienda comenzar a trabajar con an\'alisis de haploides el cu\'al puede generar mayor referencia en los asuntos de precisi\'on para relacionar las enfermedades con los genes.
+
+
+
+
+
+
+
