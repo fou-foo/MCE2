@@ -14,6 +14,29 @@ library(RColorBrewer)
 ```
 
 
+```{r data, eval=FALSE}
+library(readr)
+library(lubridate)
+library(dplyr)
+cervezas <- read_delim(file='Datos_Cerveza_UnaPlaza.txt', delim='|')
+catalogo <- read_delim(file='CATSKU_BI.csv', delim='|')
+sapply(cervezas, class)
+cervezas$monto <- cervezas$loc <- NULL
+cervezas$id_fecha <- ymd(cervezas$id_fecha)
+cervezas$id_producto <- as.character(cervezas$id_producto)
+#prapracion de catalogo
+sapply(catalogo, class)
+catalogo$PRODUCTO_KEY <- as.character(catalogo$PRODUCTO_KEY)
+sku.cervezas <- unique(cervezas$id_producto)
+catalogo.cervezas <- catalogo %>% filter(PRODUCTO_KEY %in% sku.cervezas)
+names(catalogo.cervezas)
+catalogo.cervezas <- catalogo.cervezas[,c('PRODUCTO_KEY', 'PRODUCTO_DES', 'SUBSEGMENTO_DES')]
+cervezas <- na.omit(cervezas)
+save(cervezas, file='cervezasFiltro.rdata')
+save(catalogo.cervezas, file='catalogoCervezas.rdata')
+```
+
+
 ```{r barras1}
 load(file = 'cervezasFiltro.rdata')
 load( file = 'catalogoCervezas.rdata') #catalogo con los detalles SOLO de las cervezas
@@ -78,6 +101,7 @@ ggplot(subset(temp, Categoria==var[index]),
 ```{r barras2}
 ###################
 # graficos día de la semana
+library(lubridate)
 cervezas %>% group_by(id_producto, wday(id_fecha, label=TRUE)) %>%
     summarise(cantidad=sum(cantidad),
               montomargen=sum(montomargen)) -> temp
@@ -140,6 +164,8 @@ ggplot(subset(temp, Categoria==var[index]),
 #Sys.sleep(10)
 #save(cervezas, file = 'tablota.rdata')
 load(file = 'tablota.rdata')
+library(dplyr)
+library(ggplot2)
 # grafica de montos y cantidades en serie de tiempo 
 cervezas %>% group_by(Categoria, id_fecha) %>%
     summarise(
@@ -183,7 +209,7 @@ cervezas %>% filter(Categoria==var[index])%>%
               montomargen=sum(montomargen),
               Categoria=head(Categoria,1))-> temp
 temp <- temp[ order(temp$cantidad), ]
-temp$PRODUCTO_DES[1:5] <- 'Otras'
+temp$PRODUCTO_DES[1:8] <- 'Otras'
 temp %>% group_by(PRODUCTO_DES)%>%
     summarise(cantidad=sum(cantidad), 
               montomargen=sum(montomargen),
@@ -221,7 +247,7 @@ cervezas %>% filter(Categoria==var[index])%>%
               montomargen=sum(montomargen),
               Categoria=head(Categoria,1))-> temp
 temp <- temp[ order(temp$montomargen), ]
-temp$PRODUCTO_DES[1:5] <- 'Otras'
+temp$PRODUCTO_DES[1:8] <- 'Otras'
 p1 <- ggplot(data=temp, aes(x=Categoria, y=montomargen, 
                       fill=PRODUCTO_DES))+geom_col()+
     theme_minimal()+
