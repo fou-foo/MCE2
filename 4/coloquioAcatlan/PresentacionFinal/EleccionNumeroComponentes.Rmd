@@ -10,6 +10,7 @@ output:
     fonttheme: "structurebold"
 header-includes:
     - \usepackage[spanish]{babel}
+    - \usepackage{graphicx}
 ---
 ---
 
@@ -82,18 +83,18 @@ Se construyeron tres instancias, con las mismas dimensiones ($515,345 \times 90$
 # EDA
 
 
-![No. de canciones por año en el conjunto de datos de la instancia 3](freq_canciones.png)
+![No. de canciones por año en el conjunto de datos de la instancia 3](img/freq_canciones.png)
 
 # PCA
 
 
-![Proyección de dos muestras (0.1\% y 1\% del total ), varianza explicada 19\%.](pca.png)
+![Proyección de dos muestras (0.1\% y 1\% del total ), varianza explicada 19\%.](img/pca.png)
 
 
 
 # Linealidad ?
 
-![Correlación entre $Y$ y las variables exógenas.](correlograma.png)
+![Correlación entre $Y$ y las variables exógenas.](img/correlograma.png)
 
 # Implementación
 
@@ -105,86 +106,62 @@ Se construyeron tres instancias, con las mismas dimensiones ($515,345 \times 90$
   
   * M-K: Simulación y promedio $O(n)$
 
-La implementación es conceptualmente fácil de paralelizar, en una arquitectura multihilo. Los cálculos fueron efectuados en una instancia Standard F8s\_v2 (8 vcpu, 32 GB de memoria) de un proveedor de servicios en la nube 
+La implementación es conceptualmente fácil de paralelizar, en una arquitectura multihilo. Los cálculos fueron efectuados en una instancia Standard F16s\_v2 (16 vcpu, 64 GB de memoria) de un proveedor de servicios en la nube 
 
 
 
 
-#Instancia 1 y 2 (1000 simulaciones)
+# Instancia 1 (1000 monte-carlo)
+
+![Boostrap instancia 1](img/parallel_unif.png)
 
 
 
+# Instancia 1 
+
+![Densidades muestrales](img/parallel_unif_densidade.png)
 
 
-![](parallel_unif_norm.png)
+# Instancia 2 (1000 monte-carlo)
 
-#
-
-![](parallel_boot.png)
-
-#
-
-![](parallel_unif.png)
-
-# 
+![](img/ray_densidades.png)
 
 
-![](parallel_unif_densidade.png)
+# Instancia 2 (1000 monte-carlo)
 
-#
-
-Los resultados en esta instancia son los esperados: el criterios de Kaiser, el parallel analysis uniforme y con bootstrap sugieren el mismo número de componentes (el punto en donde las curvas se intersectan).\footnote{ El criterio 'del codo' ?}
+![](img/ray_densidades_RMT.png)
 
 
-# Instancia 2 (Rayleigh)
+# Resumen instancias 1 y 2
 
+Los resultados en estas instancias son los esperados: el criterios de Kaiser, el parallel analysis uniforme y con bootstrap sugieren el mismo número de componentes (45, el punto en donde las curvas se intersectan).\footnote{ El criterio 'del codo' ?}
 
-
-![](ray_norm_uni.png)
-
-#
-
-![](ray_boot.png)
-
-#
-
-![](ray_densidades.png)
-
-
-#
-
-![](ray_densidades_RMT.png)
-
-# 
-
-
-Esta instancia presentó los mismos resultados que la anterior (45 componentes). La distribución límite de Marchenko Pastur encierra a todos los valores propios.
-\footnote{Este experimento nos sugiere que el criterio que estamos tomando usando  resultados de matrices aleatorias podría extenderse, sino a todas las distribuciones tal vez sí a las de la familia exponencial.}
+La distribución límite de Marchenko Pastur encierra a todos los valores propios, esto nos sugiere que el criterio que estamos tomando usando  resultados de matrices aleatorias podrían extenderse, a las distribuciones de la familia exponencial
 
 # Caso práctico
 
-![Parallel analysis uniforme](reales_unif.png)
 
-#
-
-![Bootstrap presenta menor varianza que en las dos instancias anteriores, i.e. las muestras son igual de 'informativas' que la original](reales_boot.png)
-
-#
-
-![](paralllel_prac.png)
-
-# Instancia 3(Million Song Dataset)
+![Bootstrap caso práctico](img/paralllel_prac_big.png)
 
 
-![](practica_emp1.png)
 
-#
+# Comentario simulación intancia 3
 
-![](practica_emp2.png)
+El parallel analysis presenta menor varianza que en las dos instancias anteriores, i.e. las muestras simuladas son igual de 'informativas' que la original
 
-#
 
-En la siguiente tabla resumimos los números de componentes que propone cada criterio sobre las tres instancias, así como sus respectivos tiempos de cómputo que requiere la simulación:
+# Instancia 3 (Million Song Dataset)
+
+
+![](img/practica_emp1.png)
+
+# Instancia 3 (Million Song Dataset, zoom)
+
+![](img/practica_emp2.png)
+
+# Resultados
+
+Resumimos los números de componentes que propone cada criterio sobre las tres instancias, así como sus respectivos tiempos de cómputo que requiere la simulación:
 
 \begin{center}
 \begin{tabular}{|l|c|c|c|c|c|}
@@ -200,11 +177,10 @@ Id  & Kaiser &  Uniforme & Bootstrap & M-P & Tiempo\\
 
 
 
-# Predicción
+# Resultados (regresión)
 
 
-\textbf{En un trabajo del donador de los datos \cite{paper} se reporta un error sobre el conjunto de prueba de 10.20 y 8.76 (medido en la misma escala que en nuestro experimento) utilizando el método de 50 vecinos más cercanos y el algoritmo de Vowpal Wabbit.} Nuestro resultado final es de \textbf{9.5}. casi en el punto medio sin embargo nosotros nos restringimos a métodos de regresión lineales.
-
+En un trabajo del donador de los datos \cite{paper} se reporta un error sobre el conjunto de prueba de 10.20 y 8.76 (medido en la misma escala que en nuestro experimento) utilizando el método de 50 vecinos más cercanos y el algoritmo de Vowpal Wabbit. Nuestro resultado final es de \textbf{9.5}. casi en el punto medio sin embargo nosotros nos restringimos a métodos de regresión lineales.
 
 
 # Conclusiones
@@ -216,16 +192,16 @@ Nuestro criterio basado en la distribución de Marchenko Pastur:
   - Acota el espacio de búsqueda de las componentes de PLS.
 
  
- Diseñamos un experimento para simulación donde se tienen tres estratos el primero muy cercano a los supuestos necesarios del teorema de Marchenko-Pastur\footnote{Cuyo paper original se encuentra en ruso \includegraphics[height=5.0mm]{carita_miedo.PNG}}, el segundo no satisfaciendo la normalidad y el tercero (datos reales) solo con media cero y desviación estándar estimada igual a la unidad.
+ Diseñamos un experimento de simulación donde se tienen tres estratos el primero muy cercano a los supuestos necesarios del teorema de Marchenko-Pastur\footnote{Cuyo paper original se encuentra en ruso \includegraphics[height=5.0mm]{img/carita_miedo.PNG}}, el segundo no satisfaciendo la normalidad y el tercero (datos reales) solo con media cero y desviación estándar estimada igual a la unidad.
  
 
 
 - La estimación utilizando técnicas de reducción de dimensionalidad, en particular PLS con una proporción bastante pequeña respecto al número de variables siempre presentó un mejor desempeño aún en casos teóricos y prácticos.
 
 
-#
+# Conclusión
 
-- La agregación puede aportar grandes ganancias por encima de los componentes individuales.
+- La agregación puede aportar grandes ganancias por encima de los componentes individuales, NO FUERZA BRUTA
 
 - Citando a Stephen M. Stigler \footnote{ver \cite{ame} pág. 23} sobre el cuento de Jorge Luis Borges \textit{Funes el memorioso} de 1942
 
@@ -265,8 +241,6 @@ A. Edelman; \textit{Random Matrix Theory and its Innovative Applications};2013.
 \bibitem{horn}
 Horn, J. L.; \textit{A Rationale and Test For the Number of Factors in Factor Analysis}; Psychometrika, 30, 179-85; 1965.
 
-\bibitem{kaggle}
-Kaggle Inc.; \url{https://www.kaggle.com/} consultado el 23 de octubre de 2018
 
 \bibitem{kaiser}
 Kaisert H.; \textit{The application of electronic computers to factor analysis}; Paper read at
@@ -280,9 +254,6 @@ a symposium on application of computers to psychological problems. Meeting of Am
 
 
 
-\bibitem{elements}
-Hastie T., Tibshirani R. and Friedman J. ; \textit{The 
-Elements of Statistical Larning}; Springer 2nd., 2009.
 
 
 \bibitem{ame}
@@ -292,8 +263,6 @@ Stephen M. Stigler; \textit{Los siete pilares de la sabiduría estadística}; Libr
 \bibitem{paper}
 T. Bertin-Mahieux, D. P.W. Ellis,B. Whitman y P. Lamere ; \textit{THE MILLION SONG DATASET}; recuperado de \url{https://www.ee.columbia.edu/~dpwe/pubs/BertEWL11-msd.pdf} el 3 de noviembre de 2018.\\
 
-\bibitem{Another}
-Wang, B. and Zou, H. (2017) \emph{Another Look at Distance Weighted Discrimination}, Journal of Royal Statistical Society, Series B, 80(1), 177-198. \url{https://rss.onlinelibrary.wiley.com/doi/10.1111/rssb.12244}
 
 
 \end{thebibliography}

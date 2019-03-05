@@ -70,7 +70,7 @@ server <- function(input, output) {
     p1 <- ggplot(data = proyec, aes(x=V2, y=V3, color=label))+geom_point() +
       stat_function(fun = function(z){z*(w[1]/w[2])}, aes(colour = I('MDP')), size=1.5)+
       geom_hline(yintercept=0, aes(colour=I('red')),     show.legend = NA)+
-      ggtitle('Proyección en la dirección opima de Bayes y MaxDataPiling') +
+      ggtitle('Proyeccion en la direccion optima de Bayes y MaxDataPiling') +
       theme_minimal()+  xlab('Bayes') + ylab('') +
       scale_colour_manual(
         labels = c('-1', '+1', 'MDP'),
@@ -87,7 +87,7 @@ server <- function(input, output) {
     a <- a()
     proyec <- a[[1]]
     p2 <- ggplot(data = proyec, aes(x=V3, fill=label, colour=label))+geom_density()+
-      geom_rug(sides="b")+ggtitle('Distribución en la dirección de Bayes') + theme_minimal()+
+      geom_rug(sides="b")+ggtitle('Distro en la direccion de Bayes') + theme_minimal()+
       xlab('Bayes') + ylab('') +
       scale_fill_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+
       scale_color_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+

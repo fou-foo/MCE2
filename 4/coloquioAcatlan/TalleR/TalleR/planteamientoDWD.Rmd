@@ -1,6 +1,6 @@
 ---
 title: "planteamientoDWD"
-author: "JosÃ© Antonio GarcÃ­a Ramirez"
+author: "José Antonio García Ramirez"
 output: 
   html_document:
     mathjax: "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
@@ -8,7 +8,7 @@ output:
 ---
 
 
-Para DWD la funciÃ³n objetivo primal es 
+Para DWD la función objetivo primal es 
 
 \[
 \min_{r,w,\beta,\epsilon} \sum_{i}(1/r_i) + Ce^t \epsilon

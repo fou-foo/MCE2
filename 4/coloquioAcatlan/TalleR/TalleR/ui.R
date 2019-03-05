@@ -58,29 +58,28 @@ body <- dashboardBody(
       fluidRow(
           box(width = 12,h3("Los datos chaparros (HDLSS) tienden asin (d al inf y n fijo) a tener una
                             geometria  rigida"),
-            h4("La principal fortaleza de DWD es que su desempeÒo es cercano al de SVM, cuando SVM es mejor"),
                h5("Cuando d >>n los datos consisten en un subespacio n dimensional y la idea de trabajar en este espacio es IMPRACTICA"),
-                h6("Los nuevos datos se espera que aparezcan fuera de este subespacio"),
-            h6("En el contexto de microarreglos el interÈs recae en solo algunos subconjuntos de genes especÌficos y esta atenci√≥n es m√°s dif√?cil de mantener solo con algunas combinaciones lineales (es decir cualquier base del subespacio generado por los datos) de lo genes considerados")
+                h6("Las nuevas observaciones se espera que aparezcan fuera de este subespacio"),
+            h6('En el contexto de microarreglos el interes recae solo en algunos genes y esta atencion es mas dificil de antener solo con algunas comb. lin. (i.e. cualquier base degerado por los datos) de los genes considerados')
           ))
-    ),
+    )#,
 
     #la tab de la derivacion
-     tabItem(tabName = "Optimizacion",  h2("Problema de optimizaci√≥n de DWD"),
-             fluidRow( h1('                        '),
-               box(width = 12, column(4), column(3,
-                       img(src='margen.png', align = "center", height = 400),
-                       column(4)
-               ))), hr(),
-             fluidRow(
-               box( width = 12,       column(6,  withMathJax(includeMarkdown(("SVM.Rmd")))) ,
-
-                       column(6, withMathJax(includeMarkdown(("planteamientoDWD.Rmd"))))
-                 )
-             )
-
-
-            )
+     # tabItem(tabName = "Optimizacion",  h2("Problema de opti de DWD"),
+     #         fluidRow( h1('                        '),
+     #           box(width = 12, column(4), column(3,
+     #                   img(src='margen.png', align = "center", height = 400),
+     #                   column(4)
+     #           ))), hr(),
+     #         fluidRow(
+     #           box( width = 12,       column(6,  withMathJax(includeMarkdown(("SVM.Rmd")))) ,
+     #
+     #                   column(6, withMathJax(includeMarkdown(("planteamientoDWD.Rmd"))))
+     #             )
+     #         )
+     #
+     #
+     #        )
 
     )
   )
