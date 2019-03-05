@@ -6,10 +6,10 @@ library(plotly)
 library(MASS)
 library(shiny)
 library(knitr)
-library(rmarkdown) 
+library(rmarkdown)
 #setwd('/home/fou/Desktop/MCE_CIMAT/Second/CienciaDeDatos/DWD')
 #########################################
-# Construccion del backend              # 
+# Construccion del backend              #
 #########################################
 #lectura de datos simulados previamente
 n <- 20
@@ -17,13 +17,13 @@ load('datos.RData')
 ####################################
 server <- function(input, output) {
   #############################markdown de SVM y DWD
-  # output$SVM <- renderUI({  
+  # output$SVM <- renderUI({
   #   rmarkdown::render(input = "SVM.Rmd",
   #                     output_format = html_document(self_contained = TRUE),
-  #                     output_file = 'SVM.html')  
-  #   shiny::includeHTML('SVM.html') 
+  #                     output_file = 'SVM.html')
+  #   shiny::includeHTML('SVM.html')
   # })
-  
+
   #seleccion de datos simulados
   a <- reactive({
     d <- input$d #seleccion de datos
@@ -39,7 +39,7 @@ server <- function(input, output) {
     X <- X/sum(X**2)**.5 #normalizamos el vector que define al frontera de Bayes
     #acos(sum(X*w))*360/(2*pi)
     stack$label <- 1
-    stack$label[(n+1):(2*n)] <- -1 
+    stack$label[(n+1):(2*n)] <- -1
     Y <- X
     Y[-c(1,2)] <- 0
     Y[1] <- X[2]
@@ -58,8 +58,8 @@ server <- function(input, output) {
     b <- list(proyec, w )
     return(b)
   })
-  
-  
+
+
   #construccion de scaterplot del tab DWD
   output$puntos <- renderPlotly({
     datos <- a()
@@ -70,8 +70,8 @@ server <- function(input, output) {
     p1 <- ggplot(data = proyec, aes(x=V2, y=V3, color=label))+geom_point() +
       stat_function(fun = function(z){z*(w[1]/w[2])}, aes(colour = I('MDP')), size=1.5)+
       geom_hline(yintercept=0, aes(colour=I('red')),     show.legend = NA)+
-      ggtitle('Proyecci贸n en la direcci贸n opima de Bayes y MaxDataPiling') +
-      theme_minimal()+  xlab('Bayes') + ylab('') + 
+      ggtitle('Proyecci髇 en la direcci髇 opima de Bayes y MaxDataPiling') +
+      theme_minimal()+  xlab('Bayes') + ylab('') +
       scale_colour_manual(
         labels = c('-1', '+1', 'MDP'),
         values = c("purple", "orange", "green4")
@@ -79,23 +79,23 @@ server <- function(input, output) {
     p2 <- ggplotly(p1) #distro en bayes
     p2 #puntos pegados a la frontera
   })
-  
-  
-  
+
+
+
   #construccion de densidades del tab DWD
   output$Bayes <- renderPlotly({
     a <- a()
     proyec <- a[[1]]
     p2 <- ggplot(data = proyec, aes(x=V3, fill=label, colour=label))+geom_density()+
-      geom_rug(sides="b")+ggtitle('Distribuci贸n en la direcci贸n de Bayes') + theme_minimal()+
-      xlab('Bayes') + ylab('') + 
+      geom_rug(sides="b")+ggtitle('Distribuci髇 en la direcci髇 de Bayes') + theme_minimal()+
+      xlab('Bayes') + ylab('') +
       scale_fill_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+
       scale_color_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+
       theme(legend.title = element_blank())
     p2 <- ggplotly(p2) #distro en bayes
     p2
   })
-  
+
   #construccion de proyecciones del tab DWD
   output$DWD <- renderPlotly({
     a <- a()
@@ -113,6 +113,6 @@ server <- function(input, output) {
       layout(title = "Distancia a hiperplano MDP",
              xaxis = list(title = ' '),
                           yaxis = list(title = ''))
-    
+
   })
 }

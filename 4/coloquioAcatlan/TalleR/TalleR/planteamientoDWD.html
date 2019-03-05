@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="José Antonio García Ramirez" />
+<meta name="author" content="JosÃ© Antonio GarcÃ­a Ramirez" />
 
 
 <title>planteamientoDWD</title>
@@ -91,6 +91,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -119,12 +122,12 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">planteamientoDWD</h1>
-<h4 class="author"><em>José Antonio García Ramirez</em></h4>
+<h4 class="author"><em>JosÃ© Antonio GarcÃ­a Ramirez</em></h4>
 
 </div>
 
 
-<p>Para DWD la función objetivo primal es</p>
+<p>Para DWD la funciÃ³n objetivo primal es</p>
 <p><span class="math display">\[
 \min_{r,w,\beta,\epsilon} \sum_{i}(1/r_i) + Ce^t \epsilon
 \]</span></p>
@@ -136,8 +139,8 @@ r =YX^tw+\beta y+\epsilon
 \]</span> <span class="math display">\[
 r_i\geq0,\epsilon_i\geq0
 \]</span></p>
-<p>La condición de que la norma de <span class="math inline">\(w\)</span> sea la unidad se relaja a que sea a lo más la unidad, esto hace el problema convexo.</p>
-<p>La parte ingeniosa y delicada de la derivación consiste en eliminar los recíprocos utilizando restricciones de conos de segundo orden. Los conos de segundo orden se definen como las hipersuperficies que son de la forma:</p>
+<p>La condición de que la norma de <span class="math inline">\(w\)</span> se relaja sea unitaria, esto hace el problema convexo.</p>
+<p>La parte ingeniosa y delicada de la derivaciónn consiste en eliminar los recíprocos utilizando restricciones de conos de segundo orden. Los conos de segundo orden se definen como las hipersuperficies que son de la forma:</p>
 <p><span class="math display">\[
 S_{m+1}:=\{(\eta, u) \in R^{m+1}: \eta \geq ||u||
 \]</span></p>
@@ -153,7 +156,8 @@ YX^tw+\beta y+\epsilon-\rho+\sigma = 0
 \phi = 1
 \]</span> <span class="math display">\[
 \tau=e
-\]</span> Con <span class="math inline">\((\phi,w)\in S_{d+1}, \epsilon_i \geq 0, (\rho_i,\sigma_i,\tau_i)\in S_3,i=1,2,\dots ,n\)</span>.\ Es importante notar que la condiciónn <span class="math inline">\(\psi =1\)</span> es el segundo detalle importante pues esto transforma el problema de buscar un vector de norma menor a la unidad <span class="math inline">\(w\)</span> en <span class="math inline">\(R^d\)</span> en buscar un punto en el cono embebido en <span class="math inline">\(S_{d+1}\)</span> lo cual en principio podría parecer extraño sin embargo notemos que en la formulación anterior todas las restricciones son lineales.</p>
+\]</span> Con <span class="math inline">\((\phi,w)\in S_{d+1}, \epsilon_i \geq 0, (\rho_i,\sigma_i,\tau_i)\in S_3,i=1,2,\dots ,n\)</span>.</p>
+<p>Es importante notar que la condición <span class="math inline">\(\psi =1\)</span> es el segundo detalle importante pues esto transforma el problema de buscar un vector de norma menor a la unidad <span class="math inline">\(w\)</span> en <span class="math inline">\(R^d\)</span> en buscar un punto en el cono embebido en <span class="math inline">\(S_{d+1}\)</span> lo cual en principio podrÃ­a parecer extraño sin embargo notemos que en la formulación anterior todas las restricciones son lineales.</p>
 <p>En general los problemas SOCP, tiene un dual amable el cual es:</p>
 <p><span class="math display">\[
 \max_{ \alpha } -||XY\alpha||+2e^t\sqrt{\alpha}
@@ -163,7 +167,7 @@ y^t\alpha = 0
 \]</span> <span class="math display">\[
 0\leq \alpha \leq Ce 
 \]</span></p>
-<p>El dual anterior se asemeja mucho al problema dual correspondiente a SVM el cual maximiza</p>
+<p>El dual anterior se asemeja mucho al problema dual correspondiente a SVM el cual maximiza:</p>
 <p><span class="math inline">\(- (1/2) ||XY \alpha ||^2 + e^t\alpha\)</span></p>
 
 

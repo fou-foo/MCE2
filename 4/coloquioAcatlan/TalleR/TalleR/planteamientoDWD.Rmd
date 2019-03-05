@@ -26,17 +26,17 @@ r =YX^tw+\beta y+\epsilon
 r_i\geq0,\epsilon_i\geq0
 \]
 
-La condici贸n de que la norma de $w$ sea la unidad se relaja a que sea a lo m谩s la unidad, esto hace el problema convexo.
+La condici髇 de que la norma de $w$ se relaja sea unitaria, esto hace el problema convexo.
 
-La parte ingeniosa y delicada de la derivaci贸n consiste en eliminar los rec铆procos utilizando restricciones de conos de segundo orden. Los conos de segundo orden se definen como las hipersuperficies que son de la forma:
+La parte ingeniosa y delicada de la derivaci髇n consiste en eliminar los rec韕rocos utilizando restricciones de conos de segundo orden. Los conos de segundo orden se definen como las hipersuperficies que son de la forma:
 
 \[
 S_{m+1}:=\{(\eta, u) \in R^{m+1}: \eta \geq ||u||
 \]
 
-Notemos en lo anterior que $u$ es un vector de dimensi贸n $m$. Considerando los conos mencionados se definen $r_i= \rho_i - \sigma_i$ donde $\rho_i=(r_i+ 1/r_i)/2,\sigma_i=(1/r_i -r_i)/2$. Entonces $\rho_i^2-\sigma_i^2=1$ o $(\rho_i, \sigma_i,1)\in S_3$ y $\rho_i+\sigma_i =1/r_i$. 
+Notemos en lo anterior que $u$ es un vector de dimensi髇 $m$. Considerando los conos mencionados se definen $r_i= \rho_i - \sigma_i$ donde $\rho_i=(r_i+ 1/r_i)/2,\sigma_i=(1/r_i -r_i)/2$. Entonces $\rho_i^2-\sigma_i^2=1$ o $(\rho_i, \sigma_i,1)\in S_3$ y $\rho_i+\sigma_i =1/r_i$. 
 
-Entonces sustituyendo lo anterior en (5) la funci贸n de costo a minimizar se convierte en:
+Entonces sustituyendo lo anterior en (5) la funci髇 de costo a minimizar se convierte en:
 
 \[
 \min_{ \phi ,w,\beta,\epsilon, \rho,\sigma,\tau} Ce^t \epsilon + e^t\rho +\epsilon^t \sigma
@@ -55,7 +55,7 @@ YX^tw+\beta y+\epsilon-\rho+\sigma = 0
 \]
 Con $(\phi,w)\in S_{d+1}, \epsilon_i \geq 0, (\rho_i,\sigma_i,\tau_i)\in  S_3,i=1,2,\dots ,n$.
 
-Es importante notar que la condici贸nn $\psi =1$ es el segundo detalle importante pues esto transforma el problema de buscar un vector de norma menor a la unidad $w$ en $R^d$  en buscar un punto en el cono embebido en $S_{d+1}$ lo cual en principio podr铆a parecer extra帽o\footnote{Pues incrementa la dimensi贸n del espacio de b煤squeda} sin embargo notemos que en la formulaci贸n anterior todas las restricciones son lineales. 
+Es importante notar que la condici髇 $\psi =1$ es el segundo detalle importante pues esto transforma el problema de buscar un vector de norma menor a la unidad $w$ en $R^d$  en buscar un punto en el cono embebido en $S_{d+1}$ lo cual en principio podr铆a parecer extra駉\footnote{Pues incrementa la dimensi髇 del espacio de b鷖queda} sin embargo notemos que en la formulaci髇 anterior todas las restricciones son lineales. 
 
 En general los problemas SOCP, tiene un dual amable el cual es:
 
@@ -71,7 +71,7 @@ y^t\alpha = 0
 0\leq \alpha \leq Ce 
 \]
 
-El dual anterior se asemeja mucho al problema dual correspondiente a SVM el cual maximiza
+El dual anterior se asemeja mucho al problema dual correspondiente a SVM el cual maximiza: 
 
 $- (1/2) ||XY \alpha ||^2 + e^t\alpha$ 
 
