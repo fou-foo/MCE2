@@ -1,12 +1,11 @@
 ---
-title: "VAR-PLS"
-subtitle: 'Protocolo de tesina'
+title: "Visualización de pronósticos"
+subtitle: 'Estancia de vinculación '
 author: J. Antonio García Ramírez
-date: 17-02-2019
+date: 12 de marzo, 2019
 output:
   beamer_presentation:
-    theme: "CambridgeUS"
-    colortheme: "beaver"
+    theme: "Madrid"
     fonttheme: "structurebold"
 header-includes:
    - \usepackage[utf8]{inputenc}
@@ -17,102 +16,106 @@ header-includes:
 # Esquema
 
  * Antecedentes
-    - Observatorio Econométrico 
 
- * Motivación
-    - CIMAT
-    - Profesionales
-    
  * Objetivo
-    
+ 
+ * Motivación
+
  * Comunicación
-    - Mtro. Héctor
-    - Dr. Andres :D 
-    - DR. Francisco C. 
-    
+
  * Delimitación
-    - Issue(S) : Código, tiempos de ejecución y documentación.
-    
+
  * Enfoque(s)
-    - Cascada (abandoned)
-    - Ágil
-    
+
  * Avances (Situación actual)
-    - Primer entregable 
- 
+
  * Trabajo (no tan) futuro 
-    - Áreas de oportunidad 
-    - Criptomonedas
-
  
-    
+ * Comentarios y sugerencias 
+ 
  * Bibliografía y referencias
-  
-# Observatorio Econométrico 
- 
-Iniciativa de la unidad Monterrey 
-
-\begin{center}
-[Boletín](https://drive.google.com/file/d/1q_G4laOQV3H3UNF2gXZxhEZdacG3rq_R/view?usp=sharing)
-\end{center}
 
 
+# Antecedentes
+
+Observatorio Econométrico: Iniciativa de la unidad Monterrey 
+
+[Boletín del 2012](https://drive.google.com/file/d/1q_G4laOQV3H3UNF2gXZxhEZdacG3rq_R/view?usp=sharing)
 
 
-# Definición del problema
-
-\begin{center}
-\textbf{ Pronosticar de 1 a $h$ pasos hacia delante}
-\end{center}
-
-Con más de una serie 
+[Carlos III](https://e-archivo.uc3m.es/handle/10016/20747#preview)
 
 
+
+# Objetivo
+
+
+**Visualizar los pronosticos** \footnote{Pronósticos precisos y confiables, para la toma de decisiones} **de la [metodología](https://drive.google.com/file/d/1OEoKR1Bz2QQ7Jpp2sx-mvGJm8Xr2bYPD/view?usp=sharing) que se tiene  ¿para qué?**
+
+Automatizar el proceso, en medida de lo posible
+
+
+
+
+
+
+
+# Motivación
+
+\begin{itemize}
+\item CIMAT
+\item Profesionales
+\end{itemize}
+    
+# Comunicación
+
+
+\begin{itemize}
+\item Mtro. Héctor
+\item Dr. Andres  
+\item Dr. Francisco C. 
+
+
+
+\end{itemize}
     
 
+# Delimitación
+    
+    Issue(S) : Código, tiempos de ejecución y documentación.
+    
+# Enfoque(s)
 
+Cascada (abandoned)
 
-# Justificación
-
-
-
-OLS minimiza la suma cuadrada de $\epsilon_t$ pero no garantiza que lo sea para $h$ errores a futuro
+Ágil
+    
+# Avances (Situación actual)
  
+ __Primer entregable__
 
-# Objetivos
 
-Pronósticos precisos y confiables, para la toma de decisiones. 
+# Trabajo (no tan) futuro 
 
-Costo computacional bajo, implementación eficiente (OLS)
 
-# Metodología
 
 \begin{itemize}
+\item Áreas de oportunidad 
+    
+\item Criptomonedas
 
-\item Modelo VAR
 
-\item Con el proceso autorregresivo construir la regresión PLS
-
-\item	Construcción de intervalos de predicción vía Bootstrap
-
-\item	Pronosticar con el VAR-PLS
 
 \end{itemize}
 
 
+# Comentarios y sugerencias
+ 
+    
+# Bibliografía y referencias
 
-# Cronograma
 
-![Cronograma](img/cronograma.PNG)
 
-# Anexo: Posibles extensiones
-
-\begin{itemize}
-    \item Incluir cointegración PLS-VAR
-    \item Matrices \textit{sparse}
-\end{itemize}
-
-# Bibliografía
 
 
 
@@ -121,24 +124,13 @@ Costo computacional bajo, implementación eficiente (OLS)
 \bibitem{pls}
 Bjorn-Helge Mevik and Ron Wehrens;\textit{ The pls Package: Principal Component and Partial Least Squares Regression in R}, Journal of Statistical Software January 2007, Volume 18, Issue 2.
 
-\bibitem{boostrapKim}
-Kim, J.H. (2001); \textit{ Bootstrap after bootstrap prediction intervals for autoregressive models}, Journal of Business and Economic Statistics, 19(1), 117-128.
 
 
 
 \bibitem{PLSmaths}
 Hoskuldsson (1988); \textit{ PLS Regression Methods}, Journal of Chemometrics, Vol 2, pp 221-228
 
-\bibitem{bootstrap1}
-Pascual, L., J. Romo, and E. Ruiz (2004);  \textit{Bootstrap predictive inference for ARIMA processes}, Journal of Time Series Analysis, 25, 449-465
 
-\end{thebibliography}
-
-# 
-
-
-
-\begin{thebibliography}{1}
 
 \bibitem{frances}
 Philip Hans Franses (2006); \textit{Forecasting 1 to h steps ahead using partial least squares}, Econometric Institute, Erasmus University Rotterdam, Econometric Institute Report
