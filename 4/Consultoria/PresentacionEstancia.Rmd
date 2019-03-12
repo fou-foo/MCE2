@@ -17,33 +17,44 @@ header-includes:
 # Esquema
 
  * Antecedentes
- * Definición del problema
- * Justificación
- * Objetivos
- * Metodología
- * Cronograma
- * Anexo: Extensiones
- * Bibliografía
+    - Observatorio Econométrico 
+
+ * Motivación
+    - CIMAT
+    - Profesionales
+    
+ * Objetivo
+    
+ * Comunicación
+    - Mtro. Héctor
+    - Dr. Andres :D 
+    - DR. Francisco C. 
+    
+ * Delimitación
+    - Issue(S) : Código, tiempos de ejecución y documentación.
+    
+ * Enfoque(s)
+    - Cascada (abandoned)
+    - Ágil
+    
+ * Avances (Situación actual)
+    - Primer entregable 
+ 
+ * Trabajo (no tan) futuro 
+    - Áreas de oportunidad 
+    - Criptomonedas
+
+ 
+    
+ * Bibliografía y referencias
   
-# Antecedentes, $PLSAR(h,p)$ 
+# Observatorio Econométrico 
+ 
+Iniciativa de la unidad Monterrey 
 
-Phillip Hans Franses\footnote{2006, Países Bajos }  propone una metodología para realizar pronosticos
-
-El método se ilustra con la productividad de USA en $[1945.1, 2000.4]$ frente a $AR(p)$ y $AR_j(p)$
-
-![Resultados de Frances](img/ResultadosFrances.PNG "foo")
-
-# Antecedentes, lo cool:
-
-\begin{itemize}
-
-    \item CI (Bootstrap)
-    
-    \item Test formales para el rango de $\hat{B}_{pls}$
-    
-    \item  Extension a $k>1$, no estacionaridad y raices unitarias
-    
-\end{itemize}
+\begin{center}
+[Boletín](https://drive.google.com/file/d/1q_G4laOQV3H3UNF2gXZxhEZdacG3rq_R/view?usp=sharing)
+\end{center}
 
 
 
