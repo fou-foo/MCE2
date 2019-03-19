@@ -1,35 +1,35 @@
 ---
-title: "VAR-PLS"
-subtitle: 'Protocolo de tesina'
-author: J. Antonio García Ramírez
-date: 17-02-2019
+title: "Pronósticos de variables macroeconómicas vía VAR-PLS"
+subtitle: 'Tesina (primer avance)'
+author:
+-  J. Antonio García R. \newline
+-  Dra. Graciela González F.
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   beamer_presentation:
-    theme: "CambridgeUS"
-    colortheme: "beaver"
+    theme: "Madrid"
     fonttheme: "structurebold"
 header-includes:
    - \usepackage[utf8]{inputenc}
    - \usepackage[spanish]{babel} 
+   - \usepackage{fontawesome}
 ---
 ---
 
 # Esquema
 
- * Antecedentes
- * Definición del problema
- * Justificación
- * Objetivos
- * Metodología
- * Cronograma
+ * Antecedentes y definición del problema
+ * Justificación y objetivos
+ * Metodología (Qué se tiene)
+ * Cronograma  (Cómo vamos)
  * Anexo: Extensiones
  * Bibliografía
   
-# Antecedentes, $PLSAR(h,p)$ 
+# Antecedentes, $PLSAR(h,p)$, y definición del problema
 
-Phillip Hans Franses\footnote{2006, Países Bajos }  propone una metodología para realizar pronosticos
+Phillip Hans Franses\footnote{2006, Países Bajos }  propone una metodología para __realizar pronosticos a $h$ horizontes, de manera conjunta.__
 
-El método se ilustra con la productividad de USA en $[1945.1, 2000.4]$ frente a $AR(p)$ y $AR_j(p)$
+El método se ilustra con la productividad de USA en $[1945.1, 2000.4]$ comparándolo contra $AR(p)$ y $AR_j(p)$
 
 ![Resultados de Frances](img/ResultadosFrances.PNG "foo")
 
@@ -37,42 +37,25 @@ El método se ilustra con la productividad de USA en $[1945.1, 2000.4]$ frente a 
 
 \begin{itemize}
 
-    \item CI (Bootstrap)
+    \item CI (Bootstrap)    \faThumbsOUp
     
-    \item Test formales para el rango de $\hat{B}_{pls}$
+    \item Test formales para $rank(\hat{B}_{pls})$ \faTicket
     
-    \item  Extension a $k>1$, no estacionaridad y raices unitarias
+    \item  Extension a $k>1$ y no estacionaridad \faThumbsOUp
     
 \end{itemize}
 
 
 
-
-# Definición del problema
-
-\begin{center}
-\textbf{ Pronosticar de 1 a $h$ pasos hacia delante}
-\end{center}
-
-Con más de una serie 
-
-
-    
+# Justificación y objetivos
 
 
 
-# Justificación
-
-
-
-OLS minimiza la suma cuadrada de $\epsilon_t$ pero no garantiza que lo sea para $h$ errores a futuro
+OLS minimiza MSE para $\epsilon_t$ \footnote{Dentro de la muestra. Ver \cite{Lutkepohl}} pero no garantiza que lo sea para $h$ errores a futuro
  
+__Pronósticos precisos y confiables, para la toma de decisiones__
 
-# Objetivos
-
-Pronósticos precisos y confiables, para la toma de decisiones. 
-
-Costo computacional bajo, implementación eficiente (OLS)
+Costo computacional bajo (implementación eficiente)
 
 # Metodología
 
@@ -80,19 +63,41 @@ Costo computacional bajo, implementación eficiente (OLS)
 
 \item Modelo VAR
 
-\item Con el proceso autorregresivo construir la regresión PLS
+\item Con el proceso autorregresivo construir la regresión PLS (pronóstico)
 
 \item	Construcción de intervalos de predicción vía Bootstrap
 
-\item	Pronosticar con el VAR-PLS
+
+\end{itemize}
+
+
+# Metodología (Qué se tiene)
+
+\begin{itemize}
+
+\item Fundamentos teóricos: ts, VAR, PLS.  
+
+\item Comparación con otra metodología (resultados de la estancia de vinculación) \footnote{Diferente a la usada por Frances, incluye inflación y tipo de cambio}
 
 \end{itemize}
 
 
 
-# Cronograma
 
-![Cronograma](img/cronograma.PNG)
+# Metodología (lo nuevo)
+
+\begin{itemize}
+
+\item Contexto del uso de modelos VAR en econometría \footnote{A partir de la revisión de \cite{Juselius}}    
+
+
+\end{itemize}
+
+
+
+# Cronograma (Cómo vamos)
+
+![Cronograma](img/cronograma2.PNG)
 
 # Anexo: Posibles extensiones
 
@@ -101,33 +106,27 @@ Costo computacional bajo, implementación eficiente (OLS)
     \item Matrices \textit{sparse}
 \end{itemize}
 
+![](img/carita_miedo.PNG)
+
+
 # Bibliografía
 
 
 
 \begin{thebibliography}{1}
 
-\bibitem{pls}
-Bjorn-Helge Mevik and Ron Wehrens;\textit{ The pls Package: Principal Component and Partial Least Squares Regression in R}, Journal of Statistical Software January 2007, Volume 18, Issue 2.
 
-\bibitem{boostrapKim}
-Kim, J.H. (2001); \textit{ Bootstrap after bootstrap prediction intervals for autoregressive models}, Journal of Business and Economic Statistics, 19(1), 117-128.
+\bibitem{Juselius}
+Juselius, K. (2007).The Cointegrated VAR Model: Methodology and Applications.  Ad-vanced Texts in Econometrics. Oxford University Press, USA, 2 edition. 
 
-
+\bibitem{Haavelmo}
+Haavelmo,  T.  (1944).The  probability  approch  in  econometrrics.Econometrica,12(Supplement):1-118.  12, 
 
 \bibitem{PLSmaths}
 Hoskuldsson (1988); \textit{ PLS Regression Methods}, Journal of Chemometrics, Vol 2, pp 221-228
 
-\bibitem{bootstrap1}
-Pascual, L., J. Romo, and E. Ruiz (2004);  \textit{Bootstrap predictive inference for ARIMA processes}, Journal of Time Series Analysis, 25, 449-465
-
-\end{thebibliography}
-
-# 
-
-
-
-\begin{thebibliography}{1}
+\bibitem{Lutkepohl}
+Lutkepohl, H. (2006).New  Introduction  To  Multiple  Time  Series  Analysis.  Springer.
 
 \bibitem{frances}
 Philip Hans Franses (2006); \textit{Forecasting 1 to h steps ahead using partial least squares}, Econometric Institute, Erasmus University Rotterdam, Econometric Institute Report
@@ -137,5 +136,26 @@ Philip Hans Franses (2006); \textit{Forecasting 1 to h steps ahead using partial
 \bibitem{interpretation}
 P.H. Garthwaite (1994); \textit{An Interpretation of Partial Least Squares},  JASA Vol 89, No 425, pp122-127
 
+
+\end{thebibliography}
+
+
+
+# 
+
+
+
+\begin{thebibliography}{1}
+
+
+\bibitem{1} 
+Brockwell, P. J. and Davis, R. A. (1986).\textit{Time Series: Theory and Methods.} Springer-Verlag, Berlin, Heidelberg.  
+
+\bibitem{2}
+Chan, N. H. (2010). \textit{Time Series: Applications to Finance with R and S-Plus(R)}. WileySeries in probability and Statistics. Wiley, 2nd edition.  
+
+
+\bibitem{3}
+Hamilton, J. D. (1994). \textit{Time Series Analysis}. Princeton University Press, 1 edition. 7
 \end{thebibliography}
 
