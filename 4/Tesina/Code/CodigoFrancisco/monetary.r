@@ -7,7 +7,7 @@ library(pls)
 library(psych)
 
 # path
-dt.file <- "C:/Users/kiko/Desktop/congress_isbis/var_pls/"
+dt.file <- "C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\CodigoFrancisco\\"
 
 # config model
 
@@ -42,8 +42,8 @@ data.fore <- data[c(n+1):c(n+h), ]
 K <- ncol(data)
 
 # p order
-p <- VARselect(data.into, lag.max = lag.max, type = "const",
-      season = season)$selection[crit]
+p <- VARselect(y= data.into, lag.max = lag.max, type = "const",
+      season = season, exogen = NULL)$selection[crit]
 
 # johansen test
 joha <- ca.jo(data, K = p, ecdet = "const", season = season)
@@ -54,7 +54,7 @@ eq <- paste("p - ", abs(round(joha@V[2,1], 2)),"(m0) - ",  abs(round(joha@V[3,1]
       "(y) + ", abs(round(joha@V[4,1], 2)),"(r) + ", abs(round(joha@V[5,1], 2)),
       sep = "")
 
-opp <- par(mfrow = c(2,1))
+opp <- par(mfrow = c(1,1))
 ts.plot(data[,1], col = 1, lty = 1, lwd = 1, ylab = "log(p)")
 title("p series")
 ts.plot(cbind(data,1)%*%joha@V[,1,drop=FALSE], col = 4, lty = 1, lwd = 1,
@@ -63,7 +63,7 @@ title(eq)
 par(opp)
 
 
-var.vec <- vec2var(joha, r = 1)
+var.vec <- vec2var(joha, r =1 )
 
 mat.fit <- cbind(data[,"p"], c(rep(NA, p), fitted(var.vec)[,1]))
 colnames(mat.fit) <- c("p", "p(fitted)")
@@ -77,7 +77,7 @@ list.fore.var.pls <- list.mape.var.pls <- list()
 
 for(ncomp in 1 : c(K*p)){    print(ncomp)
   # VAR-PLS estimation
-  var.pls1 <- var.pls(data.into, p = p, ncomp = ncomp, season = season)
+  var.pls1 <- var.pls(x = data.into, p = p, ncomp = ncomp, season = season)
 
   # forecast to h head with ci via bootstrap
   fore.var.pls <- ci.var.pls.boot(var.pls1, n.ahead = h, runs = runs)
@@ -191,10 +191,10 @@ for(i in 1 : length(var.i)){
 
   # specification optimal
   seas <- idx.matrix[var.i[i],"seas"]
-  
+
   if(seas == 2)
     seas <- NULL
-  
+
   lags <- idx.matrix[var.i[i],"lag"]
   type <- idx.matrix[var.i[i],"ec.det"]
 
@@ -305,7 +305,7 @@ min.var.pls <- which(colMeans(mape.var.pls) == min(colMeans(mape.var.pls)))
 
 lower.var.pls <- sapply(1:c(K*p),
                   function(x) list.fore.var.pls[[x]]$Lower[,objective])
-                
+
 upper.var.pls <- sapply(1:c(K*p),
                   function(x) list.fore.var.pls[[x]]$Upper[,objective])
 
@@ -332,12 +332,12 @@ legend("topleft", c("p-real", "p-forecast", "lower(0.05) & upper(0.95)"),
   col = c(1,2,4), lwd = 2, lty = 1, cex = 0.85, bg = "white")
 title(paste("Forecast series ",objective,
   ": VAR(12)-PLS(h=",h,",k=",min.var.pls,")", sep = ""))
-  
+
 mat.fore.var <- cbind(data[,objective], c(data.into[,objective],
                 fore.int.var), c(data.into[,objective],
                 fore.int.var - ci.int.var), c(data.into[,objective],
                 fore.int.var + ci.int.var))
-  
+
 mat.fore.var[c(1:c(nrow(data.into)-1)),2] <- NA
 mat.fore.var[c(1:c(nrow(data.into))),3] <- NA
 mat.fore.var[c(1:c(nrow(data.into))),4] <- NA
