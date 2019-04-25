@@ -7,7 +7,7 @@ library(pls)
 library(psych)
 
 # path
-dt.file <- "C:/Users/kiko/Desktop/congress_isbis/var_pls/"
+dt.file <- "C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\CodigoFrancisco\\"
 
 # config model
 
@@ -134,12 +134,12 @@ for(i in 1 : nrow(idx.matrix)){
   # relative errors for model 1
   r.test <- sapply(1:ncol(data.into), function(x) c(test.data[,x] -
               fore[,x])/c(test.data[,x] - ar1[,x]))
-  
+
   # statistics for relative error (model 1)
   mrae <- colMeans(abs(r.test))
   mdrae <- apply(r.test, 2, function(x) median(abs(x)))
   gmrae <- apply(r.test, 2, function(x) geometric.mean(abs(x)))
-  
+
   # statistics models
   mat.test[i,"mape"] <- mape[1]
   mat.test[i,"mdape"] <- mdape[1]
@@ -225,7 +225,7 @@ fore.int.var.pls <- apply(fore.var.pls, 1, function(x) quantile(x, probs = 0.5))
 # mape with integral forecast
 mape.int.var.pls <- round(abs(c(data.fore[,"p"] - fore.int.var.pls)/
                     data.fore[,"p"]), 4)*100
-                    
+
 # integral VAR vs integral VAR-PLS
 comp3 <- mape.int.var > mape.int.var.pls
 
@@ -241,3 +241,4 @@ mat <- cbind(data[,"p"], c(data.into[,"p"], fore.int.var.pls))
 
 
 ts.plot(mat[-c(1:100),], col = c(1,2))
+

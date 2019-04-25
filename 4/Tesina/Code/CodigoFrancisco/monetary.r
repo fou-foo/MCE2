@@ -1,10 +1,10 @@
-
+# Actualizacion 20/04/2019
 remove(list=ls())
 
 # libraries
 library(vars)
 library(pls)
-library(psych)
+#library(psych)
 
 # path
 dt.file <- "C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\CodigoFrancisco\\"
