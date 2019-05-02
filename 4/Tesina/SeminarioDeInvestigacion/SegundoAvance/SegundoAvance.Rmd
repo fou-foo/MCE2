@@ -158,6 +158,10 @@ Se ha buscado que sea un documento autocontenido \footnote{En medida de lo posib
 
 \begin{thebibliography}{1}
 
+\bibitem{Bootstrap}
+Pascual, Ruiz y Fresoli (2011). Bootstrap forecast of multivariate VAR models
+without using the backward representation. Working Paper 11-34,  Statistics and
+Econometrics Series
 
 \bibitem{Juselius}
 Juselius, K. (2007).The Cointegrated VAR Model: Methodology and Applications.  Ad-vanced Texts in Econometrics. Oxford University Press, USA, 2 edition. 
@@ -168,17 +172,10 @@ Haavelmo,  T.  (1944).The  probability  approch  in  econometrrics.Econometrica,
 \bibitem{PLSmaths}
 Hoskuldsson (1988); \textit{ PLS Regression Methods}, Journal of Chemometrics, Vol 2, pp 221-228
 
-\bibitem{Lutkepohl}
-Lutkepohl, H. (2006).New  Introduction  To  Multiple  Time  Series  Analysis.  Springer.
 
 \bibitem{frances}
 Philip Hans Franses (2006); \textit{Forecasting 1 to h steps ahead using partial least squares}, Econometric Institute, Erasmus University Rotterdam, Econometric Institute Report
 2006-47
-
-
-\bibitem{interpretation}
-P.H. Garthwaite (1994); \textit{An Interpretation of Partial Least Squares},  JASA Vol 89, No 425, pp122-127
-
 
 \end{thebibliography}
 
@@ -189,6 +186,9 @@ P.H. Garthwaite (1994); \textit{An Interpretation of Partial Least Squares},  JA
 
 
 \begin{thebibliography}{1}
+
+\bibitem{Lutkepohl}
+Lutkepohl, H. (2006).New  Introduction  To  Multiple  Time  Series  Analysis.  Springer.
 
 
 \bibitem{1} 

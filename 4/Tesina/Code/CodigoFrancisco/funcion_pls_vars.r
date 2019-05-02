@@ -30,7 +30,7 @@ var.pls <- function(x, p, ncomp = NULL, season = NULL, exog = NULL)
     # Salidas    result (var.pls): Lista con clase propia creada en la funcion con las componentes
                             # [[1]] (mvr): Todo el modelo resultado de la funcion 'plsr'
                             # [[2]] (matrix): Matriz de variables originales
-                            # [[3]] (matrix): Matriz con todos los lags en el ordemn X[t-1, 1], X[t-1, 2], X[t-1, 3] y X[t-4, 4]...
+                            # [[3]] (matrix): Matriz con todos los lags en el orden X[t-1, 1], X[t-1, 2], X[t-1, 3] y X[t-4, 4]...
                                         # El orden de las variables se respeta de 'x', pero los lags se agregan a la derecha como columnas
                             # [[4]] (int): El orden del AR(p)
                             # [[5]] (matrix): Matriz con todas los indicadores-dummies- de las estacionalidades
@@ -43,7 +43,7 @@ var.pls <- function(x, p, ncomp = NULL, season = NULL, exog = NULL)
     obs <- nrow(x)
 
     # Matriz de exogenas
-    if(!is.null(exog))
+    if(!is.null(exog)) # si las hay
     {
         exog <- as.matrix(exog)
         class(exog) <- "matrix"
@@ -74,6 +74,7 @@ var.pls <- function(x, p, ncomp = NULL, season = NULL, exog = NULL)
   i.1 <- seq(1, ncol(mat.x.lags), ncol(x)) # indice de la matriz X donde comienzan los indices de las variables sin lag
   i.2 <- seq(ncol(x), ncol(mat.x.lags), ncol(x))
 
+  # no es elegante pero alguna vez lo hice con'apply' y se entendia menos
   for(i in 1:p)
   {
       mat.x.lags[ , i.1[i]:i.2[i]] <- lag.mat(x, i)
@@ -84,9 +85,10 @@ var.pls <- function(x, p, ncomp = NULL, season = NULL, exog = NULL)
   mat.x.lags <- cbind(mat.x.lags, exogen)
   colnames(mat.x.lags) <- c(colnames.x, colnames(exogen))
 
-  # Modelo PLS Y = BX + E (todas las componentes) SIMPLS
+  # Modelo PLS Y = BX + E (todas las componentes) SIMPLS >> entonces para que lo pasac omo parrametro ?
   pls.model <- plsr(x ~ mat.x.lags, method = "simpls") # metodo de estimacion con scores no ortogonales
-
+      # lo malo de esta parte es que elimina ttodos los nulos IGUAL AQUI PODEMOS USAR UNA DESCOMPOSICIÓN DIFERENTE
+      # y si lo hacemos por CV ?
   # ncomp predict
   if(is.null(ncomp))
     ncomp <- ncol(mat.x.lags)
@@ -99,7 +101,7 @@ var.pls <- function(x, p, ncomp = NULL, season = NULL, exog = NULL)
   return(result)
 }
 
-# Prediccion con modelo VAR-PLS
+# Prediccion con modelo VAR-PLS, tal y como lo dice Frances con las X's y las Y's
 predict.var.pls <- function(object, n.ahead, exog.new = NULL, ncomp = NULL)
 {
     # Entradas    object (var.pls): Objeto salida de la funcion 'var.pls'
@@ -233,34 +235,41 @@ ci.var.pls.boot <- function(object, n.ahead, exog.new = NULL, runs = 1000L,
   B[,"const"] <- Btemp["(Intercept)",] #pus resulta que no es cero
   B[,-ncol(B)] <- t(Btemp[-1, ])
 
-  # Realizamos Bootstrap
+  # Realizamos BootstrapESTO es mafil mente parralelizable
   BOOT <- vector("list", runs)
-  ysampled <- matrix(0, nrow = total, ncol = K)
+  # PASO 1: DE la sección 3 del paper
+  # 'BOOTSTRAP FORECAST OF MULTIVARIATE VAR MODELS WITHOUT USING THE BACKWARD REPRESENTATION'
+  ysampled <- matrix(0, nrow = total, ncol = K) # aqui guarda todas las muestras de bootstrap
   colnames(ysampled) <- colnames(object$x)
   Zdet <- NULL
   if (ncol(datamat) > (K * (p + 1)))
   {
+      # por si llegan ha hacer faltas columns
       Zdet <- as.matrix(datamat[, (K * (p + 1) + 1):ncol(datamat)])
   }
-  resorig <- scale(model$resid[,,model$ncomp], scale = FALSE)*
-              c(1/sqrt(c(total-p)/c(total-2*p))) # centra los residuos CHECAR DENOMINADOR EN EL PAPER
+  resorig <- scale(model$resid[ , , model$ncomp], scale = FALSE)*
+              ( (total-p)/ (total-2*p))**(.5) # guarda los rresiduos y los centra y scale por el factor que dice el paper
+  # inicia paso 2
   for (i in 1:runs)
   {
-      booted <- sample(c(1:obs), replace = TRUE) #indices de la muestra bootstrap
-      resid <- resorig[booted, ]  # muestra bootstrap
-      lasty <- c(t(x[p:1, ]))
+      booted <- sample( 1:obs, replace = TRUE) #indices de la muestra bootstrap
+      # solo requiere el primero
+      #booted <- 0:(p) + i #debend e ser secuenciales
+      resid <- resorig[booted, ]  # muestra bootstrap de los residuos de la estimacion anterior por PLS
+      lasty <- c(t(x[p:1, ])) # el tuimo Y estimado
       ysampled[c(1:p), ] <- x[c(1:p), ]
       for (j in 1:obs)
       {
-          # ESTO NO CORRESPONDE CON LO QUE DICEN LAS LAMINAS, DE HECHO ES MUCHO ESFUERZO
-          # CHECAR EL PAPER
-          lasty <- lasty[1:(K * p)]
-          Z <- c(lasty, Zdet[j, ])
-          ysampled[j + p, ] <- B %*% Z + resid[j, ]
+          # Ya con el bootstrap de reemplazo de y y los errores, se obtiene otra muestra de boootstrap
+          lasty <- lasty[1:(K * p)] # se selecciona una m.a. de las y re-estimadas
+          Z <- c(lasty, Zdet[j, ]) #se fijan los errors
+          ysampled[j + p, ] <- B %*% Z + resid[j, ] # prepara los datos para la sigueinte estimación
+                                # esto en defifnitiva se puede mejorar
           lasty <- c(ysampled[j + p, ], lasty)
       }
-      var.pls.boot <- var.pls(ysampled, p, season = season, exog = exog)
-      BOOT[[i]] <- predict.var.pls(var.pls.boot, n.ahead, exog.new)
+      var.pls.boot <- var.pls(ysampled, p, season = season, exog = exog) #reentrada la estimación inicial
+      BOOT[[i]] <- predict.var.pls(object=var.pls.boot, n.ahead = n.ahead,
+                                   exog.new=exog.new  , ncomp = ncomp)
   }
 
   # Guardamos resultados y obtenemos percentiles
