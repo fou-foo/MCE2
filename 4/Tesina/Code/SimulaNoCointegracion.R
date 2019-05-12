@@ -21,3 +21,5 @@ colnames(y) <- paste0('V', 1:(l))
 a <-ca.jo(y)
 summary(a)
 simulacion <- as.data.frame(y)
+
+a <- CarloMagno(simulacion, lag.max = 10)

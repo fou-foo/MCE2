@@ -7,7 +7,7 @@ library(pls)
 library(psych)
 
 # path
-dt.file <- "/home/fou/Desktop/MCE2/4/Tesina/Code/ExperimentoObservatorio/"
+dt.file <- "C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\"
 
 # config model
 
@@ -41,9 +41,9 @@ apply(data,2, function(x) adf.test(diff(x))$p.value  ) # casi todas son I(1)
 # monetary model P=f(m0,y,r)
 # ver que pasa sin los logs
 data <- log((data))
-apply(data,2, function(x) adf.test(x)$p.value  ) # lo son casi todas 
-borrar <- c('Actividades.Primarioas', 'Construccion', 'Energia', 
-            'Billetes.y.monedas', 'Industria.EUA', 
+apply(data,2, function(x) adf.test(x)$p.value  ) # lo son casi todas
+borrar <- c('Actividades.Primarioas', 'Construccion', 'Energia',
+            'Billetes.y.monedas', 'Industria.EUA',
             'Precios.EUA')
 match(borrar, names(data))
 data[, borrar] <- NULL
@@ -62,15 +62,9 @@ p <- VARselect(y= data.into, lag.max = lag.max, type = "const",
 # johansen test
 joha <- ca.jo(data, K = p, ecdet = "const", season = season)
 summary(joha)
-
-# intentemos guardar el rango ESTA MAL 
-rango <- which(joha@teststat< joha@cval[, '1pct'])[1] # checar si siempre es descendente
-rango <- 3 - rango + 1 # revisar si siempre regresa la informacion de 3 relaciones de cointegracion
-
-
 # esta relacion de cointegracion va a tener que reescribirse para un caso mas general-mas variables-
-eq <- paste("Inflacion  ", abs(round(joha@V[2,1], 2)), colnames(joha@V)[2], 
-            abs(round(joha@V[3,1], 2)), colnames(joha@V)[3], 
+eq <- paste("Inflacion  ", abs(round(joha@V[2,1], 2)), colnames(joha@V)[2],
+            abs(round(joha@V[3,1], 2)), colnames(joha@V)[3],
             abs(round(joha@V[4,1], 2)), colnames(joha@V)[4],
             abs(round(joha@V[5,1], 2)), colnames(joha@V)[5],
             abs(round(joha@V[6,1], 2)), colnames(joha@V)[6],
@@ -110,6 +104,7 @@ title(paste("VECM(",p,"): p series", sep = ""))
 list.fore.var.pls <- list.mape.var.pls <- list()
 
 # aqui se estiman las p*K componentes y se construyen los intervalos de confianza
+ncomp <- 1
 for(ncomp in 1:c(K*p))
 {
     print(ncomp)
@@ -286,7 +281,7 @@ mape.var.pls <- sapply(1:c(K*p), function(x) list.mape.var.pls[[x]][,objective])
 # models comparative
 # all VAR-PLS vs integral VAR
 comp1 <- sapply(1:c(K*p), function(x) mape.int.var > mape.var.pls[,x]) # errores de var mayores al pls
-round(sum(comp1)/length(comp1), 4)*100 # es peor 
+round(sum(comp1)/length(comp1), 4)*100 # es peor
 
 # all VAR selected vs all VAR-PLS
 comp2 <- list()
@@ -372,7 +367,7 @@ mat.fore.pls[c(1:c(nrow(data.into))),4] <- NA
 mat.fore.pls <- mat.fore.pls[-c(1:c(12*8)),]
 mat.fore.pls <- ts(mat.fore.pls, start = as.numeric(c(unlist(strsplit(row.names(data[97,]), '/'))[c(3,2)])), frequency = 12)
 
-ts.plot(diff(exp(mat.fore.pls)), col = c(1,2,4,4), lwd = 2, lty = 1)
+ts.plot((exp(mat.fore.pls)), col = c(1,2,4,4), lwd = 2, lty = 1)
 abline(v = 2009 + 2/12, col = "gray", lty = 2, lwd = 1)
 legend("topleft", c("p-real", "p-forecast", "lower(0.05) & upper(0.95)"),
        col = c(1,2,4), lwd = 2, lty = 1, cex = 0.85, bg = "white")
@@ -422,7 +417,7 @@ colMeans(list.mape.var.pls[[min.var.pls]])
 mean(mape.int.var)
 cumsum(round(var.pls1$pls.model$Xvar/var.pls1$pls.model$Xtotvar, 6))
 ####
-# Errores relativos 
+# Errores relativos
 errores.pls <- abs((exp(tail(mat.fore.pls[, 2],h))-exp(tail(data$InflacionNacional,h)))/exp(tail(data$InflacionNacional,h)))
 (errores.porcentuales <- errores.pls*100)
 (error.medio.pls <- mean(errores.porcentuales))
@@ -430,6 +425,6 @@ errores.pls <- abs((exp(tail(mat.fore.pls[, 2],h))-exp(tail(data$InflacionNacion
 errores.var <- abs( (exp(tail(mat.fore.var[,2], h))- exp(tail(data$InflacionNacional,h)))/  exp(tail(data$InflacionNacional,h)) )
 (errores.porcentuales.var <- errores.var*100)
 (error.medio.var <- mean(errores.porcentuales.var ))
-##verificacion  
+##verificacion
 (errores.porcentuales <- errores.pls*100) < (errores.porcentuales.var <- errores.var*100)
 

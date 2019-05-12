@@ -4,7 +4,7 @@
 ############################################
 
 remove(list=ls()) # removemos todos los objetos del enviroment
-
+{
 ###########################################
 # librerias                               #
 {
@@ -14,19 +14,20 @@ library(psych) # solo ocupamos una funcion de aqui CHECAR CUAL ES
 library(ggplot2) # libreria de graficos
 library(lubridate)  # libreria para manejo de fechas
 library(reshape2) #manipulacion de dataframes
-  
+
 }
 ###########################################
 # Parametros                              #
 {
-path <- '/home/fou/Desktop/MCE2/4/Tesina/Code/' # ubicacion del archivo 'Funciones_VARPLSParallel.R' y los datos
+path <- 'C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\' # ubicacion del archivo 'Funciones_VARPLSParallel.R' y los datos
 h <- 6 # numero de steps a pronostricar
-lag.max <- 15 # lag maximo para la determinacion inicial del AR(p)
-runs <- 100  # numero de iteraciones bootstrap para los intervalos de confianza 
+lag.max <- 6 # lag maximo para la determinacion inicial del AR(p)
+runs <- 100  # numero de iteraciones bootstrap para los intervalos de confianza
 crit <- "FPE(n)" # criterio con cual elegir el orden inicial del VAR(p)
 season <- NULL # PREGUNTAR A fRANCISCO
 ec.det <- c("none", "const", "trend", "both") # posibles formas de tendencia
 frecuencia <- 12 # frecuencia anual de las series
+confianza <- .95
 }
 source(paste0(path, "Funciones_VARPLSParallel.R"))# cargar funciones auxiliares
 ##########################################
@@ -36,27 +37,101 @@ data <- read.csv(paste0(path, "CompendioObservatorio.csv"), row.names = 1)
 ##########################################
 # imputacion de datos                    #
 data <- na.omit(data)
-data <- as.data.frame(apply(data, 2, log))
-# data <- cbind(data, simulacion)
+temp <- row.names(data)
+data <- as.data.frame(sapply(data, log))
+row.names(data) <- temp
+data2 <- data
+#data[, 3:17] <- NULL
 ##########################################
-# visualizacion 
+# visualizacion
 data.s <- data
 data.s$time <- row.names(data)
 data.s$time <- dmy(data.s$time)
 data.s <- melt(data.s, id='time')
-ggplot(data.s, aes(x= time, y =log(value), color=variable)) + geom_line() +
-  theme_minimal() + xlab('Tiempo') + ylab('log(x)') +
-  theme(legend.position = "bottom", legend.title = element_text(color = "white")) +
-  ggtitle('Variables econometrÃ­cas')
-ggplot(data.s, aes(x= time, y =(value), color=variable)) + geom_line() +
+ggplot(data.s, aes(x= time, y =exp(value), color=variable)) + geom_line() +
   facet_wrap(variable~., scales = "free") +  theme_minimal() + xlab('') +
   ylab('') +  theme(legend.position = "bottom", legend.title = element_text(color = "white")) +
-  ggtitle('Variables econometrÃ­cas') +guides( color=FALSE)
+  ggtitle('Variables econometrícas') +guides( color=FALSE)
 ###########################################
-data <- as.data.frame(sapply(data, log)) # estabilizacion de la varianza
+fechas <- row.names(data) # guardamos las fechas
+row.names(data) <- fechas
 # division de la muestra como sugiere Frances
 n <- dim(data)[1] # tamaÃ±o total de la muestra
 k <- dim(data)[2] # numero de componentes
-Y <- tail(data, h)
-X <- head(data, n-h)
+Y <- tail(data, n - h + 1 )
+X <- head(data, n - h + 1 )
+# test de cointegracion de
+CarloMagno(data, lag.max=lag.max)
 p <- VARselect(y= X, lag.max = lag.max)$selection[crit]# determinacion del orden del VAR(p)
+Y <- Y[ dim(Y)[1]:1, ] # Frances propone este acomodo de las observaciones
+X <- X[ dim(X)[1]:1, ]
+Y <- as.data.frame(Y)
+X <- as.data.frame(X)
+colnames(Y) <- colnames(X) <- colnames(data)
+X.lags <- SpanMatrix(X, p=(p))# generamos la matriz extendida con todos los lags
+Y.lags <- SpanMatrix(X, p=(h-1))# generamos la matriz extendida con todos los lags
+model <- plsr(Y.lags~ X.lags, method = "simpls", x=TRUE, y=TRUE)
+componentes.practicas <- model$ncomp # por los nulos se reducen
+Pronosticos <- lapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
+                  1:componentes.practicas)
+temp1 <- temp <- matrix(nrow = componentes.practicas, ncol = dim(data)[2])
+temp1 <- temp <- as.data.frame(temp)
+colnames(temp1) <- colnames(temp) <- colnames(data)
+row.names(temp1) <- row.names(temp) <- paste0('Comp.', 1:componentes.practicas)
+for(i in 1:componentes.practicas)
+{
+    temp[i, ] <- Error.relativo(Pronosticos[[i]], ncomp = i, data, h)
+    temp1[i, ] <- MAPE(x=Pronosticos[[i]], ncomp=i, data, h)
+}
+temp1$id <- 1:componentes.practicas
+Ncomp <- which.min(temp[, 1])
+}
+# grafica de mape
+z <- melt(temp1, id='id')
+Ncomp.mape <- which.min(temp1[, 1])
+ggplot(z, aes(x=id, y=value, color=variable)) + geom_line() +
+    facet_wrap(variable~., scales = "free") +  theme_minimal() + xlab('') +
+    ylab('') +  theme(legend.position = "bottom", legend.title = element_text(color = "white")) +
+    ggtitle('MAPE') +guides( color=FALSE)
+###################
+# intervalos de confianza
+set.seed(0)
+runs <- 1000
+Intervalos <- lapply(rep(p, runs), function(x) Bootstrap(x=X, X.lags = X.lags, p=x, Y=Y, Y.lags = Y.lags, Ncomp.mape=Ncomp.mape)  )
+Intervalos <- do.call('rbind', Intervalos)
+Intervalos <- as.data.frame(Intervalos)
+significancia <- (1 - confianza)/2
+c.i <- lapply(Intervalos, function(x)quantile(x, probs=c(significancia, 1-significancia )) )
+c.i <- as.data.frame(do.call('rbind', c.i))
+c.i$l <- c.i$`97.5%`-c.i$`2.5%`
+#######################################################
+### estimacion del VAR a comparar
+var <- VAR(ts(data2, start = c(2015, 1), frequency = 12), p=p, ic='FPE',
+           lag.max = lag.max, type='both' )
+tabla.var <- data.frame(Pronostico=predict(var, n.ahead = h)$fcst$InflacionNacional[,'fcst'],
+                        y = tail(data2[,1],h ))
+tabla.var$Error.relativo <- abs(tabla.var$y - tabla.var$Pronostico)/abs(tabla.var$Pronostico)*100
+tabla.var
+mean(tabla.var$Error.relativo)
+######################################
+# plot de pronostico conjunto
+Final <- data.frame(Valor.Real=tail(data2[,1], h) ,
+                    VAR.PLS = Predict.PLS(modelo=model, original=Y, h = h, ncomp=Ncomp.mape)[,1],
+                    VAR=predict(var, n.ahead = h)$fcst$InflacionNacional[,'fcst'])
+tabla <- Final <- exp(Final)
+Final <- cbind(Final, c.i[, 1:2])
+Final$`2.5%` <- Final$VAR.PLS - Final$`2.5%`
+Final$`97.5%` <- Final$VAR.PLS + Final$`97.5%`
+Final$t <- dmy(row.names(tail(data, h)))
+data <- exp(data2)
+data$t <- dmy(row.names(data))
+t <- melt(Final, id='t')
+tabla$Error.relativo.pls <- abs(tabla$Valor.Real - tabla$VAR.PLS )/abs(tabla$Valor.Real)*100
+tabla$Error.relativo.var <- abs(tabla$Valor.Real - tabla$VAR )/abs(tabla$Valor.Real)*100
+tabla
+sapply(tabla, mean)
+ggplot(data = data, aes(y=InflacionNacional, x=t)) + geom_line() +
+    geom_line(data=t, aes(x=t, y=value, color=variable)) + theme_minimal() +
+    ylab('') + xlab('') +xlim(ymd('2017-01-01'), max(data$t)) +
+    ylim(c(90,max(c(data$InflacionNacional, t$value )))) + guides( color=FALSE) +
+    ggtitle(paste0('Pronóstico VAR(', p, ')-PLS(h=', h, ', k=', Ncomp.mape, ')'))
