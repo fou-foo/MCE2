@@ -110,7 +110,7 @@ Predict.PLS <- function(modelo, original, ncomp, h)
         # se pronostica iteritivamente los demas pronosticos, en cada iteracion se reajusta el modelo
         Y.h <- rbind(head(salidas,i-1), head(Y.lags, nrow(Y.lags) - i+1))
         X.h <- rbind( head(X.aux, i-1), head(X.lags, nrow(X.lags) - i+1)  )
-        model <- plsr( Y.h ~ X.h, ncomp= ncomp, method='simpls') #
+        model <- plsr( Y.h ~ X.h, ncomp= ncomp, method='oscorespls') #
         pronosticos <- predict(model, newdata = head(X.h, 1 ))[,,ncomp]
         salidas[i, ] <- pronosticos
     }
@@ -207,8 +207,18 @@ MAPE <- function(x, ncomp, data, h )
     return(mape)
 }
 
+# Funcion para efectuar una sola replica de Bootstrap
 Bootstrap <- function(x, X.lags, p, Y, Y.lags, Ncomp.mape)
 {
+    # Entradas:
+        #   x (matrix): Matriz con los datos originales
+        #   X.lags (matrix): Matriz con todos los lags
+        #   p (int): Orden del VAR(p)
+        #   Y  (matrix): Matriz con las observaciones a pronosticar en 'Y'
+        #   Y.lags (matrix): Matriz con los h lags de 'Y'
+        #   Ncomp.mape (int): Numero de componentes a considear en los pronosticos
+    # Salidas:
+        #   Res1 (vector): Vector de longitud h, la replica bootstrap del pronostico
     x <- X # copia de la matriz 'x' con las variables originales sin lags
     X.lags <- X.lags # copia de la matriz con todos los lags
     p <- p  # copia del orden del AR(p)
@@ -217,27 +227,31 @@ Bootstrap <- function(x, X.lags, p, Y, Y.lags, Ncomp.mape)
     # Matrices y elementos
     K <- ncol(x)
     total <- nrow(x)
-    modelo <- plsr(Y.lags~ X.lags, method = 'simpls', ncomp=Ncomp.mape)
+    modelo <- plsr(Y.lags~ X.lags, method = 'oscorespls', ncomp=Ncomp.mape)
     # Coeficientes de modelo PLS
+    # Paso 1 del procedimiento bootstrap
+    # estimar B y fijar los primeros 'p' elementos
     B <- coef(modelo)[,,1]
     residuos <- scale(modelo$resid[ , , Ncomp.mape], scale = FALSE)*( (total-p)/ (total-2*p))**(.5) # guarda los rresiduos y los centra y scale por el factor que dice el paper
-    iniciales <- tail(na.omit(X.lags), p)
+    iniciales <- tail(as.data.frame(na.omit(X.lags)), p)
     Y.muestra.boot <- matrix( nrow = total, ncol = dim(Y.lags)[2]) # aqui guarda todas las muestras de bootstrap
     X.muestra.boot <- matrix( nrow = total, ncol = dim(X.lags)[2]) # aqui guarda todas las muestras de bootstrap
     colnames(Y.muestra.boot) <- colnames(Y.lags)
     colnames(X.muestra.boot) <- colnames(X.lags)
-    index.res <- sample(1:dim(residuos)[1], h, replace = TRUE)
-    Y.muestra.boot[1:h, ] <- iniciales %*% B + residuos[index.res, ]
-    X.muestra.boot[1:h, ] <- iniciales
+    index.res <- sample(1:dim(residuos)[1], p, replace = TRUE)
+    Y.muestra.boot[1:p, ] <- as.matrix(iniciales) %*% B + residuos[index.res, ]
+    X.muestra.boot[1:p, ] <- as.matrix(iniciales)
     # paso 2
-    for(i in 2:(total-h+1))
+    # generar una muestra de bootstrap de longitud 't'
+    for(i in 2:(total-p+1))
     {
-        index.res <- sample(1:dim(residuos)[1], h, replace = TRUE)
-        Y.muestra.boot[i:(i+h-1), ] <- X.muestra.boot[(i-1):(i+h-2), ] %*% B + residuos[index.res, ]
-        X.muestra.boot[i:(i+h-1), ] <- X.lags[sample(1:dim(X.lags)[1], h ), ]
+        index.res <- sample(1:dim(residuos)[1], p, replace = TRUE)
+        Y.muestra.boot[i:(i+p-1), ] <- X.muestra.boot[(i-1):(i+p-2), ] %*% B + residuos[index.res, ]
+        X.muestra.boot[i:(i+p-1), ] <- X.lags[(i-1):(i+p-2), ]
     }
     # paso 3
-    model <- plsr(Y.muestra.boot ~ X.muestra.boot , method = 'simpls', ncomp=Ncomp.mape, x=TRUE, y=TRUE)
+    # Restimacion de coeficientes B y prediccion
+    model <- plsr(Y.muestra.boot ~ X.muestra.boot , method = 'oscorespls', ncomp=Ncomp.mape, x=TRUE, y=TRUE)
     Res1 <- Predict.PLS(modelo=model, original=Y, ncomp = Ncomp.mape, h=h)
     Res1 <- Res1[, 1]
     return(Res1)

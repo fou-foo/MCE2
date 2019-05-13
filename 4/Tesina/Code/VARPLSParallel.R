@@ -22,11 +22,8 @@ library(reshape2) #manipulacion de dataframes
 path <- 'C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\' # ubicacion del archivo 'Funciones_VARPLSParallel.R' y los datos
 h <- 6 # numero de steps a pronostricar
 lag.max <- 6 # lag maximo para la determinacion inicial del AR(p)
-runs <- 100  # numero de iteraciones bootstrap para los intervalos de confianza
+runs <- 1000  # numero de iteraciones bootstrap para los intervalos de confianza
 crit <- "FPE(n)" # criterio con cual elegir el orden inicial del VAR(p)
-season <- NULL # PREGUNTAR A fRANCISCO
-ec.det <- c("none", "const", "trend", "both") # posibles formas de tendencia
-frecuencia <- 12 # frecuencia anual de las series
 confianza <- .95
 }
 source(paste0(path, "Funciones_VARPLSParallel.R"))# cargar funciones auxiliares
@@ -70,7 +67,7 @@ X <- as.data.frame(X)
 colnames(Y) <- colnames(X) <- colnames(data)
 X.lags <- SpanMatrix(X, p=(p))# generamos la matriz extendida con todos los lags
 Y.lags <- SpanMatrix(X, p=(h-1))# generamos la matriz extendida con todos los lags
-model <- plsr(Y.lags~ X.lags, method = "simpls", x=TRUE, y=TRUE)
+model <- plsr(Y.lags~ X.lags, method = "oscorespls", x=TRUE, y=TRUE)
 componentes.practicas <- model$ncomp # por los nulos se reducen
 Pronosticos <- lapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
                   1:componentes.practicas)
@@ -96,18 +93,17 @@ ggplot(z, aes(x=id, y=value, color=variable)) + geom_line() +
 ###################
 # intervalos de confianza
 set.seed(0)
-runs <- 1000
 Intervalos <- lapply(rep(p, runs), function(x) Bootstrap(x=X, X.lags = X.lags, p=x, Y=Y, Y.lags = Y.lags, Ncomp.mape=Ncomp.mape)  )
-Intervalos <- do.call('rbind', Intervalos)
-Intervalos <- as.data.frame(Intervalos)
+intervalos <- do.call('rbind', Intervalos)
+intervalos <- as.data.frame(intervalos)
 significancia <- (1 - confianza)/2
-c.i <- lapply(Intervalos, function(x)quantile(x, probs=c(significancia, 1-significancia )) )
+c.i <- lapply(intervalos, function(x)quantile(x, probs=c(significancia, 1-significancia )) )
 c.i <- as.data.frame(do.call('rbind', c.i))
-c.i$l <- c.i$`97.5%`-c.i$`2.5%`
+c.i$l <- c.i[, 2] -c.i[, 1]
 #######################################################
 ### estimacion del VAR a comparar
 var <- VAR(ts(data2, start = c(2015, 1), frequency = 12), p=p, ic='FPE',
-           lag.max = lag.max, type='both' )
+           lag.max = lag.max )
 tabla.var <- data.frame(Pronostico=predict(var, n.ahead = h)$fcst$InflacionNacional[,'fcst'],
                         y = tail(data2[,1],h ))
 tabla.var$Error.relativo <- abs(tabla.var$y - tabla.var$Pronostico)/abs(tabla.var$Pronostico)*100
@@ -120,8 +116,8 @@ Final <- data.frame(Valor.Real=tail(data2[,1], h) ,
                     VAR=predict(var, n.ahead = h)$fcst$InflacionNacional[,'fcst'])
 tabla <- Final <- exp(Final)
 Final <- cbind(Final, c.i[, 1:2])
-Final$`2.5%` <- Final$VAR.PLS - Final$`2.5%`
-Final$`97.5%` <- Final$VAR.PLS + Final$`97.5%`
+Final[, 4] <- Final$VAR.PLS - Final[, 4]
+Final[, 5] <- Final$VAR.PLS + Final[, 5]
 Final$t <- dmy(row.names(tail(data, h)))
 data <- exp(data2)
 data$t <- dmy(row.names(data))
@@ -131,7 +127,9 @@ tabla$Error.relativo.var <- abs(tabla$Valor.Real - tabla$VAR )/abs(tabla$Valor.R
 tabla
 sapply(tabla, mean)
 ggplot(data = data, aes(y=InflacionNacional, x=t)) + geom_line() +
-    geom_line(data=t, aes(x=t, y=value, color=variable)) + theme_minimal() +
+    geom_line(data=subset(t, variable != 'VAR'), aes(x=t, y=value, color=variable)) + theme_minimal() +
     ylab('') + xlab('') +xlim(ymd('2017-01-01'), max(data$t)) +
     ylim(c(90,max(c(data$InflacionNacional, t$value )))) + guides( color=FALSE) +
-    ggtitle(paste0('Pronóstico VAR(', p, ')-PLS(h=', h, ', k=', Ncomp.mape, ')'))
+    ggtitle(paste0('Pronóstico VAR(', p, ')-PLS(h=', h, ', k=', Ncomp.mape, ')'))  +
+    scale_color_manual(values = c('Valor.Real'= 'navy', 'VAR.PLS' = 'red',
+                                  '2.5%' = 'orange', '97.5%' = 'orange'))
