@@ -22,7 +22,7 @@ library(reshape2) #manipulacion de dataframes
 path <- 'C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\' # ubicacion del archivo 'Funciones_VARPLSParallel.R' y los datos
 h <- 6 # numero de steps a pronostricar
 lag.max <- 6 # lag maximo para la determinacion inicial del AR(p)
-runs <- 1000  # numero de iteraciones bootstrap para los intervalos de confianza
+runs <- 100  # numero de iteraciones bootstrap para los intervalos de confianza
 crit <- "FPE(n)" # criterio con cual elegir el orden inicial del VAR(p)
 confianza <- .95
 }
@@ -67,7 +67,7 @@ X <- as.data.frame(X)
 colnames(Y) <- colnames(X) <- colnames(data)
 X.lags <- SpanMatrix(X, p=(p))# generamos la matriz extendida con todos los lags
 Y.lags <- SpanMatrix(X, p=(h-1))# generamos la matriz extendida con todos los lags
-model <- plsr(Y.lags~ X.lags, method = "oscorespls", x=TRUE, y=TRUE)
+model <- plsr(Y.lags~ X.lags, method = "simpls", x=TRUE, y=TRUE)
 componentes.practicas <- model$ncomp # por los nulos se reducen
 Pronosticos <- lapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
                   1:componentes.practicas)
@@ -100,6 +100,7 @@ significancia <- (1 - confianza)/2
 c.i <- lapply(intervalos, function(x)quantile(x, probs=c(significancia, 1-significancia )) )
 c.i <- as.data.frame(do.call('rbind', c.i))
 c.i$l <- c.i[, 2] -c.i[, 1]
+
 #######################################################
 ### estimacion del VAR a comparar
 var <- VAR(ts(data2, start = c(2015, 1), frequency = 12), p=p, ic='FPE',
@@ -125,7 +126,12 @@ t <- melt(Final, id='t')
 tabla$Error.relativo.pls <- abs(tabla$Valor.Real - tabla$VAR.PLS )/abs(tabla$Valor.Real)*100
 tabla$Error.relativo.var <- abs(tabla$Valor.Real - tabla$VAR )/abs(tabla$Valor.Real)*100
 tabla
+tabla$Presicio.VAR.PLS <- 100 - tabla$Error.relativo.pls
+tabla$Presicio.VAR <- 100 - tabla$Error.relativo.var
+library(xtable)
+xtable(tabla)
 sapply(tabla, mean)
+xtable(cbind(c.i, tabla[,2]))
 ggplot(data = data, aes(y=InflacionNacional, x=t)) + geom_line() +
     geom_line(data=subset(t, variable != 'VAR'), aes(x=t, y=value, color=variable)) + theme_minimal() +
     ylab('') + xlab('') +xlim(ymd('2017-01-01'), max(data$t)) +
