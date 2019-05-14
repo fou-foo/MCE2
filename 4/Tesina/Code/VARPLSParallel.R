@@ -22,7 +22,7 @@ library(parallel)
 path <- 'C:\\Users\\fou-f\\Documents\\GitHub\\MCE2\\4\\Tesina\\Code\\' # ubicacion del archivo 'Funciones_VARPLSParallel.R' y los datos
 h <- 6 # numero de steps a pronostricar
 lag.max <- 6 # lag maximo para la determinacion inicial del AR(p)
-runs <- 100  # numero de iteraciones bootstrap para los intervalos de confianza
+runs <- 10000  # numero de iteraciones bootstrap para los intervalos de confianza
 crit <- "FPE(n)" # criterio con cual elegir el orden inicial del VAR(p)
 confianza <- .95
 }
@@ -67,7 +67,7 @@ X <- as.data.frame(X)
 colnames(Y) <- colnames(X) <- colnames(data)
 X.lags <- SpanMatrix(X, p=(p))# generamos la matriz extendida con todos los lags
 Y.lags <- SpanMatrix(X, p=(h-1))# generamos la matriz extendida con todos los lags
-model <- plsr(Y.lags~ X.lags, method = "simpls", x=TRUE, y=TRUE)
+model <- plsr(Y.lags~ X.lags, method = "oscorespls", x=TRUE, y=TRUE)
 componentes.practicas <- model$ncomp # por los nulos se reducen
 Pronosticos <- mclapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
                   1:componentes.practicas)
