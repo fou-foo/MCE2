@@ -14,7 +14,7 @@ library(psych) # solo ocupamos una funcion de aqui CHECAR CUAL ES
 library(ggplot2) # libreria de graficos
 library(lubridate)  # libreria para manejo de fechas
 library(reshape2) #manipulacion de dataframes
-
+library(parallel)
 }
 ###########################################
 # Parametros                              #
@@ -30,7 +30,7 @@ source(paste0(path, "Funciones_VARPLSParallel.R"))# cargar funciones auxiliares
 ##########################################
 # Lectura de datos                       #
 # Se espera un dataframe donde la primer columna sean las fechas de las series y la segunda la variable de interes a pronosticar
-data <- read.csv(paste0(path, "CompendioObservatorio.csv"), row.names = 1)
+data <- read.csv(paste0(path, "Compendio13Mayo2019.csv"), row.names = 1)
 ##########################################
 # imputacion de datos                    #
 data <- na.omit(data)
@@ -69,7 +69,7 @@ X.lags <- SpanMatrix(X, p=(p))# generamos la matriz extendida con todos los lags
 Y.lags <- SpanMatrix(X, p=(h-1))# generamos la matriz extendida con todos los lags
 model <- plsr(Y.lags~ X.lags, method = "simpls", x=TRUE, y=TRUE)
 componentes.practicas <- model$ncomp # por los nulos se reducen
-Pronosticos <- lapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
+Pronosticos <- mclapply(FUN=function(x) Predict.PLS(modelo=model, original=Y, ncomp=x, h=h),
                   1:componentes.practicas)
 temp1 <- temp <- matrix(nrow = componentes.practicas, ncol = dim(data)[2])
 temp1 <- temp <- as.data.frame(temp)
@@ -93,7 +93,7 @@ ggplot(z, aes(x=id, y=value, color=variable)) + geom_line() +
 ###################
 # intervalos de confianza
 set.seed(0)
-Intervalos <- lapply(rep(p, runs), function(x) Bootstrap(x=X, X.lags = X.lags, p=x, Y=Y, Y.lags = Y.lags, Ncomp.mape=Ncomp.mape)  )
+Intervalos <- mclapply(rep(p, runs), function(x) Bootstrap(x=X, X.lags = X.lags, p=x, Y=Y, Y.lags = Y.lags, Ncomp.mape=Ncomp.mape)  )
 intervalos <- do.call('rbind', Intervalos)
 intervalos <- as.data.frame(intervalos)
 significancia <- (1 - confianza)/2
