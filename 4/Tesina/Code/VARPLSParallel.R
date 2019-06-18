@@ -30,7 +30,7 @@ source(paste0(path, "Funciones_VARPLSParallel.R"))# cargar funciones auxiliares
 ##########################################
 # Lectura de datos                       #
 # Se espera un dataframe donde la primer columna sean las fechas de las series y la segunda la variable de interes a pronosticar
-data <- read.csv(paste0(path, "Compendio13Mayo2019.csv"), row.names = 1)
+data <- read.csv(paste0(path, "Compendio16junio2019.csv"), row.names = 1)
 ##########################################
 # imputacion de datos                    #
 data <- na.omit(data)
