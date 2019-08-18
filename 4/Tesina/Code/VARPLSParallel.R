@@ -107,7 +107,7 @@ var <- VAR(ts(data2, start = c(2015, 1), frequency = 12), p=p, ic='FPE',
            lag.max = lag.max )
 tabla.var <- data.frame(Pronostico=predict(var, n.ahead = h)$fcst$InflacionNacional[,'fcst'],
                         y = tail(data2[,1],h ))
-tabla.var$Error.relativo <- abs(tabla.var$y - tabla.var$Pronostico)/abs(tabla.var$Pronostico)*100
+tabla.var$Error.relativo <- abs(tabla.var$y - tabla.var$Pronostico)/abs(tabla.var$y)*100
 tabla.var
 mean(tabla.var$Error.relativo)
 ######################################
